@@ -1,0 +1,63 @@
+GET /uli-pilot/_search
+{
+  "query": {
+    "function_score": {
+      "boost": "1",
+      "functions": [
+        {
+          "filter": {
+            "fuzzy": {
+              "MemberNationalAssociationId": {
+                "value": "012345687",
+                "fuzziness": 1,
+                "transpositions": true
+              }
+            }
+          },
+          "weight": 6
+        },
+        {
+          "filter": {
+            "fuzzy": {
+              "MemberFullName" : {
+                "value": "Joe Smithe",
+                "fuzziness": 2,
+                "transpositions": true
+              }
+            }
+          },
+          "weight": 5
+        },
+        {
+          "filter": {
+            "fuzzy": {
+              "MemberNickname": {
+                "value": "Jo",
+                "fuzziness": 2,
+                "transpositions": true
+              }
+            }
+          }, 
+          "weight": 1
+        },
+        {
+          "filter": {
+            "fuzzy": {
+              "MemberLastName": {
+                "value": "Smith",
+                "fuzziness": 2,
+                "transpositions": true
+              }
+            }
+          },
+          "weight": 3
+        }
+      ],
+      "max_boost": 10,
+      "score_mode": "sum",
+      "boost_mode": "multiply",
+      "min_score": 10
+    }
+  },
+  "explain": true
+}
