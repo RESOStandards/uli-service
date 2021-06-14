@@ -2,17 +2,19 @@
 ULI Service with Backend Ingest Process and Matching Service
 
 This repository contains the following items:
-* A template spreadsheet, which will allow you to ingest data into the ULI Pilot backend using your local data.
+* A [template spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true), which will allow you to ingest data into the ULI Pilot backend using your local data. 
 * A [`docker-compose.yml` file](https://github.com/RESOStandards/uli-service/blob/main/docker-compose.yml) that will start the Elastic backend for you.
-* A text file containing an Elastic Ingest Pipeline for the template spreadsheet.
+* A [text file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.txt) containing an Elastic Ingest Pipeline for the template spreadsheet.
 * A file containing a [ULI Pilot Search query](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-search.txt), which you can fill in values for once you have ingested data.
 
 **1. Preparing ULI Pilot Data for Ingest**
 The rest of the steps in this README are optional, but to participate in the ULI Pilot there needs to be an initial seed file created from the Member and Office data in the organization at that time. 
 
-A Template Spreadsheet has been provided for your convenience. Please fill in the fields and send the sheet to [RESO Development](mailto:dev@reso.org?subject=RESO ULI Pilot Data). Feel free to reach out with any additional questions. 
+A [Template Spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true) has been provided for your convenience. 
 
-For those who are running the server locally, please proceed to the next step.
+Please fill in the fields on the "Merged" tab of the spreadsheet and send the sheet to [RESO Development](mailto:dev@reso.org?subject=RESO ULI Pilot Data). Feel free to reach out with any additional questions. 
+
+For those who are running the server locally, please proceed to the next step after filling their data into the Merged sheet.
 
 
 **2. Starting the Elastic Backend**
