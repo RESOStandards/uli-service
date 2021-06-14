@@ -12,7 +12,7 @@ The rest of the steps in this README are optional, but to participate in the ULI
 
 A [Template Spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true) has been provided for your convenience. 
 
-Please fill in the fields on the "Merged" tab of the spreadsheet and send the sheet to [RESO Development](mailto:dev@reso.org?subject=RESO ULI Pilot Data). Feel free to reach out with any additional questions. 
+Please fill in the fields on the "Merged" tab of the spreadsheet and send the sheet to [RESO Development](mailto:dev@reso.org). Feel free to reach out with any additional questions. 
 
 For those who are running the server locally, please proceed to the next step after filling their data into the Merged sheet.
 
