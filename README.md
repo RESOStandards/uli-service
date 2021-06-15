@@ -43,9 +43,9 @@ If you are not familiar with Ingest Pipelines, as a shortcut, you can also use t
 
 First, navigate to the [local instance of Kibana](http://localhost:5601/app/home#/) and look for the following: ![upload-a-file](https://user-images.githubusercontent.com/535358/121967623-8ee83a00-cd25-11eb-89a1-f93090e06431.png)
 
-From there, you will be taken to the [File Data Visualizer](http://localhost:5601/app/ml/filedatavisualizer), which will allow you to upload the .csv version of the Excel spreadsheet template from step (1). See [this  article](https://www.elastic.co/guide/en/elasticsearch/reference/master/ingest.html) for more information.
+From there, you will be taken to the [File Data Visualizer](http://localhost:5601/app/ml/filedatavisualizer), which will allow you to upload the .csv version of the Excel spreadsheet template from step (1). See [this  article](https://www.elastic.co/blog/importing-csv-and-log-data-into-elasticsearch-with-file-data-visualizer) for more information.
 
-If using this method, the ingest pattern you create will match what's in the `uli-pilot-pipeline.txt` file above and will be created in the [following location](http://localhost:5601/app/management/ingest/ingest_pipelines/?pipeline=uli-pilot-pipeline) in your local Elastic installation if you name it `uli-pilot-pipeline`.
+If using this method, the ingest pattern you create will match what's in the [`uli-pilot-pipeline.txt` file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.txt) and will be created in the [following location](http://localhost:5601/app/management/ingest/ingest_pipelines/?pipeline=uli-pilot-pipeline) in your local Elastic installation if you name it `uli-pilot-pipeline`. 
 
 If you are using the provided template spreadsheet, the items created will match what's in this example as well as the queries. Make sure to name your index `uli-pilot` when ingesting data to match the samples.
 
