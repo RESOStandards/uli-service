@@ -1,4 +1,3 @@
-GET /uli-pilot/_search
 {
   "query": {
     "function_score": {
