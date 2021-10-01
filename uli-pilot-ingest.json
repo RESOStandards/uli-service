@@ -31,13 +31,6 @@
     }
   },
   {
-    "convert": {
-      "field": "OfficePostalCode",
-      "type": "long",
-      "ignore_missing": true
-    }
-  },
-  {
     "remove": {
       "field": "message"
     }
