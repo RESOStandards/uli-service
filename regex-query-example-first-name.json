@@ -2,7 +2,7 @@
   "query": {
     "regexp": {
       "MemberFirstName": {
-        "value": "Chris*",
+        "value": "Chris.*",
         "flags": "ALL",
         "case_insensitive": true,
         "max_determinized_states": 10000,
