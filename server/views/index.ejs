@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head> 
+    <title>Certification | RESO - Real Estate Standards Organization</title>
+    <meta name="description" content="RESO certifies systems that comply with real estate data standards. Certification ensures interoperability between technology systems that speak a common language. Standards provide that common language.">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <link rel="icon" href="https://2xx2gy2ovf3r21jclkjio3x8-wpengine.netdna-ssl.com/wp-content/uploads/2017/08/cropped-website-icon-mark-black-on-transparent-32x32.png" sizes="32x32" />
+  </head>
+  <script id="hydrated-data">
+    <%- JSON.stringify(config.data) %>
+  </script>
+  <body>
+    <div id="root" className="bg-gray-100"></div>
+    <script src="<%-config.bundlePath%>"></script>
+  </body>
+</html>
