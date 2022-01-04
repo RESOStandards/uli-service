@@ -1,8 +1,13 @@
-<h1 align="center">
-   RESO-Certification
-</h1>
+# ULI Pilot Search Service
+ULI Service with Backend Ingest Process and Matching Service for User Deduplication.
+
+This work uses the [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) probabilistic matching algorithm for its search implementation, with a set of weights similar to those outlined in the [Sandbox document](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing) discussed in the RESO ULI Subgroup previously.
+
 
 ### Setting up project for the first time
+
+Make sure you have [Docker and Docker Compose installed](https://docs.docker.com/compose/install/). The Windows and MacOs installers bundle them both together. The referenced guide has instructions for how to get started with both. 
+
 - Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
 - Run your project with the command `docker-compose up`
 - While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
@@ -31,23 +36,6 @@ curl --location --request POST 'http://localhost:3000/api/v1/certification_repor
 
 Log on to [http://localhost/api-docs](http://localhost/api-docs) to try api endpoints.
 
-### Cypress tests :
-
-#### Steps to run the specs:
-
-##### 1. Navigate to the directory cypress-tests
-
-##### 2. To install the required dependencies, run the command:
-
-  `npm install`
-
-##### 4. Command to run specs from cypress GUI:
-
-  `npm run cy:open`
-
-##### 5. Command to run specs from commandline:
-
-  `npm run cy:run`
 
 ### Debugging in VSCode :
 
