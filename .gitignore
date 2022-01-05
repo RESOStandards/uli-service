@@ -22,3 +22,6 @@ docker-data-volumes/elasticsearch/nodes
 esbackup/reso_backup_location
 
 server/services/payload/sampleDifference.js
+
+# encryption files
+*.p12
