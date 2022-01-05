@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  backend:
+    container_name: nodejs
+    build: ./
+    ports:
+    - "3000:3000"
+    - "5678:5678"
+    command: ["./wait-for-it.sh", elasticsearch-test:9200, "--", "yarn", "run", "test"]
+    environment:
+    - ES_HOST=elasticsearch-test
+    volumes:
+    - .:/app
+    - ./error.log:/usr/src/app/error.log
+    - /app/node_modules/
+    depends_on:
+    - elasticsearch-test
+  elasticsearch-test:
+    container_name: elasticsearch-test
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    environment:
+    - node.name=es01
+    - discovery.type=single-node
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+    -  esdata:/usr/share/elasticsearch/data
+    ports:
+    - "9200:9200"                 
+volumes:
+  esdata:
+    driver: local
+ 

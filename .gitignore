@@ -1,0 +1,24 @@
+node_modules/
+server/public/dist
+server/logs.json
+assets.json
+elasticsearch.yml
+kibana.yml
+esbackup
+
+# pkg manager
+yarn-error.log
+
+# Text Editor Configs
+.vscode
+.idea
+client_id
+
+docker-data-volumes/elasticsearch/nodes
+
+#migration
+.migrate
+
+esbackup/reso_backup_location
+
+server/services/payload/sampleDifference.js

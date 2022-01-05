@@ -1,19 +1,30 @@
 version: "3.9"
 services:
+  webserver:
+    image: nginx:mainline-alpine
+    container_name: uli_webserver
+    restart: always
+    ports:
+    - "80:80"   
+    - "443:443"
+    - "8080:8080"
+    volumes:
+    - ../nginx-conf:/etc/nginx/conf.d
+    - ../cert:/ssl
+    depends_on:
+    - backend
+    - kibana
   backend:
     container_name: uli_nodejs
     restart: always
     build:
       context: .
     ports:
-    - "80:3000"
-    - "5678:5678"
-    - "9229:9229"
+    - 3000
     environment:
+    - NODE_ENV=qa  
     - ES_HOST=elasticsearch
-    - NODE_ENV=development
-#    - SERVER_HOST=192.168.1.74
-    command: yarn dev
+    command: yarn run qa
     volumes:
     - .:/usr/src/app/
     - ./error.log:/usr/src/app/error.log
@@ -21,30 +32,30 @@ services:
     depends_on:
     - elasticsearch
   elasticsearch:
-      container_name: uli_elasticsearch
+      container_name: elasticsearch
       image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
       environment:
       - node.name=es01
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#      - SERVER_HOST=192.168.1.74
+      - "ES_JAVA_OPTS=-Xms8g -Xmx8g"
       volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./elastic-certificates.p12:/usr/share/elasticsearch/config/elastic-certificates.p12
       - ./docker-data-volumes/elasticsearch:/usr/share/elasticsearch/data
       - ./esbackup:/usr/share/elasticsearch/esbackup
       ports:
-      - "9200:9200"
+      - 9200
   kibana:
       container_name: uli_kibana
       depends_on:
-      - elasticsearch  
+      - elasticsearch
       image: docker.elastic.co/kibana/kibana:7.10.1
+      environment:
+      - NODE_OPTIONS="--max_old_space_size=4096"
       ports:
-      - 5601:5601
+      - 5601
       volumes:
       - ./kibana.yml:/usr/share/kibana/config/kibana.yml           
 volumes:
   esdata:
-    driver: local
- 
+    driver: local    
