@@ -4,6 +4,17 @@ ULI Service with Backend Ingest Process and Matching Service for User Deduplicat
 This work uses the [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) probabilistic matching algorithm for its search implementation, with a set of weights similar to those outlined in the [Sandbox document](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing) discussed in the RESO ULI Subgroup previously.
 
 
+### Setting up project for the first time
+
+Make sure you have [Docker and Docker Compose installed](https://docs.docker.com/compose/install/). The Windows and MacOs installers bundle them both together. The referenced guide has instructions for how to get started with both. 
+
+- Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
+- Run your project with the command `docker-compose up`
+- While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
+```docker-compose exec elasticsearch bash```
+- Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
+
+
 This repository contains the following items:
 * A [template spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true), which will allow you to ingest data into the ULI Pilot backend using your local data. 
 * A [`docker-compose.yml` file](https://github.com/RESOStandards/uli-service/blob/main/docker-compose.yml) that will start the Elastic backend for you.
