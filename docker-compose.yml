@@ -12,7 +12,7 @@ services:
     environment:
     - ES_HOST=elasticsearch
     - NODE_ENV=development
-#    - SERVER_HOST=192.168.1.74
+    - SERVER_HOST=192.168.1.74
     command: yarn dev
     volumes:
     - .:/usr/src/app/
@@ -27,7 +27,7 @@ services:
       - node.name=es01
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#      - SERVER_HOST=192.168.1.74
+      - SERVER_HOST=192.168.1.74
       volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./elastic-certificates.p12:/usr/share/elasticsearch/config/elastic-certificates.p12
