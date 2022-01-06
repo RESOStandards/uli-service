@@ -58,6 +58,10 @@ password: elastic
 ```
 to login to your app as admin.
 
+### Developing with a non-localhost setup
+
+You need to edit the docker-compose.yml file and uncomment the SERVER_HOST lines.  Make sure the value given is that of your development server.
+
 ### How to make use of the token generated from token management
 
 The generated token can be clubbed with any API in the authorization header prefixed by the keyword: `ApiKey`.

@@ -12,7 +12,7 @@ services:
     environment:
     - ES_HOST=elasticsearch
     - NODE_ENV=development
-    - SERVER_HOST=192.168.1.74
+#    - SERVER_HOST=192.168.1.74
     command: yarn dev
     volumes:
     - .:/usr/src/app/
@@ -26,8 +26,8 @@ services:
       environment:
       - node.name=uli-es01
       - discovery.type=single-node
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - SERVER_HOST=192.168.1.74
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+#      - SERVER_HOST=192.168.1.74
       volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./docker-data-volumes/elasticsearch:/usr/share/elasticsearch/data
