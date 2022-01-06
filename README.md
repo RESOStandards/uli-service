@@ -20,6 +20,7 @@ Since we are using the docker-compose version 3.9, these are the minimum support
 ### Setting up project for the first time
 
 - Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
+- Make a `kibana.yml` file in the root.  A simple version is provided and you may use it with the command `cp kibana.yml.sample kibana.yml`
 - Run your project with the command `docker-compose up`
 - While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
 ```docker-compose exec elasticsearch bash```
