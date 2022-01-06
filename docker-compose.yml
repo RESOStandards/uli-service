@@ -24,7 +24,7 @@ services:
       container_name: uli_elasticsearch
       image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
       environment:
-      - node.name=es01
+      - node.name=uli-es01
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - SERVER_HOST=192.168.1.74
