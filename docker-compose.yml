@@ -30,7 +30,6 @@ services:
       - SERVER_HOST=192.168.1.74
       volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./elastic-certificates.p12:/usr/share/elasticsearch/config/elastic-certificates.p12
       - ./docker-data-volumes/elasticsearch:/usr/share/elasticsearch/data
       - ./esbackup:/usr/share/elasticsearch/esbackup
       ports:

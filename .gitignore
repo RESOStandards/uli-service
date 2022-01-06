@@ -2,7 +2,6 @@ node_modules/
 server/public/dist
 server/logs.json
 assets.json
-elasticsearch.yml
 kibana.yml
 esbackup
 

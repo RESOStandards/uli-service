@@ -2,7 +2,23 @@
    RESO-Certification
 </h1>
 
+# Getting Started
+
+## 1. Preparing ULI Pilot Data for Ingest
+
+Please fill in the fields on the "Merged" tab of the spreadsheet and send the sheet to [RESO Development](mailto:dev@reso.org). Feel free to reach out with any additional questions. 
+
+For those who are running the server locally, please proceed to the next step after filling their data into the Merged sheet.
+
+### Requirements
+
+- Docker version 20.10.8
+- docker-compose version 1.29.2
+
+Since we are using the docker-compose version 3.9, these are the minimum supported versions of these programs.
+
 ### Setting up project for the first time
+
 - Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
 - Run your project with the command `docker-compose up`
 - While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
