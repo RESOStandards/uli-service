@@ -40,6 +40,7 @@ services:
       - "ES_JAVA_OPTS=-Xms8g -Xmx8g"
       volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./elastic-certificates.p12:/usr/share/elasticsearch/config/elastic-certificates.p12
       - ./docker-data-volumes/elasticsearch:/usr/share/elasticsearch/data
       - ./esbackup:/usr/share/elasticsearch/esbackup
       ports:

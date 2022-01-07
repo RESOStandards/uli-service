@@ -17,37 +17,18 @@ For those who are running the server locally, please proceed to the next step af
 
 Since we are using the docker-compose version 3.9, these are the minimum supported versions of these programs.
 
+Make sure you have [Docker and Docker Compose installed](https://docs.docker.com/compose/install/). The Windows and MacOs installers bundle them both together. The referenced guide has instructions for how to get started with both. 
+
 ### Setting up project for the first time
 
 - Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
+- run the command `docker-compose -f create-certs.yml run --rm create_certs` to create self-signed certificates.
 - Make a `kibana.yml` file in the root.  A simple version is provided and you may use it with the command `cp kibana.yml.sample kibana.yml`
 - Run your project with the command `docker-compose up`
 - While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
 ```docker-compose exec elasticsearch bash```
-- Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
-
-The command prompt will ask you to enter password for each built-in users. Please type "`elastic`" as password for every user considering this development period.
-
-### Setting up project for the first time
-
-Make sure you have [Docker and Docker Compose installed](https://docs.docker.com/compose/install/). The Windows and MacOs installers bundle them both together. The referenced guide has instructions for how to get started with both. 
-
-- Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
-- Run your project with the command `docker-compose up`
-- While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
-```docker-compose exec elasticsearch bash```
-- Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
-
-
-### Setting up project for the first time
-
-Make sure you have [Docker and Docker Compose installed](https://docs.docker.com/compose/install/). The Windows and MacOs installers bundle them both together. The referenced guide has instructions for how to get started with both. 
-
-- Change permissions to a sub-folder `sudo chown -R 1000:1000 ./docker-data-volumes/elasticsearch`
-- Run your project with the command `docker-compose up`
-- While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
-```docker-compose exec elasticsearch bash```
-- Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
+- ./bin/elasticsearch-certutil http
+- Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive --url https://localhost:9200` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
 
 The command prompt will ask you to enter password for each built-in users. Please type "`elastic`" as password for every user considering this development period.
 

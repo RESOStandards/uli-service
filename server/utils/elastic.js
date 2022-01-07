@@ -3,7 +3,7 @@ const axios = require("axios");
 const _ = require("lodash");
 
 const esHost = process.env.ES_HOST;
-const baseUrl = `http://${esHost}:9200/`;
+const baseUrl = `https://${esHost}:9200/`;
 
 const createIndexWithMapping = async (headerOptions, index, indexMapping) => {
   await axios({

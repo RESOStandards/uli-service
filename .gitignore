@@ -4,6 +4,7 @@ server/logs.json
 assets.json
 kibana.yml
 esbackup
+.env
 
 # pkg manager
 yarn-error.log
