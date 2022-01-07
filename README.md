@@ -27,7 +27,6 @@ Make sure you have [Docker and Docker Compose installed](https://docs.docker.com
 - Run your project with the command `docker-compose up`
 - While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
 ```docker-compose exec elasticsearch bash```
-- ./bin/elasticsearch-certutil http
 - Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive --url https://localhost:9200` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
 
 The command prompt will ask you to enter password for each built-in users. Please type "`elastic`" as password for every user considering this development period.
