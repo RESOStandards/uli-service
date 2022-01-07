@@ -10,7 +10,7 @@ services:
     - "5678:5678"
     - "9229:9229"
     environment:
-    - ES_HOST=elasticsearch
+    - ES_HOST=es01
     - NODE_ENV=development
     - SERVER_HOST=192.168.1.74
     command: yarn dev
@@ -19,8 +19,8 @@ services:
     - ./error.log:/usr/src/app/error.log
     - /usr/src/app/node_modules/
     depends_on:
-    - elasticsearch
-  elasticsearch:
+    - es01
+  es01:
       container_name: uli_elasticsearch
       image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
       environment:
@@ -28,18 +28,8 @@ services:
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
-      - xpack.license.self_generated.type=trial 
-      - xpack.security.enabled=true
-      - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.key=$CERTS_DIR/es01/es01.key
-      - xpack.security.http.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
-      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/es01.crt
-      - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.verification_mode=certificate 
-      - xpack.security.transport.ssl.certificate_authorities=$CERTS_DIR/ca/ca.crt
-      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/es01.crt
-      - xpack.security.transport.ssl.key=$CERTS_DIR/es01/es01.key      
       volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./certs:/usr/share/elasticsearch/config/certificates
       - ./docker-data-volumes/elasticsearch:/usr/share/elasticsearch/data
       - ./esbackup:/usr/share/elasticsearch/esbackup
@@ -48,7 +38,7 @@ services:
   kibana:
       container_name: uli_kibana
       depends_on:
-      - elasticsearch  
+      - es01  
       image: docker.elastic.co/kibana/kibana:7.10.1
       ports:
       - 5601:5601
