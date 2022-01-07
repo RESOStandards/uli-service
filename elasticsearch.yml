@@ -5,7 +5,7 @@ xpack.security.enabled: true
 xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.verification_mode: certificate
 xpack.security.transport.ssl.certificate_authorities: /usr/share/elasticsearch/config/certificates/ca/ca.crt
-xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certificates/es01/es01.crt
-xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/es01/es01.key
+xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certificates/uli-es01/uli-es01.crt
+xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certificates/uli-es01/uli-es01.key
 
 path.repo: ./esbackup

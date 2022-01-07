@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  backend:
+  uli-backend:
     container_name: uli_nodejs
     restart: always
     build:
@@ -10,7 +10,7 @@ services:
     - "5678:5678"
     - "9229:9229"
     environment:
-    - ES_HOST=es01
+    - ES_HOST=uli-es01
     - NODE_ENV=development
 #    - SERVER_HOST=192.168.1.74
     command: yarn dev
@@ -19,8 +19,8 @@ services:
     - ./error.log:/usr/src/app/error.log
     - /usr/src/app/node_modules/
     depends_on:
-    - es01
-  es01:
+    - uli-es01
+  uli-es01:
       container_name: uli_elasticsearch
       image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
       environment:
@@ -34,10 +34,10 @@ services:
       - ./esbackup:/usr/share/elasticsearch/esbackup
       ports:
       - "9200:9200"
-  kibana:
+  uli-kibana:
       container_name: uli_kibana
       depends_on:
-      - es01  
+      - uli-es01  
       image: docker.elastic.co/kibana/kibana:7.10.1
       ports:
       - 5601:5601

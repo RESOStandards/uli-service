@@ -1,7 +1,7 @@
 instances:
-  - name: es01
+  - name: uli-es01
     dns:
-      - es01
+      - uli-es01
       - localhost
     ip:
       - 127.0.0.1
