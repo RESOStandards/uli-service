@@ -27,7 +27,6 @@ services:
       - node.name=uli-es01
       - discovery.type=single-node
       - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
-      - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
       volumes:
       - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./certs:/usr/share/elasticsearch/config/certificates
