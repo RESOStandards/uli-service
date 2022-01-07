@@ -26,7 +26,7 @@ Make sure you have [Docker and Docker Compose installed](https://docs.docker.com
 - Make a `kibana.yml` file in the root.  A simple version is provided and you may use it with the command `cp kibana.yml.sample kibana.yml`
 - Run your project with the command `docker-compose up`
 - While docker-compose up is running in one terminal, open another terminal to get inside the elasticsearch container by running the command:
-```docker-compose exec es01 bash```
+```docker-compose exec uli-es01 bash```
 - Then run the following command to generate passwords for all the built-in users: `bin/elasticsearch-setup-passwords interactive` (This will generate a lot of files inside the docker-data-volumes folder which would contain security indices and other metadata.)
 
 The command prompt will ask you to enter password for each built-in users. Please type "`elastic`" as password for every user considering this development period.
