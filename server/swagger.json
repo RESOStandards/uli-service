@@ -1,0 +1,27 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "RESO Certification",
+    "description": "Certification site for RESO"
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": " ##### Example: ApiKey Y05NM1*****d053dw=="
+    }
+  },
+  "security": [{ "ApiKeyAuth": [] }],
+  "basePath": "/api/v1/",
+  "tags": [
+    {
+      "name": "Certifications",
+      "description": "API for certifications"
+    }
+  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+  }
+}

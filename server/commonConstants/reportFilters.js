@@ -1,0 +1,141 @@
+const endorsementOptions = [
+  {
+    label: "All",
+    value: "",
+  },
+  {
+    label: "Web API",
+    shortLabel: "Web API",
+    value: "web_api_server_core",
+  },
+  {
+    label: "Data Dictionary",
+    shortLabel: "DD",
+    value: "data_dictionary",
+  },
+  {
+    label: "IDX",
+    shortLabel: "IDX",
+    value: "payloads",
+  },
+];
+
+const statusOptions = [
+  {
+    label: "All",
+    shortLabel: "All",
+    value: "",
+    bgColor: "",
+    textColor: "",
+    priority: -1,
+  },
+  {
+    label: "In Progress",
+    shortLabel: "In Progress",
+    value: "in_progress",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-400",
+    borderColor: "border-yellow-400",
+    icon: "refresh",
+    priority: 0,
+  },
+  {
+    label: "Failed",
+    shortLabel: "Failed",
+    value: "failed",
+    bgColor: "bg-red-100",
+    textColor: "text-red-500",
+    borderColor: "border-red-500",
+    icon: "error",
+    priority: 1,
+  },
+  {
+    label: "Cancelled",
+    shortLabel: "Cancelled",
+    value: "cancelled",
+    bgColor: "bg-red-400",
+    textColor: "text-white",
+    borderColor: "border-red-300",
+    icon: "cross",
+    priority: 2,
+  },
+  {
+    label: "Passed",
+    shortLabel: "Passed",
+    value: "passed",
+    bgColor: "bg-green-100",
+    textColor: "text-green-400",
+    borderColor: "border-green-400",
+    icon: "confirm",
+    priority: 3,
+  },
+  {
+    label: "Notified",
+    shortLabel: "Notified",
+    value: "recipient_notified",
+    bgColor: "bg-blue-300",
+    textColor: "text-blue-500",
+    borderColor: "border-blue-200",
+    icon: "notifications-updated",
+    priority: 4,
+  },
+  {
+    label: "Retracted",
+    shortLabel: "Retracted",
+    value: "retracted",
+    bgColor: "bg-red-100",
+    textColor: "text-red-500",
+    borderColor: "border-red-600",
+    icon: "remove",
+    priority: 5,
+  },
+  {
+    label: "Revoked",
+    shortLabel: "Revoked",
+    value: "revoked",
+    bgColor: "bg-red-500",
+    textColor: "text-white",
+    borderColor: "border-red-400",
+    icon: "undo",
+    priority: 6,
+  },
+  {
+    label: "Certified",
+    shortLabel: "Certified",
+    value: "certified",
+    bgColor: "bg-green-500",
+    textColor: "text-white",
+    borderColor: "border-green-400",
+    icon: "tick-circle",
+    priority: 7,
+  },
+  {
+    label: "Legacy",
+    shortLabel: "Legacy",
+    value: "legacy",
+    bgColor: "bg-gray-700",
+    textColor: "text-white",
+    borderColor: "border-gray-400",
+    icon: "issue",
+    priority: 8,
+  },
+];
+
+const sortByOptions = [
+  {
+    label: "Ascending",
+    value: "asc",
+    icon: "sort-alphabetical",
+  },
+  {
+    label: "Descending",
+    value: "desc",
+    icon: "sort-alphabetical-desc",
+  },
+];
+
+module.exports = {
+  endorsementOptions,
+  statusOptions,
+  sortByOptions,
+};

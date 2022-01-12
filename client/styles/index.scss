@@ -1,0 +1,84 @@
+@import "~@blueprintjs/core/lib/css/blueprint";
+@import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@media print{
+  @page {
+    size: A3 landscape;
+    transform: scale(.75);
+  }
+  header, footer {
+    visibility: hidden;
+  }
+
+  .noprint {
+    visibility: hidden;
+  }
+}
+
+body {
+  font-family: 'Roboto',Helvetica,Arial,Lucida,sans-serif;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  color: theme("colors.gray.800");
+  background: theme("colors.gray.100");
+  scrollbar-width: none;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, span {
+  font-family: 'Roboto',Helvetica,Arial,Lucida,sans-serif;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.MuiTreeItem-root[role=treeitem] {
+  .MuiTreeItem-content {
+    .MuiTypography-root.MuiTreeItem-label.MuiTypography-body1 {
+      font-size: 18px;
+    }
+  }
+}
+
+// Range Slider
+.bp3-slider-handle {
+  background-color: rgba(37, 99, 235, var(--tw-bg-opacity));
+  border-radius: 9999px;
+  background-image: none;
+}
+
+.bp3-slider-handle:hover, .bp3-slider-handle:focus, .bp3-slider-handle:active {
+  background-color: rgba(37, 99, 235, var(--tw-bg-opacity));
+}
+
+.bp3-vertical > .bp3-slider-handle .bp3-slider-label {
+  white-space: pre-wrap;
+  padding-top: 0px;
+}
+
+.bp3-slider-handle .bp3-slider-label {
+  white-space: nowrap;
+  padding: 0.5rem;
+  padding-right: 1.5rem;
+  background: transparent;
+  box-shadow: none;
+  color: #6B7280;
+}
+
+.bp3-slider-progress {
+  background-color: #D4D4D8;
+}
+
+.bp3-tab-panel {
+  height: 85%;
+  overflow-y: auto;
+}
+
+.rv-xy-plot__axis__tick__line {
+  stroke: #a2a2a3;
+}

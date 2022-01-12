@@ -1,0 +1,7 @@
+instances:
+  - name: uli-es01
+    dns:
+      - uli-es01
+      - localhost
+    ip:
+      - 127.0.0.1
