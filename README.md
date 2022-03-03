@@ -1,4 +1,4 @@
-# RESO Unique Licensee Identifier (ULI) Service
+# RESO Unique Licensee Identifier (ULI)
 
 ## Summary
 The RESO ULI Service seeks to create reliable identifiers that can be used by licensed participants in real estate transactions.
