@@ -1,60 +1,58 @@
-# ULI Pilot Search Service
-ULI Service with Backend Ingest Process and Matching Service for User Deduplication.
+# RESO Unique Licensee Identifier (ULI) Service
 
-This work uses the [Okapi BM25](https://en.wikipedia.org/wiki/Okapi_BM25) probabilistic matching algorithm for its search implementation, with a set of weights similar to those outlined in the [Sandbox document](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing) discussed in the RESO ULI Subgroup previously.
+## Summary
+The RESO ULI Service seeks to create reliable identifiers that can be used by licensed participants in real estate transactions.
+
+## Motivation
+There are many touch points and disparate processes in dealing with licensee data currently. This causes data accuracy issues and difficulty integrating between systems, which themselves often compound the problem by creating their own identifiers that don't align with each other across multiple products and markets.
+
+Real estate agents are licensed by each state, which have their own search portals to validate licensee information. At first glance, it would seem that by checking these sources at the point of entry, generally a real estate association, that downstream vendors would always have accurate data. 
+
+However, these data sets aren't readily available and often require manual effort in validating potential licensees, which can be error prone. There can also be differences in the information used in practice versus what a given participant was licensed with. For example, someone gets married and changes their last name in one system but not the other or they use two slightly different names across multiple markets or states they're practicing in, which then don't align and duplicate records are created.
+
+Another significant challenge is that associations and multiple listing services (MLSs) often allow many different user accounts for a given licensee. This can create problems in trying to generate reports for each user's activity in a given market.
+
+## Rationale
+There are existing systems designed to deal with licensee data, but they don't provide a single source of truth that works for any potential licensee across markets. As such, they bring their own set of challenges. 
+
+The RESO Unique Licensee Identifier project aims to establish an authoritative, community-driven service that can de-duplicate licensees across markets and assign common identifiers to link their various records together without each respective system having to change to support them. As such, the impact in implementing the system will be low in terms of changes to participating systems or user behavior. 
+
+## Methodology
+How is the ULI project different from other approaches to this problem?
+
+It relies on two key factors:
+
+* Scoring Algorithm
+* Collaborative Filtering
+
+### Scoring Algorithm
+What is scoring and what does it do? 
+
+Typically, those working with licensee data would write conditional logic in order to compare things like first and last names, along with variations, and things like state license information and other identifiers to suggest possible matches with existing licensees. 
+
+However, this becomes complex to maintain and hard to reason about as the number of conditions increases. It's also hard to change when improvements need to be made. What's needed is a scoring methodology that can easily be adjusted depending on feedback from the system or to meet local needs. 
+
+The ULI uses an approach based on primary and secondary identifiers, where no single item can result in a match on its own. This allows for scoring to be adjusted easily and in a data-driven manner, based on feedback from the system such as false positive and negative rates. It also allows for additional factors to be added without significant changes to the underlying system. 
+
+In the context of the ULI system, scoring allows matches above a given confidence score to be routed to the organizations that provided those records so they can resolve them in a collaborative manner.
 
 
-This repository contains the following items:
-* A [template spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true), which will allow you to ingest data into the ULI Pilot backend using your local data. 
-* A [`docker-compose.yml` file](https://github.com/RESOStandards/uli-service/blob/main/docker-compose.yml) that will start the Elastic backend for you.
-* A [text file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.txt) containing an Elastic Ingest Pipeline for the template spreadsheet.
-* A file containing a [ULI Pilot Search query](https://github.com/RESOStandards/uli-service/blob/main/uli-ranking-formula.json), which you can fill in values for once you have ingested data.
-
-# Getting Started
-
-## 1. Preparing ULI Pilot Data for Ingest
-
-The rest of the steps in this README are optional, but to participate in the ULI Pilot there needs to be an initial seed file created from the Member and Office data in the organization at that time. 
-
-A [Template Spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true) has been provided for your convenience. 
-
-Please fill in the fields on the "Merged" tab of the spreadsheet and send the sheet to [RESO Development](mailto:dev@reso.org). Feel free to reach out with any additional questions. 
-
-For those who are running the server locally, please proceed to the next step after filling their data into the Merged sheet.
+[Read more](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing)
 
 
-## 2. Starting the Elastic Backend
+### Collaborative Filtering
+While the scoring algorithm used for this project is simple, flexible, and interesting, it's just the first step in the process. The resolution of licensees to their unique underlying records ultimately depends on consensus being reached within the system. 
 
-Make sure you have [Docker and Docker Compose installed](https://docs.docker.com/compose/install/). The Windows and MacOs installers bundle them both together. The referenced guide has instructions for how to get started with both. 
+Behind the scenes, the ULI service consumes inbound licensee information from each participant and runs it through the scoring process to see if it matches other records with a high degree of confidence. 
 
-Once Docker Compose is installed, change into the directory where you downloaded this source code and type the following command with the Docker service running:
-```
-  docker-compose up
-```
-This will build containers with the backend environment for you locally the first time it's run, or if the containers are ever removed. You will see a lot of output in your console during this time. 
+If no match is found, then a Unique Licensee Identifier is created. However, when matches are found, notifications are sent to each provider where the record was found so they can agree on which record should be used. Once they do so, a ULI can be assigned.
 
-The containers that are built will maintain the state of their data beyond a restart.
 
-## 3. Ingesting Data into the Elastic Backend
+## ULI Pilot Project
+There is currently a pilot project consisting of several markets and over a hundred thousand licensees where this service is being tested. 
 
-Once the sheet has been filled in (step 1) and the server is running, you can use the uli-pilot-pipeline.txt file to create an [ingest pipeline](https://www.elastic.co/guide/en/elasticsearch/reference/master/ingest.html) for your data. 
+The goal of the project is to test the service with real world data in order to measure the efficacy of the approach and collect matching metrics. 
 
-If you are not familiar with Ingest Pipelines, as a shortcut, you can also use the following method to import up to 100MB of csv data and create your own Elastic index.
+Please [contact RESO](dev@reso.org) if you are interested in participating in the ULI Pilot.
 
-First, navigate to the [local instance of Kibana](http://localhost:5601/app/home#/) and look for the following: ![upload-a-file](https://user-images.githubusercontent.com/535358/121967623-8ee83a00-cd25-11eb-89a1-f93090e06431.png)
-
-From there, you will be taken to the [File Data Visualizer](http://localhost:5601/app/ml/filedatavisualizer), which will allow you to upload the .csv version of the Excel spreadsheet template from step (1). See [this  article](https://www.elastic.co/blog/importing-csv-and-log-data-into-elasticsearch-with-file-data-visualizer) for more information.
-
-If using this method, the ingest pattern you create will match what's in the [`uli-pilot-pipeline.txt` file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.txt) and will be created in the [following location](http://localhost:5601/app/management/ingest/ingest_pipelines/?pipeline=uli-pilot-pipeline) in your local Elastic installation if you name it `uli-pilot-pipeline`. 
-
-If you are using the provided template spreadsheet, the items created will match what's in this example as well as the queries. Make sure to name your index `uli-pilot` when ingesting data to match the samples.
-
-## 4. Querying the Pilot Data
-After you have ingested the data, you can query the server using Kibana's [Dev Tools](http://localhost:5601/app/dev_tools#/console). These will connect to the local Elastic instance, and provides a convenient place to try out queries. 
-
-In this case, you'll want to use something similar to the query that's posted in the [ULI Pilot search endpoint](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-search.txt):
-
-![dev-tools](https://user-images.githubusercontent.com/535358/121968113-7cbacb80-cd26-11eb-917d-1e5093242e09.png)
-
-After adjusting the query for your data set, press the "play" button to see results.
-
+If you'd like to run the service yourself, see [this guide](./docs/running-the-pilot.md) to get started.
