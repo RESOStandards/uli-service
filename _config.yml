@@ -1,5 +1,4 @@
 theme: jekyll-theme-slate
-name: RESO Unique Licensee Identifier
-title: null
+title: RESO Unique Licensee Identifier
 github:
-  is_project_page: true
+  is_project_page: false
