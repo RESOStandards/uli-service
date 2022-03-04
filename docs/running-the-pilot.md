@@ -3,7 +3,7 @@
 This repository contains the following items:
 * A [template spreadsheet](https://github.com/RESOStandards/uli-service/blob/main/ULI%20-%20Data%20Pilot%20Template.xlsx?raw=true), which will allow you to ingest data into the ULI Pilot backend using your local data. 
 * A [`docker-compose.yml` file](https://github.com/RESOStandards/uli-service/blob/main/docker-compose.yml) that will start the Elastic backend for you.
-* A [text file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.txt) containing an Elastic Ingest Pipeline for the template spreadsheet.
+* A [text file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.json) containing an Elastic Ingest Pipeline for the template spreadsheet.
 * A file containing a [ULI Pilot Search query](https://github.com/RESOStandards/uli-service/blob/main/uli-ranking-formula.json), which you can fill in values for once you have ingested data.
 
 
