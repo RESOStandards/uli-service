@@ -44,6 +44,35 @@ Behind the scenes, the service consumes inbound licensee information from each p
 
 If no other licensee is found within the confidence threshold, a new ULI is created. However, when there are potential duplicates, notifications are sent to each organization where the record was found so they can agree on which identifier should be used. Once the resolution process is complete, any existing identifiers will be updated with references to the ones where consensus was reached. 
 
+## How Does It Work?
+Let's assume that two organizations, UOI A and UOI B, want to use the ULI service. 
+
+The following diagram shows the ULI initialization and resolution process:
+![ULI Lifecycle](https://user-images.githubusercontent.com/535358/156807018-46371981-9fd6-4463-87da-f6d57ea86efd.png)
+
+### Step 1
+The first step is that any participating organization synchronize their ULI data with the service. 
+
+[The fields used for the ULI project](https://github.com/RESOStandards/uli-service/blob/9aee7fd973b304e5de752b6a9e589ae5334029b2/uli-pilot-ingest.json#L6-L27) have been selected to minimize the use of personally identifiable information (PII) and are widely available on state licensing board portals. 
+
+Ideally each organization would resolve any duplicates they have within their own data sets at this point, but it's not necessary since they can resolve them at any time. 
+
+### Step 2
+Now let's assume that a new licensee wants to join organization UOI A. The membership staff in UOI A would search for the new licensee in the ULI Service, potentially using information from their licensing board. If no match is found, a new ULI is created for the licensee. If matches are found, then each organization needs to resolve them before proceeding.
+
+### Step 3
+In this case, an existing licensee was found in UOI B with a confidence of 70% or greater. The RESO ULI Service notifies UOI A and UOI B and asks them to take action. 
+
+There are three options at this point:
+* If the match isn't accurate, then UOI A can create a new ULI record and UOI B can keep their existing one. 
+* Both organizations could choose to keep the existing record, in which case its ULI is used.
+* Both organizations could choose to create a new ULI by merging prior and new data, which would retire the old ULI and update it to point to the new one. 
+
+### Step 4
+Once the licensee has been resolved, its ULI can be used in both organizations. 
+
+
+
 
 ## ULI Pilot Project
 There is currently a pilot project consisting of several markets and hundreds of thousands of licensees. 
