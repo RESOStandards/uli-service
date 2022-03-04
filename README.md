@@ -28,7 +28,7 @@ What is scoring and what does it do?
 
 Typically, those working with licensee data would write complex code in order to compare things like first and last names, with variations, and things like state license information and other identifiers in order to suggest possible matches with existing licensees at the time of entry.
 
-However, this becomes complex to maintain and hard to reason about as the number of conditions increases. It's also hard to change when improvements need to be made. What's needed is a scoring methodology that can be adjusted based on feedback from the system.
+However, this becomes complex and increasingly difficult to maintain as the number of conditions increases. It's also hard to change when improvements need to be made. What's needed is a scoring methodology that can be adjusted based on feedback from the system.
 
 The RESO ULI uses a probabilistic, consensus-based approach with weighted scoring factors, where no single identifier can result in a match on its own. This allows for the system's matching accuracy to be adjusted without writing code. It also means that additional factors can be added without significant changes to the underlying system. 
 
