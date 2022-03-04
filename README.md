@@ -52,13 +52,13 @@ The following diagram shows the ULI initialization and resolution process:
 ![ULI Lifecycle](https://user-images.githubusercontent.com/535358/156813229-dfa2e522-5400-4342-a6f9-ada0c38e31ea.png)
 
 
-### STEP 1 - ORGANIZATIONS UOI A AND UOI B JOIN ULI SERVICE
+### STEP 1 - Organizations UOI A and UOI B Join the ULI Service
 Licensee data for orgs UOI A and B needs to be ingested when they join the network. Any potential duplicates will be found and resolved, as needed.
 
-### STEP 2 - NEW LICENSEE JOINS UOI A
+### STEP 2 - New Licensee Joins UOI A
 Now let's assume that a new licensee wants to join organization UOI A. The membership staff in UOI A would search for the new licensee in the ULI Service, potentially using information from their licensing board. If no match is found, a new ULI is created for the licensee. If matches are found, then each organization needs to resolve them before proceeding.
 
-### STEP 3 - COMMON LICENSEE IDENTIFIED BETWEEN UOI A AND UOI B
+### STEP 3 - Common Licensee Identified Between UOI A and UOI B
 In this case, an existing licensee was found in UOI B with a confidence of 70% or greater. The RESO ULI Service notifies UOI A and UOI B and asks them to take action. 
 
 There are three options at this point:
@@ -66,7 +66,7 @@ There are three options at this point:
 * Both organizations could choose to keep the existing record, in which case its ULI is used.
 * Both organizations could choose to create a new ULI by merging prior and new data, which would retire the old ULI and update it to point to the new one. 
 
-### STEP 4 - CONSENSUS
+### STEP 4 - Consensus
 Once the licensee has been resolved, its ULI can be used in both organizations. 
 
 ## Sample UI Screens
