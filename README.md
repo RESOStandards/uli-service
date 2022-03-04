@@ -1,4 +1,4 @@
-## Summary
+## Project Summary
 The RESO Unique Licensee Identifier (ULI) project seeks to create reliable identifiers that can be used by licensed participants in real estate transactions.
 
 ## Motivation
