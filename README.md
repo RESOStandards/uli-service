@@ -1,4 +1,8 @@
 ## Project Summary
+Data inaccuracy across many systems is caused by the lack of an industrywide identifier for licensees. State licenses, association IDs and MLS IDs do not convey a single identifier that creates consistency across systems and geographies.  Both inside an individual MLS and across multiple MLSs, individual licensees are often duplicated to accommodate MLS access needs.  This problem is compounded when individuals work across state lines under unique state licenses. Listing and sales licensees are essentially without an unique identifier. This makes their activity, roster and listing and sales volume information across MLSs, advertising portals, associations, franchisors, broker back office tools, and agent services providers disjointed and unnecessarily complicated. Solving this problem requires the creation and implementation of an Unique Licensee Identifier (ULI).
+
+Providing a unique ID to every licensed real estate professional, linked to all real estate licenses held, to create efficiency and clarity across all technology systems (association, MLS, franchisor, broker, agent and consumer-facing technology).
+
 The RESO Unique Licensee Identifier (ULI) project seeks to create reliable identifiers that can be used by licensed participants in real estate transactions.
 
 ## Motivation
@@ -14,6 +18,23 @@ Issues such as these cause problems in data shares and when trying to create sta
 There are existing systems designed to deal with licensee data, but they don't provide a single source of truth that works for any potential licensee across markets. As such, they bring their own set of challenges.
 
 The RESO Unique Licensee Identifier project aims to establish an authoritative, community-driven service that can de-duplicate licensees across markets and assign common identifiers to link their various records together without each respective system having to change to support them. As such, the impact in implementing the system will be low in terms of changes to participating systems or user behavior. 
+
+## Requirements (Critical Success Factors):
+The method MUST:
+  Generate a truly unique, unchanging identifier
+  Be practical to implement
+  Protect and enhance personally identifiable information (PII); it cannot contain PII derived from the individual, though it MAY be associated with such information if stored and utilized in a secure manner.
+  Be capable of capturing and incorporation of non-associated identifiers (manually or via automated linking via probabilistic matching)
+  Be accepted and utilized as a valuable identifier by licensee, managing and owner brokers, MLSs, data syndicators, IDX and other data consumers (NAR, state licensing entities)
+  Support one or multiple licenses per individual
+  Be scalable
+  Support versioning
+  Handle multiple license authorities
+  Support billions of IDs
+  Be removable: PII as necessary
+  Protect MLS Roster Data so that only necessary information is available in an encrypted format for the purpose of creating ULI.  To the extent that an individual’s data is visible, said data will only be visible under a high probability match.  Access to bulk roster data is not permissible.
+  Be updatable: Accommodate splitting, merging, removal
+  Work internationally
 
 ## Methodology
 How is the ULI project different from other approaches to this problem?
