@@ -1,4 +1,8 @@
 ## Project Summary
+Data inaccuracy across many systems is caused by the lack of an industrywide identifier for licensees. State licenses, association IDs and MLS IDs do not convey a single identifier that creates consistency across systems and geographies.  Both inside an individual MLS and across multiple MLSs, individual licensees are often duplicated to accommodate MLS access needs.  This problem is compounded when individuals work across state lines under unique state licenses. Listing and sales licensees are essentially without an unique identifier. This makes their activity, roster and listing and sales volume information across MLSs, advertising portals, associations, franchisors, broker back office tools, and agent services providers disjointed and unnecessarily complicated. Solving this problem requires the creation and implementation of an Unique Licensee Identifier (ULI).
+
+Providing a unique ID to every licensed real estate professional, linked to all real estate licenses held, to create efficiency and clarity across all technology systems (association, MLS, franchisor, broker, agent and consumer-facing technology).
+
 The RESO Unique Licensee Identifier (ULI) project seeks to create reliable identifiers that can be used by licensed participants in real estate transactions.
 
 ## Motivation
