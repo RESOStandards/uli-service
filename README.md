@@ -19,23 +19,6 @@ There are existing systems designed to deal with licensee data, but they don't p
 
 The RESO Unique Licensee Identifier project aims to establish an authoritative, community-driven service that can de-duplicate licensees across markets and assign common identifiers to link their various records together without each respective system having to change to support them. As such, the impact in implementing the system will be low in terms of changes to participating systems or user behavior. 
 
-## Requirements (Critical Success Factors):
-The method MUST:
-  Generate a truly unique, unchanging identifier
-  Be practical to implement
-  Protect and enhance personally identifiable information (PII); it cannot contain PII derived from the individual, though it MAY be associated with such information if stored and utilized in a secure manner.
-  Be capable of capturing and incorporation of non-associated identifiers (manually or via automated linking via probabilistic matching)
-  Be accepted and utilized as a valuable identifier by licensee, managing and owner brokers, MLSs, data syndicators, IDX and other data consumers (NAR, state licensing entities)
-  Support one or multiple licenses per individual
-  Be scalable
-  Support versioning
-  Handle multiple license authorities
-  Support billions of IDs
-  Be removable: PII as necessary
-  Protect MLS Roster Data so that only necessary information is available in an encrypted format for the purpose of creating ULI.  To the extent that an individual’s data is visible, said data will only be visible under a high probability match.  Access to bulk roster data is not permissible.
-  Be updatable: Accommodate splitting, merging, removal
-  Work internationally
-
 ## Methodology
 How is the ULI project different from other approaches to this problem?
 
