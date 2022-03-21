@@ -1,11 +1,15 @@
-## Project Summary
-Data inaccuracy across many systems is caused by the lack of an industrywide identifier for licensees. State licenses, association IDs and MLS IDs do not convey a single identifier that creates consistency across systems and geographies.  Both inside an individual MLS and across multiple MLSs, individual licensees are often duplicated to accommodate MLS access needs.  This problem is compounded when individuals work across state lines under unique state licenses. Listing and sales licensees are essentially without an unique identifier. This makes their activity, roster and listing and sales volume information across MLSs, advertising portals, associations, franchisors, broker back office tools, and agent services providers disjointed and unnecessarily complicated. Solving this problem requires the creation and implementation of an Unique Licensee Identifier (ULI).
+# ULI White Paper
+Data inaccuracy across many systems is caused by the lack of an industry-wide identifier for licensees. 
+
+State licenses, association IDs and MLS IDs do not convey a single identifier that creates consistency across systems and geographies. Both inside an individual MLS and across multiple MLSs, individual licensees are often duplicated to accommodate MLS access needs.
+
+This problem is compounded when individuals work across state lines under unique state licenses. Listing and sales licensees are essentially without an unique identifier. This makes their activity, roster and listing and sales volume information across MLSs, advertising portals, associations, franchisors, broker back office tools, and agent services providers disjointed and unnecessarily complicated. Solving this problem requires the creation and implementation of an Unique Licensee Identifier (ULI).
 
 Providing a unique ID to every licensed real estate professional, linked to all real estate licenses held, to create efficiency and clarity across all technology systems (association, MLS, franchisor, broker, agent and consumer-facing technology).
 
 The RESO Unique Licensee Identifier (ULI) project seeks to create reliable identifiers that can be used by licensed participants in real estate transactions.
 
-## Motivation
+# Motivation
 There are currently many disparate processes and touch points in dealing with licensee data. This causes data accuracy issues and difficulty integrating between systems, which themselves often compound the problem by creating their own identifiers that don't align with each other across multiple products and markets.
 
 Real estate agents are licensed by each state, which have their own search portals to validate licensee information. At first glance, it would seem that by checking these sources at the point of entry, generally a real estate association, that downstream vendors would always have accurate data. 
@@ -14,12 +18,19 @@ However, these data sets aren't readily available and often require manual effor
 
 Issues such as these cause problems in data shares and when trying to create statistical reports for a given licensee. 
 
-## Rationale
+# Business Requirements
+TODO
+
+
+[**READ MORE**](./docs/business-requirements.md)
+
+
+# Rationale
 There are existing systems designed to deal with licensee data, but they don't provide a single source of truth that works for any potential licensee across markets. As such, they bring their own set of challenges.
 
 The RESO Unique Licensee Identifier project aims to establish an authoritative, community-driven service that can de-duplicate licensees across markets and assign common identifiers to link their various records together without each respective system having to change to support them. As such, the impact in implementing the system will be low in terms of changes to participating systems or user behavior. 
 
-## Methodology
+# Methodology
 How is the ULI project different from other approaches to this problem?
 
 It relies on two key factors:
@@ -27,7 +38,7 @@ It relies on two key factors:
 * Scoring Algorithm
 * Collaborative Filtering
 
-### Scoring Algorithm
+## Scoring Algorithm
 What is scoring and what does it do? 
 
 Typically, those working with licensee data would write complex code in order to compare things like first and last names, with variations, and things like state license information and other identifiers in order to suggest possible matches with existing licensees at the time of entry.
@@ -38,47 +49,48 @@ The RESO ULI uses a probabilistic, consensus-based approach with weighted scorin
 
 Scoring allows matches above a given confidence score to be routed to the organizations that provided those records so they can resolve them in a collaborative manner.
 
-[Read more](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing)
+[**READ MORE**](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing)
 
 
-### Collaborative Filtering
+## Collaborative Filtering
 While the scoring algorithm used for this project is simple, flexible, and powerful, it's only the first step in the process. The resolution of licensees to their unique identifiers ultimately depends on consensus being reached by users of the system. This is where the RESO ULI Service differs from other approaches.
 
 Behind the scenes, the service consumes inbound licensee information from each participant, scores it, and coordinates the resolution process.
 
 If no other licensee is found within the confidence threshold, a new ULI is created. However, when there are potential duplicates, notifications are sent to each organization where the record was found so they can agree on which identifier should be used. Once the resolution process is complete, any existing identifiers will be updated with references to the ones where consensus was reached. 
 
-## How Does It Work?
-Let's assume that two organizations, UOI A and UOI B, want to use the ULI service. 
-
-The following diagram shows the ULI initialization and resolution process:
-
-![ULI Lifecycle](https://user-images.githubusercontent.com/535358/156813229-dfa2e522-5400-4342-a6f9-ada0c38e31ea.png)
+[**READ MORE**](./docs/how-does-it-work.md)
 
 
-### STEP 1 - Organizations UOI A and UOI B Join the ULI Service
-Licensee data for orgs UOI A and B needs to be ingested when they join the network. Any potential duplicates will be found and resolved, as needed.
-
-### STEP 2 - New Licensee Joins UOI A
-Now let's assume that a new licensee wants to join organization UOI A. The membership staff in UOI A would search for the new licensee in the ULI Service, potentially using information from their licensing board. If no match is found, a new ULI is created for the licensee. If matches are found, then each organization needs to resolve them before proceeding.
-
-### STEP 3 - Common Licensee Identified Between UOI A and UOI B
-In this case, an existing licensee was found in UOI B with a confidence of 70% or greater. The RESO ULI Service notifies UOI A and UOI B and asks them to take action. 
-
-There are three options at this point:
-* If the match isn't accurate, then UOI A can create a new ULI record and UOI B can keep their existing one. 
-* Both organizations could choose to keep the existing record, in which case its ULI is used.
-* Both organizations could choose to create a new ULI by merging prior and new data, which would retire the old ULI and update it to point to the new one. 
-
-### STEP 4 - Consensus
-Once the licensee has been resolved, its ULI can be used in both organizations. 
-
-## Sample UI Screens
+# Sample UI
 ULI participants will need a user interface in order to review and approve potential matches. Some initial mockups have been created to demonstrate what it might look like. 
 
-[Read More](./docs/uli-mockups.md)
+[**READ MORE**](./docs/uli-mockups.md)
 
-## ULI Pilot Project
+# Technical Considerations
+The way the ULI is implemented has impact on its users and the overall ecosystem. 
+
+## Decentralized
+The MLS landscape is a fully decentralized environment. There are hundreds of organizations in the industry that vendors interoperate with. This is accomplished through data and API standards that allow for each market to look relatively the same even though there's not one central system. Its "nodes" are the implementers of the systems where data is entered and redistributed. 
+
+One way to create the ULI network is to use existing RESO Data Dictionary and Web API standards. If choosing this approach, it would be helpful to have a registry or locator service of API providers that support ULI queries to help route them to various providers. Certification would also play a key role here. 
+
+A potential drawback of the decentralized approach is that queries become more complex since there's no single data source and they have to fan out to all providers. It also takes longer to resolve potential duplicates. 
+
+## Decentralized with ULI Registry
+There are some benefits that a registry could provide in a fully decentralized topology. It could track the number of confirmations each ULI had and in which markets. This would help facilitate things like broadcasts when a key piece of information about the ULI has changed in one market and needs to be synchronized with the others or a ULI is found in a new market. 
+
+## Centralized
+Centralized services provide faster and simpler query resolution and a more consistent experience, but is outside of the normal RESO business model of using standards and interfaces to solve problems rather than specific implementations. And if there were to be a centralized solution, be it an API or otherwise, who would run it? 
+
+It's possible, however, to have a common source of truth which everyone has access to and can run themselves using distributed ledgers, which can either be public or private and permissioned. 
+
+There are different ways a ledger could be implemented to solve the problem, but one option would be to use it to synchronize changes to ULI data and coordinate notifications between interested parties. 
+
+Such a network could even be fully autonomous, implementing the scoring, routing, and consensus protocols so that the ULI is handled by the network itself rather than any participant yet all participants would have access to the data in real time. This is an interesting direction and merits further discussion.
+
+
+# ULI Pilot Project
 There is currently a pilot project consisting of several markets and hundreds of thousands of licensees. 
 
 The goal of the project is to test the service with real world data in order to measure the efficacy of the approach and collect metrics which will be published in a white paper.
