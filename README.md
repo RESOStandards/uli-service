@@ -19,7 +19,6 @@ However, these data sets aren't readily available and often require manual effor
 Issues such as these cause problems in data shares and when trying to create statistical reports for a given licensee. 
 
 # Business Requirements
-TODO
 
 
 [**READ MORE**](./docs/business-requirements.md)
