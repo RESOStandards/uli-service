@@ -38,9 +38,28 @@ It relies on two key factors:
 * Scoring Algorithm
 * Collaborative Filtering
 
+<div align="center"><img src="https://user-images.githubusercontent.com/535358/159535530-b26d290e-5a00-4c16-afea-3b5ba01f6193.svg" width="400" /></div>
+
+## Scoring Algorithm
+What is scoring and what does it do? 
+
+Typically, those working with licensee data would write complex code in order to compare things like first and last names, with variations, and things like state license information and other identifiers in order to suggest possible matches with existing licensees at the time of entry.
+
+However, this becomes complex and increasingly difficult to maintain as the number of conditions increases. It's also hard to change when improvements need to be made. What's needed is a scoring methodology that can be adjusted based on feedback from the system.
+
+The RESO ULI uses a [probabilistic, consensus-based approach](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing) with weighted scoring factors, where no single identifier can result in a match on its own. This allows for the system's matching accuracy to be adjusted without writing code. It also means that additional factors can be added without significant changes to the underlying system. 
+
+Scoring allows matches above a given confidence score to be routed to the organizations that provided those records so they can resolve them in a collaborative manner.
+
+## Collaborative Filtering
+While the scoring algorithm used for this project is simple, flexible, and powerful, it's only the first step in the process. The resolution of licensees to their unique identifiers ultimately depends on consensus being reached by users of the system. This is where the RESO ULI Service differs from other approaches.
+
+Behind the scenes, the service consumes inbound licensee information from each participant, scores it, and coordinates the resolution process.
+
+If no other licensee is found within the confidence threshold, a new ULI is created. However, when there are potential duplicates, notifications are sent to each organization where the record was found so they can agree on which identifier should be used. Once the resolution process is complete, any existing identifiers will be updated with references to the ones where consensus was reached. 
+
 [**READ MORE**](./docs/how-does-it-work.md)
 
-<div align="center"><img src="https://user-images.githubusercontent.com/535358/159535530-b26d290e-5a00-4c16-afea-3b5ba01f6193.svg" width="400" /></div>
 
 # Sample UI
 ULI participants will need a user interface in order to review and approve potential matches. Some initial mockups have been created to demonstrate what it might look like. 
