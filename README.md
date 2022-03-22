@@ -1,4 +1,4 @@
-# ULI White Paper
+# Overview
 Data inaccuracy across many systems is caused by the lack of an industry-wide identifier for licensees. 
 
 State licenses, association IDs and MLS IDs do not convey a single identifier that creates consistency across systems and geographies. Both inside an individual MLS and across multiple MLSs, individual licensees are often duplicated to accommodate MLS access needs.
@@ -38,29 +38,9 @@ It relies on two key factors:
 * Scoring Algorithm
 * Collaborative Filtering
 
-## Scoring Algorithm
-What is scoring and what does it do? 
-
-Typically, those working with licensee data would write complex code in order to compare things like first and last names, with variations, and things like state license information and other identifiers in order to suggest possible matches with existing licensees at the time of entry.
-
-However, this becomes complex and increasingly difficult to maintain as the number of conditions increases. It's also hard to change when improvements need to be made. What's needed is a scoring methodology that can be adjusted based on feedback from the system.
-
-The RESO ULI uses a probabilistic, consensus-based approach with weighted scoring factors, where no single identifier can result in a match on its own. This allows for the system's matching accuracy to be adjusted without writing code. It also means that additional factors can be added without significant changes to the underlying system. 
-
-Scoring allows matches above a given confidence score to be routed to the organizations that provided those records so they can resolve them in a collaborative manner.
-
-[**READ MORE**](https://docs.google.com/document/d/10YFyqw9hIwBXPjpX6yGFQoJUHWpL5M33sVHp5sEjX-Y/edit?usp=sharing)
-
-
-## Collaborative Filtering
-While the scoring algorithm used for this project is simple, flexible, and powerful, it's only the first step in the process. The resolution of licensees to their unique identifiers ultimately depends on consensus being reached by users of the system. This is where the RESO ULI Service differs from other approaches.
-
-Behind the scenes, the service consumes inbound licensee information from each participant, scores it, and coordinates the resolution process.
-
-If no other licensee is found within the confidence threshold, a new ULI is created. However, when there are potential duplicates, notifications are sent to each organization where the record was found so they can agree on which identifier should be used. Once the resolution process is complete, any existing identifiers will be updated with references to the ones where consensus was reached. 
-
 [**READ MORE**](./docs/how-does-it-work.md)
 
+<div align="center"><img src="https://user-images.githubusercontent.com/535358/159535530-b26d290e-5a00-4c16-afea-3b5ba01f6193.svg" width="400" /></div>
 
 # Sample UI
 ULI participants will need a user interface in order to review and approve potential matches. Some initial mockups have been created to demonstrate what it might look like. 
@@ -73,19 +53,21 @@ The way the ULI is implemented has impact on its users and the overall ecosystem
 ## Decentralized
 The MLS landscape is a fully decentralized environment. There are hundreds of organizations in the industry that vendors interoperate with. This is accomplished through data and API standards that allow for each market to look relatively the same even though there's not one central system. Its "nodes" are the implementers of the systems where data is entered and redistributed. 
 
-One way to create the ULI network is to use existing RESO Data Dictionary and Web API standards. If choosing this approach, it would be helpful to have a registry or locator service of API providers that support ULI queries to help route them to various providers. Certification would also play a key role here. 
+One way to create the ULI network is to use existing RESO Data Dictionary and Web API standards. If choosing this approach, it might be helpful to have a registry or locator service of API providers that support ULI queries to help route them to various providers. Certification and routine testing would also play a key role to ensure each service is operating correctly. 
+
+RESO has existing data models for events as well as push notification standards that could help coordinate events.
 
 A potential drawback of the decentralized approach is that queries become more complex since there's no single data source and they have to fan out to all providers. It also takes longer to resolve potential duplicates. 
 
 ## Decentralized with ULI Registry
-There are some benefits that a registry could provide in a fully decentralized topology. It could track the number of confirmations each ULI had and in which markets. This would help facilitate things like broadcasts when a key piece of information about the ULI has changed in one market and needs to be synchronized with the others or a ULI is found in a new market. 
+There are some benefits that a registry could provide in a fully decentralized topology. It could track the number of confirmations each ULI had in which market. This would help facilitate things like broadcasts when a key piece of information about the ULI has changed and needs to be synchronized with the others, or a ULI is found in a new market. 
 
-## Centralized
+## Sources of Truth
 Centralized services provide faster and simpler query resolution and a more consistent experience, but is outside of the normal RESO business model of using standards and interfaces to solve problems rather than specific implementations. And if there were to be a centralized solution, be it an API or otherwise, who would run it? 
 
-It's possible, however, to have a common source of truth which everyone has access to and can run themselves using distributed ledgers, which can either be public or private and permissioned. 
+It's possible, however, to have a common source of truth which everyone has access to and can run themselves using distributed ledgers, which can either be public and consensus based or private and permissioned.
 
-There are different ways a ledger could be implemented to solve the problem, but one option would be to use it to synchronize changes to ULI data and coordinate notifications between interested parties. 
+There are different ways a ledger could be implemented to solve the problem. One option would be to use it to synchronize changes to ULI data and coordinate notifications between interested parties. Another is to use it for the event distribution and remediation process, without storing PII. Once things are written to a ledger, they're permanent. There are tradeoffs to either approach, which will impact businesses, technology providers, and users of these systems.
 
 Such a network could even be fully autonomous, implementing the scoring, routing, and consensus protocols so that the ULI is handled by the network itself rather than any participant yet all participants would have access to the data in real time. This is an interesting direction and merits further discussion.
 
