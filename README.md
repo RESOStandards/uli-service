@@ -68,6 +68,10 @@ ULI participants will need a user interface in order to review and approve poten
 # Technical Considerations
 The way the ULI is implemented has impact on its users and the overall ecosystem. 
 
+## Centralized
+
+
+
 ## Decentralized
 The MLS landscape is a fully decentralized environment. There are hundreds of organizations in the industry that vendors interoperate with. This is accomplished through data and API standards that allow for each market to look relatively the same even though there's not one central system. Its "nodes" are the implementers of the systems where data is entered and redistributed. 
 
