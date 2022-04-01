@@ -66,33 +66,34 @@ ULI participants will need a user interface in order to review and approve poten
 [**READ MORE**](./docs/uli-mockups.md)
 
 # Technical Considerations
-The way the ULI is implemented has impact on its users and the overall ecosystem. 
-
-## Centralized
-
-
+The way the ULI is implemented has an impact on its users and the overall ecosystem, as well as business considerations. 
 
 ## Decentralized
 The MLS landscape is a fully decentralized environment. There are hundreds of organizations in the industry that vendors interoperate with. This is accomplished through data and API standards that allow for each market to look relatively the same even though there's not one central system. Its "nodes" are the implementers of the systems where data is entered and redistributed. 
 
-One way to create the ULI network is to use existing RESO Data Dictionary and Web API standards. If choosing this approach, it might be helpful to have a registry or locator service of API providers that support ULI queries to help route them to various providers. Certification and routine testing would also play a key role to ensure each service is operating correctly. 
+One way to create the ULI network is to use existing RESO Data Dictionary and Web API standards. 
 
-RESO has existing data models for events as well as push notification standards that could help coordinate events.
+If choosing this approach, it might be helpful to have a registry or locator service of certified API providers that support ULI queries to help route them to various providers as well as a registry of which ULIs were resolved by which providers. 
 
-A potential drawback of the decentralized approach is that queries become more complex since there's no single data source and they have to fan out to all providers. It also takes longer to resolve potential duplicates. 
+When a new licensee record is created in a given market, a process would search all participant systems using standard Web API Core queries and ULI fields in the Data Dictionary and wait for them to resolve to see if licensees are found with a high confidence. If a match is found, all systems would need to either accept the match, combine the information into a new record, or confirm that it's not a match, and a protocol would be created to synchronize the confirmations. 
+
+RESO has existing data models for events as well as push notification standards that could help coordinate events. Compared to the number of markets, which is roughly 500 in terms of MLSs, the number of providers is more than an order of magnitude smaller so this process could be relatively efficient, and a local search could be done first before broadcast to help eliminate potential duplicates.
+
+A potential drawback of the approach outlined above is that queries become more complex since there's no single data source and each request has to fan out to all resolvers in the network. On the business side, this means that real time searches would only be possible on local data stores but searches in the network might take some time to complete. 
+
+One possibility would be to use consensus-based distributed ledgers and confirmations from known sources to resolve licensee information.  amount of information participants wanted to share on the ledger. There are also potential PII questions to address, as most ledgers are meant to be immutable. This might mean that the data would be stored off-chain, in which case this could be a URL to the record on the provider, in which case access could be controlled and the record could be removed, if needed. 
+
+If ULI information were recorded on the ledger, then any node could resolve a query if up to date. If not, then ledgers might still be a good choice for synchronizing events.
 
 ## Decentralized with ULI Registry
-There are some benefits that a registry could provide in a fully decentralized topology. It could track the number of confirmations each ULI had in which market. This would help facilitate things like broadcasts when a key piece of information about the ULI has changed and needs to be synchronized with the others, or a ULI is found in a new market. 
+There are some benefits that a registry could provide in a fully decentralized topology. It could track the number of confirmations each ULI had in which market, and potentially facts about the ULI. 
 
-## Sources of Truth
-Centralized services provide faster and simpler query resolution and a more consistent experience, but is outside of the normal RESO business model of using standards and interfaces to solve problems rather than specific implementations. And if there were to be a centralized solution, be it an API or otherwise, who would run it? 
+This would help facilitate things like broadcasts when a key piece of information about the ULI has changed and needs to be synchronized with the others, or a ULI is found in a new market. 
 
-It's possible, however, to have a common source of truth which everyone has access to and can run themselves using distributed ledgers, which can either be public and consensus based or private and permissioned.
+## Centralized
+Centralized services provide faster and simpler query resolution, but are outside of the normal RESO business model of using standards and interfaces to solve problems rather than specific implementations. And if there were a centralized solution, who would run it and would providers be willing to create solutions based on it? 
 
-There are different ways a ledger could be implemented to solve the problem. One option would be to use it to synchronize changes to ULI data and coordinate notifications between interested parties. Another is to use it for the event distribution and remediation process, without storing PII. Once things are written to a ledger, they're permanent. There are tradeoffs to either approach, which will impact businesses, technology providers, and users of these systems.
-
-Such a network could even be fully autonomous, implementing the scoring, routing, and consensus protocols so that the ULI is handled by the network itself rather than any participant yet all participants would have access to the data in real time. This is an interesting direction and merits further discussion.
-
+Ledgers could potentially play the same role as centralized services in this case, depending on how much the network was willing to share. If that meant the entire ULI Payload then each node would have a full copy of the information and would appear as a centralized service and could answer for any node in the network. If information could not be shared in this manner, then a ledger could be used to synchronize events so that each node would have a ULI for the records it could answer for. 
 
 # ULI Pilot Project
 There is currently a pilot project consisting of several markets and hundreds of thousands of licensees. 
