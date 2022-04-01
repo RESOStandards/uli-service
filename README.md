@@ -1,3 +1,5 @@
+# ULI White Paper
+
 # Overview
 Data inaccuracy across many systems is caused by the lack of an industry-wide identifier for licensees. 
 
@@ -111,6 +113,9 @@ The MLS landscape is a fully decentralized environment. There are hundreds of or
 
 One way to create the ULI network is to use existing RESO Data Dictionary and Web API standards. 
 
+![Decentralized](https://user-images.githubusercontent.com/535358/161304987-d9281b34-d0d2-4611-8f32-16cfe7a1dea8.svg)
+
+
 If choosing this approach, it might be helpful to have a registry or locator service of certified API providers that support ULI queries to help route them to various providers as well as a registry of which ULIs were resolved by which providers. 
 
 When a new licensee record is created in a given market, a process would search all participant systems using standard Web API Core queries and ULI fields in the Data Dictionary and wait for them to resolve to see if licensees are found with a high confidence. If a match is found, all systems would need to either accept the match, combine the information into a new record, or confirm that it's not a match, and a protocol would be created to synchronize the confirmations. 
@@ -125,6 +130,8 @@ If ULI information were recorded on the ledger, then any node could resolve a qu
 
 ## Decentralized with ULI Registry
 There are some benefits that a registry could provide in a fully decentralized topology. It could track the number of confirmations each ULI had in which market, and potentially facts about the ULI. 
+
+![Decentralized with Registry](https://user-images.githubusercontent.com/535358/161306303-85ec9548-3670-4983-bc84-5cc16d5f1380.svg)
 
 This would help facilitate things like broadcasts when a key piece of information about the ULI has changed and needs to be synchronized with the others, or a ULI is found in a new market. 
 
