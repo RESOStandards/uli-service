@@ -138,7 +138,8 @@ This would help facilitate things like broadcasts when a key piece of informatio
 ## Centralized
 Centralized services provide faster and simpler query resolution, but are outside of the normal RESO business model of using standards and interfaces to solve problems rather than specific implementations. And if there were a centralized solution, who would run it and would providers be willing to create solutions based on it? 
 
-![Centralized](https://user-images.githubusercontent.com/535358/161308006-e30cb3ea-def6-4c83-a855-f8594058484b.svg)
+
+![Centralized](https://user-images.githubusercontent.com/535358/161308694-b8c6e6c3-01c5-4c5a-912d-99c7dbbde4fb.svg)
 
 
 Ledgers could potentially play the same role as centralized services in this case, depending on how much the network was willing to share. If that meant the entire ULI Payload then each node would have a full copy of the information and would appear as a centralized service and could answer for any node in the network. If information could not be shared in this manner, then a ledger could be used to synchronize events so that each node would have a ULI for the records it could answer for. 
@@ -146,7 +147,7 @@ Ledgers could potentially play the same role as centralized services in this cas
 # ULI Domain Overview
 The following diagram shows the ULI Domain at a high level.
 
-![ULI Domain Overview](https://user-images.githubusercontent.com/535358/161308200-3903c94a-3285-409b-a197-0ccdbe8f18ba.svg)
+![ULI Domain Overview](https://user-images.githubusercontent.com/535358/161308712-74456221-3618-4966-b51b-0c4064318c59.svg)
 
 
 # ULI Pilot Project
