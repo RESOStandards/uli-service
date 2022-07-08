@@ -46,6 +46,28 @@ While various vendors have implemented their own solutions, there is a need for 
 
 [add content: Level of Effort required (staff time, etc) workflow chart]
 
+# ULI Fields
+The fields for the ULI have been chosen in order to be mindful of personally identifiable information (PII) and readily available in the public domain in order to avoid sharing information that's currently private in each participant's system. 
+
+The fields are as follows:
+* MemberFullName
+* MemberLastName
+* MemberFirstName
+* MemberMiddleInitial
+* MemberNickname
+* MemberType
+* MemberNationalAssociationId
+* MemberStateLicense
+* MemberStateLicenseType
+* MemberStateLicenseState
+* MemberMlsId
+* OfficeName
+* OfficeMlsId
+* SourceSystemID
+* SourceSystemName
+* OriginatingSystemID
+* OriginatingSystemName
+
 # Critical Success Factors
 The method MUST
 * Generate a truly unique, unchanging identifier
