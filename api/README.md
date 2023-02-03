@@ -11,8 +11,7 @@ git clone https://github.com/RESOStandards/uli-service.git
 
 <br />
 
-**Step 2**: Make sure that Docker is installed and running
-[See documentation](https://docs.docker.com/get-docker/).
+**Step 2**: Make sure that Docker is installed and running. [See documentation](https://docs.docker.com/get-docker/).
 
 <br />
 
