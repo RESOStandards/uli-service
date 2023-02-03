@@ -68,7 +68,7 @@ There won't be any indexes available when the server is first started, so you'll
 ## Available Services
 The following services are currently available in the ULI Pilot.
 
-You use cURL or [download Postman](https://www.postman.com/downloads/) to make requests.
+You can use cURL or [download Postman](https://www.postman.com/downloads/) to make requests.
 
 ### Bulk Ingest API
 Ingests one or more records and marks their status `unprocessed`. 
