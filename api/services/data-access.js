@@ -36,9 +36,9 @@ const search = async () => {
 
 */
 const ingest = async (providerUoi, uliData = []) => {
-  // if (!uliData?.length) {
-  //   return [];
-  // }
+  if (!uliData?.length) {
+    return [];
+  }
 
   try {
     const ndJson =
@@ -48,12 +48,11 @@ const ingest = async (providerUoi, uliData = []) => {
           JSON.stringify({
             ingestTimestamp: new Date().toISOString(),
             providerUoi,
+            status: 'unprocessed',
             ...licensee,
           }) + "\n";
         return acc;
       }, "") + "\n";
-
-    console.log("ndjson is: \n" + ndJson);
 
     const response = await post(`${ES_URL}/${ULI_SERVICE_INDEX}/_bulk`, ndJson, {
       headers: { "Content-Type": "application/x-ndjson" },
@@ -61,6 +60,7 @@ const ingest = async (providerUoi, uliData = []) => {
     return response;
   } catch (err) {
     console.log(err);
+    return [];
   }
 };
 

@@ -22,6 +22,13 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
     const { body: data = [], params } = req;
     const { providerUoi } = params;
 
+    if (!providerUoi?.length) {
+      res.send({
+        statusCode: 400,
+        message: "Missing providerUoi in path!"
+      });
+    }
+
     if (!data?.length) {
       res.send({
         statusCode: 400,
