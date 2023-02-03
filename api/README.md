@@ -3,7 +3,7 @@ The ULI API provides ingest, search, and approval services. The backend uses Nod
 
 ## Getting Started
 
-**Step 1**: To run the server, first clone the repository
+**Step 1**: To run the server, first clone the repository in the terminal
 
 ```
 git clone https://github.com/RESOStandards/uli-service.git
@@ -39,7 +39,7 @@ docker-compose logs --follow | grep nodejs
 <br />
 
 # Accessing Elastic through Kibana
-Once the server has successfully started, you can access the Kibana dashboard at:
+Once the server has successfully started, you can access the Kibana dashboard using a web browser at:
 
 ```
 http://localhost:5601
@@ -68,6 +68,8 @@ There won't be any indexes available when the server is first started, so you'll
 
 ## Available Services
 The following services are currently available in the ULI Pilot.
+
+You use cURL or [download Postman](https://www.postman.com/downloads/) to make requests.
 
 ### Bulk Ingest API
 Ingests one or more records and marks their status `unprocessed`. 
