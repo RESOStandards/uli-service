@@ -125,11 +125,12 @@ GET http://localhost/uli-service/v1/search
   "body": [
     {
       "_index": "uli-service",
-      "_id": "BPA_F4YBcOSSsEKdxGcu",
+      "_id": "nKFVGIYBpMOBVjljmZu8",
       "_score": 1,
       "_source": {
-        "ingestTimestamp": "2023-02-03T12:28:20.321Z",
-        "providerUoi": "M0000032",
+        "ingestTimestamp": "2023-02-03T17:31:48.466Z",
+        "providerUoi": "M0000033",
+        "status": "unprocessed",
         "MemberFullName": "ohai323",
         "MemberLastName": "ohai",
         "MemberFirstName": "ohai2",
