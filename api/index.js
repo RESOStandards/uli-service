@@ -22,15 +22,9 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {});
 app.post("/uli-service/v1/search", async (req, res) => {
   
   try {
-    console.log("ES_HOST: " + process.env?.ES_HOST);
-
-    const results = await search();
-
-    console.log(results);
-
     res.send({
       statusCode: 200,
-      body: results
+      body: await search()
     });
 
   } catch (err) {

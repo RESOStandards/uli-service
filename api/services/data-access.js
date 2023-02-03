@@ -18,13 +18,21 @@ const indexExists = async indexName => {
 
 const search = async () => {
   try {
-    if (await indexExists(ULI_SERVICE_INDEX)) {
-      return [];
-    } else {
-      return [];
-    }
+    const { data } = await get(`${ES_URL}/${ULI_SERVICE_INDEX}/_search`);
+    return data?.hits?.hits || [];
   } catch (err) {
     console.error(err);
+    return [];
+  }
+};
+
+const ingest = async ( uliData = [] ) => {
+  try {
+    const response = await axios.post(
+
+    );
+  } catch (err) {
+
   }
 };
 
