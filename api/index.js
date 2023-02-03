@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const { search } = require('./services/data-access');
+const { search, ingest } = require('./services/data-access');
 const port = 3000;
 
 app.use(express.json({ limit: "2000mb" }));
@@ -17,7 +17,34 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {});
+app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
+  try {
+    const { body: data = [], params } = req;
+    const { providerUoi } = params;
+
+    if (!data?.length) {
+      res.send({
+        statusCode: 400,
+        message: "Request body missing ULI array!"
+      });
+    }
+
+    await ingest(providerUoi, data);
+
+    res.send({
+      statusCode: 200,
+      message: `Items queued for ingest: ${data?.length || 0}`
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.send({
+      statusCode: 400,
+      message: err
+    });
+  }
+
+});
 
 app.post("/uli-service/v1/search", async (req, res) => {
   
