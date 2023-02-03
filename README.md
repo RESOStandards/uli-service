@@ -179,3 +179,5 @@ The goal of the project is to test the service with real world data in order to 
 Please [contact RESO](dev@reso.org) if you are interested in participating in the ULI Pilot.
 
 If you'd like to run the service yourself, see [this guide](./docs/running-the-pilot.md) to get started.
+
+If you'd like to run the ULI API and Elasticsearch backend, [start here](./api/README.md).
