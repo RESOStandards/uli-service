@@ -17,10 +17,10 @@ const indexExists = async (indexName) => {
   }
 };
 
-const createFilters = (fieldValues = []) =>
+const createFilters = (fieldValues = [], uliTemplate = ULI_TEMPLATE ) =>
   fieldValues.flatMap(({ fieldName, value }) => {
-    if (value && ULI_TEMPLATE[fieldName]) {
-      const filterValue = ULI_TEMPLATE[fieldName];
+    if (value && uliTemplate[fieldName]) {
+      const filterValue = uliTemplate[fieldName];
       filterValue.filter.fuzzy[fieldName].value = value;
       return filterValue;
     } else {
@@ -28,13 +28,13 @@ const createFilters = (fieldValues = []) =>
     }
   });
 
-const search = async (fieldValues = [], explain = false) => {
+const search = async (fieldValues = [], explain = false, uliTemplate) => {
   try {
     const queryParams = {
       query: {
         function_score: {
           boost: 1,
-          functions: createFilters(fieldValues),
+          functions: createFilters(fieldValues, uliTemplate),
           max_boost: 10,
           score_mode: "sum",
           boost_mode: "multiply",
@@ -43,6 +43,9 @@ const search = async (fieldValues = [], explain = false) => {
       },
       explain
     };
+
+    // console.debug(`Query is: ${JSON.stringify(fieldValues)}`);
+
     const { data } = await get(`${ES_URL}/${ULI_SERVICE_INDEX}/_search`, {
       data: queryParams,
     });
@@ -70,7 +73,7 @@ const ingest = async (providerUoi, uliData = []) => {
 
   try {
     const ndJson =
-      uliData.flatMap((licensee) => {
+      uliData.flatMap(licensee => {
         return [
           JSON.stringify({ index: {} }),
           JSON.stringify({

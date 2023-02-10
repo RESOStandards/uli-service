@@ -3,6 +3,8 @@ const app = express();
 const { search, ingest } = require("./services/data-access");
 const port = 3000;
 
+const { v4: uuid } = require("uuid");
+
 app.use(express.json({ limit: "2000mb" }));
 app.use(express.urlencoded({ extended: false, limit: "2000mb" }));
 
@@ -19,7 +21,7 @@ app.get("/", async (req, res) => {
 
 app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
   try {
-    const { body: data = [], params } = req;
+    const { body: licensees = [], params } = req;
     const { providerUoi } = params;
 
     if (!providerUoi?.length) {
@@ -29,19 +31,56 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
       });
     }
 
-    if (!data?.length) {
+    if (!licensees?.length) {
       res.send({
         statusCode: 400,
         message: "Request body missing ULI array!",
       });
     }
 
-    await ingest(providerUoi, data);
+    await ingest(providerUoi, licensees);
+
+    const processed = [];
+    //run search and scoring methodology
+    for await (const licensee of licensees) {
+      const query = Object.entries(licensee).map(([fieldName, value]) => {
+        return { fieldName, value };
+      });
+      const results = (await search(query))?.hits || [];
+
+      if (!results?.length) {
+        const uli = `urn:reso:uli:${uuid()}`;
+
+        //assign ULI
+        processed.push({
+          ...licensee,
+          uli,
+        });
+
+        console.log(`New ULI assigned! uli: '${uli}'\n`);
+      } else {
+        const potentialMatches = results.map(
+          ({ _id: id, _source: data }) => {
+            return {
+              id,
+              uli: data?.uli || 'UNASSIGNED'
+            }
+          }
+        );
+
+        processed.push({
+          ...licensee,
+          potentialMatches,
+        });
+
+        console.log(`Potential matches: ${potentialMatches?.length || 0}\n`);
+      }
+    }
 
     res.send({
       statusCode: 200,
       body: {
-        itemsProcessed: data?.length || 0,
+        processed
       },
     });
   } catch (err) {
