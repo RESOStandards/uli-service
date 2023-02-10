@@ -36,9 +36,9 @@ const search = async (fieldValues = [], explain = false) => {
           boost: 1,
           functions: createFilters(fieldValues),
           max_boost: 10,
-          score_mode: "multiply",
+          score_mode: "sum",
           boost_mode: "multiply",
-          min_score: 7
+          min_score: 2
         },
       },
       explain
