@@ -70,17 +70,17 @@ const ingest = async (providerUoi, uliData = []) => {
 
   try {
     const ndJson =
-      uliData.reduce((acc, licensee) => {
-        acc += JSON.stringify({ index: {} }) + "\n";
-        acc +=
+      uliData.flatMap((licensee) => {
+        return [
+          JSON.stringify({ index: {} }),
           JSON.stringify({
             ingestTimestamp: new Date().toISOString(),
             providerUoi,
             status: "unprocessed",
             ...licensee,
-          }) + "\n";
-        return acc;
-      }, "") + "\n";
+          })
+        ]
+      }).join("\n") + "\n";
 
     const response = await post(
       `${ES_URL}/${ULI_SERVICE_INDEX}/_bulk`,
