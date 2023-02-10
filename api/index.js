@@ -41,8 +41,8 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
     res.send({
       statusCode: 200,
       body: {
-        itemsProcessed: data?.length || 0
-      }
+        itemsProcessed: data?.length || 0,
+      },
     });
   } catch (err) {
     console.log(err);
@@ -55,9 +55,11 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
 
 app.post("/uli-service/v1/search", async (req, res) => {
   try {
+    const { explain = false } = req?.query;
+
     res.send({
       statusCode: 200,
-      body: await search(),
+      body: await search(req?.body, explain),
     });
   } catch (err) {
     console.error(err);
