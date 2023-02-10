@@ -1,17 +1,15 @@
 "use strict";
-const { get, post } = require("axios");
-const { query } = require("express");
-const { ULI_TEMPLATE } = require("./const");
+const { get, post, head } = require("axios");
+const { ULI_TEMPLATE, ULI_SERVICE_INDEX_NAME } = require("./const");
 
 const ES_HOST = process.env.ES_HOST || "localhost";
 const ES_URL = "http://" + ES_HOST + ":9200";
 
-const ULI_SERVICE_INDEX = "uli-service";
 
-const indexExists = async (indexName) => {
+const indexExists = async indexName => {
   try {
-    const { statusCode } = await get(`${ES_URL}/${indexName}`);
-    return statusCode === 200;
+    const { status } = await head(`${ES_URL}/${indexName}`);
+    return status === 200;
   } catch (err) {
     return false;
   }
@@ -46,7 +44,7 @@ const search = async (fieldValues = [], explain = false, uliTemplate) => {
 
     // console.debug(`Query is: ${JSON.stringify(fieldValues)}`);
 
-    const { data } = await get(`${ES_URL}/${ULI_SERVICE_INDEX}/_search`, {
+    const { data } = await get(`${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_search`, {
       data: queryParams,
     });
 
@@ -86,7 +84,7 @@ const ingest = async (providerUoi, uliData = []) => {
       }).join("\n") + "\n";
 
     const response = await post(
-      `${ES_URL}/${ULI_SERVICE_INDEX}/_bulk`,
+      `${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_bulk`,
       ndJson,
       {
         headers: { "Content-Type": "application/x-ndjson" },
@@ -102,4 +100,5 @@ const ingest = async (providerUoi, uliData = []) => {
 module.exports = {
   search,
   ingest,
+  indexExists
 };

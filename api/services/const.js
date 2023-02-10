@@ -1,5 +1,7 @@
 "use strict";
 
+const ULI_SERVICE_INDEX_NAME = "uli-service";
+
 const ULI_TEMPLATE = {
   MemberFullName: {
     filter: {
@@ -209,4 +211,5 @@ const ULI_TEMPLATE = {
 
 module.exports = {
   ULI_TEMPLATE,
+  ULI_SERVICE_INDEX_NAME
 };

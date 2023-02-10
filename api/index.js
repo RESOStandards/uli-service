@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
-const { search, ingest } = require("./services/data-access");
+const { search, ingest, indexExists } = require("./services/data-access");
+const { ULI_SERVICE_INDEX_NAME } = require("./services/const");
+const { generateUli } = require("./utils");
 const port = 3000;
-
-const { v4: uuid } = require("uuid");
 
 app.use(express.json({ limit: "2000mb" }));
 app.use(express.urlencoded({ extended: false, limit: "2000mb" }));
@@ -38,35 +38,51 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
       });
     }
 
-    await ingest(providerUoi, licensees);
-
     const processed = [];
-    //run search and scoring methodology
-    for await (const licensee of licensees) {
+    const [firstLicensee, ...remainingLicensees] = licensees;
+
+    let newIndexCreated = false;
+
+    //ensure the index exists and, if not, create it with the first record
+    //insert first record if index doesn't exist
+    if (!(await indexExists(ULI_SERVICE_INDEX_NAME))) {
+      console.log(
+        `ULI Service Index '${ULI_SERVICE_INDEX_NAME}' does not exist! Creating...`
+      );
+      const uli = generateUli();
+      processed.push({ ...firstLicensee, UniqueLicenseeIdentifier: uli });
+      await ingest(providerUoi, processed);
+      console.log(`New ULI assigned! uli: '${uli}'\n`);
+      newIndexCreated = true;
+    }
+
+    const licenseesToProcess = newIndexCreated ? remainingLicensees || [] : licensees;
+
+    //run search and scoring methodology on remaining licensees
+    for await (const licensee of licenseesToProcess) {
       const query = Object.entries(licensee).map(([fieldName, value]) => {
         return { fieldName, value };
       });
+
       const results = (await search(query))?.hits || [];
 
       if (!results?.length) {
-        const uli = `urn:reso:uli:${uuid()}`;
-
+        const uli = generateUli();
         //assign ULI
         processed.push({
           ...licensee,
-          uli,
+          UniqueLicenseeIdentifier: uli,
         });
 
         console.log(`New ULI assigned! uli: '${uli}'\n`);
       } else {
-        const potentialMatches = results.map(
-          ({ _id: id, _source: data }) => {
-            return {
-              id,
-              uli: data?.uli || 'UNASSIGNED'
-            }
-          }
-        );
+        const potentialMatches = results.map(({ _id: id, _source: data }) => {
+          return {
+            id,
+            UniqueLicenseeIdentifier:
+              data?.UniqueLicenseeIdentifier || "UNASSIGNED",
+          };
+        });
 
         processed.push({
           ...licensee,
@@ -80,7 +96,7 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
     res.send({
       statusCode: 200,
       body: {
-        processed
+        processed,
       },
     });
   } catch (err) {
