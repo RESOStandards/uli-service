@@ -3,6 +3,7 @@ const app = express();
 const { search, ingest, indexExists } = require("./services/data-access");
 const { ULI_SERVICE_INDEX_NAME } = require("./services/const");
 const { generateUli } = require("./utils");
+const { faker } = require('@faker-js/faker');
 const port = 3000;
 
 app.use(express.json({ limit: "2000mb" }));
@@ -16,6 +17,60 @@ app.get("/", async (req, res) => {
   res.send({
     statusCode: 200,
     message: "It worked!!",
+  });
+});
+
+app.get("/uli-service/v1/:providerUoi/generate-test-data/:numRecords", async (req, res) => {
+  const { params } = req;
+  const { providerUoi, numRecords } = params;
+
+  if (!providerUoi?.length) {
+    res.send({
+      statusCode: 400,
+      message: "Missing providerUoi in path!",
+    });
+  }
+
+  if (isNaN(numRecords) || numRecords < 1) {
+    res.send({
+      statusCode: 400,
+      message: "Missing numRecords in path!",
+    });
+  }
+
+  var fakeData = [];
+
+  const memberTypes = ["Agent", "Broker", "Office Manager", "Appraiser", "Photographer", "Assistant", "MLO", "Realtor", "Association Staff", "MLS Staff", "Other"];
+  const licenseTypes = ["Agent", "Broker"];
+
+  const mlsId = faker.random.numeric(8);
+
+  for (let index = 0; index < numRecords; index++) {
+    var name = faker.name.firstName() + " " + faker.name.lastName();
+    var middleName = faker.name.middleName();
+
+    fakeData[index] = {
+      MemberFullName: name,
+      MemberLastName: name.split(" ")[1],
+      MemberFirstName: name.split(" ")[0],
+      MemberMiddleInitial: middleName.charAt(0),
+      MemberNickname: middleName,
+      MemberType: faker.helpers.arrayElement(memberTypes),
+      MemberNationalAssociationId: faker.random.numeric(6),
+      MemberStateLicense: faker.random.numeric(6),
+      MemberStateLicenseType: faker.helpers.arrayElement(licenseTypes),
+      MemberStateLicenseState: faker.address.state(),
+      MemberMlsId: mlsId,
+      OfficeName: faker.company.name(),
+      OfficeMlsId: faker.random.numeric(4)
+    };
+  }
+
+  res.send({
+    statusCode: 200,
+    body: {
+      fakeData,
+    },
   });
 });
 
