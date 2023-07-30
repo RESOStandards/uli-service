@@ -49,14 +49,13 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
       console.log(
         `ULI Service Index '${ULI_SERVICE_INDEX_NAME}' does not exist! Creating...`
       );
-      const uli = generateUli();
-      processed.push({ ...firstLicensee, UniqueLicenseeIdentifier: uli });
-      await ingest(providerUoi, processed);
+      const uli = generateUli();;
+      await ingest(providerUoi, [{ ...firstLicensee, UniqueLicenseeIdentifier: uli }]);
       console.log(`New ULI assigned! uli: '${uli}'\n`);
       newIndexCreated = true;
     }
 
-    const licenseesToProcess = newIndexCreated ? remainingLicensees || [] : licensees;
+    const licenseesToProcess = (newIndexCreated ? remainingLicensees : licensees) || [];
 
     //run search and scoring methodology on remaining licensees
     for await (const licensee of licenseesToProcess) {
@@ -69,10 +68,10 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
       if (!results?.length) {
         const uli = generateUli();
         //assign ULI
-        processed.push({
+        await ingest(providerUoi, [{
           ...licensee,
           UniqueLicenseeIdentifier: uli,
-        });
+        }]);
 
         console.log(`New ULI assigned! uli: '${uli}'\n`);
       } else {
@@ -89,7 +88,7 @@ app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
           potentialMatches,
         });
 
-        console.log(`Potential matches: ${potentialMatches?.length || 0}\n`);
+        console.log(`Ingest Step - Potential matches: ${potentialMatches?.length || 0}\n`);
       }
     }
 

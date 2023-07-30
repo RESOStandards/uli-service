@@ -8,7 +8,7 @@ const ES_URL = "http://" + ES_HOST + ":9200";
 
 const indexExists = async indexName => {
   try {
-    const { status } = await head(`${ES_URL}/${indexName}`);
+    const { status = 404 } = await head(`${ES_URL}/${indexName}`);
     return status === 200;
   } catch (err) {
     return false;
@@ -83,14 +83,13 @@ const ingest = async (providerUoi, uliData = []) => {
         ]
       }).join("\n") + "\n";
 
-    const response = await post(
+    return await post(
       `${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_bulk`,
       ndJson,
       {
         headers: { "Content-Type": "application/x-ndjson" },
       }
     );
-    return response;
   } catch (err) {
     console.log(err);
     return [];
