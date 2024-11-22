@@ -5,6 +5,8 @@ const { ULI_TEMPLATE, ULI_SERVICE_INDEX_NAME } = require("./const");
 const ES_HOST = process.env.ES_HOST || "localhost";
 const ES_URL = "http://" + ES_HOST + ":9200";
 
+const UNPROCESSED_STATUS = "unprocessed";
+
 
 const indexExists = async indexName => {
   try {
@@ -15,9 +17,9 @@ const indexExists = async indexName => {
   }
 };
 
-const createFilters = (fieldValues = [], uliTemplate = ULI_TEMPLATE ) =>
-  fieldValues.flatMap(({ fieldName, value }) => {
-    if (value && uliTemplate[fieldName]) {
+const createFilters = (fieldValues = {}, uliTemplate = ULI_TEMPLATE) => {
+  return Object.values(fieldValues).flatMap(({fieldName, value }) => {
+    if (value && uliTemplate?.[fieldName]) {
       const filterValue = uliTemplate[fieldName];
       filterValue.filter.fuzzy[fieldName].value = value;
       return filterValue;
@@ -25,14 +27,19 @@ const createFilters = (fieldValues = [], uliTemplate = ULI_TEMPLATE ) =>
       return [];
     }
   });
+};
 
-const search = async (fieldValues = [], explain = false, uliTemplate) => {
+const search = async (fieldValues = {}, explain = false, uliTemplate = ULI_TEMPLATE) => {
   try {
+
+    const filterValues = createFilters(fieldValues, uliTemplate);
+    console.log('filterValues are: ' + JSON.stringify(filterValues));
+
     const queryParams = {
       query: {
         function_score: {
           boost: 1,
-          functions: createFilters(fieldValues, uliTemplate),
+          functions: filterValues,
           max_boost: 10,
           score_mode: "sum",
           boost_mode: "multiply",
@@ -42,7 +49,7 @@ const search = async (fieldValues = [], explain = false, uliTemplate) => {
       explain
     };
 
-    // console.debug(`Query is: ${JSON.stringify(fieldValues)}`);
+    console.debug(`Query is: ${JSON.stringify(queryParams, "  ")}`);
 
     const { data } = await get(`${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_search`, {
       data: queryParams,
@@ -77,7 +84,7 @@ const ingest = async (providerUoi, uliData = []) => {
           JSON.stringify({
             ingestTimestamp: new Date().toISOString(),
             providerUoi,
-            status: "unprocessed",
+            status: UNPROCESSED_STATUS,
             ...licensee,
           })
         ]

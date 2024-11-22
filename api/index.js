@@ -12,13 +12,6 @@ app.listen(port, async () => {
   console.log(`ULI Service started! Listening on port ${port}...`);
 });
 
-app.get("/", async (req, res) => {
-  res.send({
-    statusCode: 200,
-    message: "It worked!!",
-  });
-});
-
 app.post("/uli-service/v1/ingest/:providerUoi", async (req, res) => {
   try {
     const { body: licensees = [], params } = req;
