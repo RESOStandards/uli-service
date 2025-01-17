@@ -40,14 +40,14 @@ First, navigate to the [local instance of Kibana](http://localhost:5601/app/home
 
 From there, you will be taken to the [File Data Visualizer](http://localhost:5601/app/ml/filedatavisualizer), which will allow you to upload the .csv version of the Excel spreadsheet template from step (1). See [this  article](https://www.elastic.co/blog/importing-csv-and-log-data-into-elasticsearch-with-file-data-visualizer) for more information.
 
-If using this method, the ingest pattern you create will match what's in the [`uli-pilot-pipeline.txt` file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.txt) and will be created in the [following location](http://localhost:5601/app/management/ingest/ingest_pipelines/?pipeline=uli-pilot-pipeline) in your local Elastic installation if you name it `uli-pilot-pipeline`. 
+If using this method, the ingest pattern you create will match what's in the [`uli-pilot-pipeline.json` file](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-ingest.json) and will be created in the [following location](http://localhost:5601/app/management/ingest/ingest_pipelines/?pipeline=uli-pilot-pipeline) in your local Elastic installation if you name it `uli-pilot-pipeline`. 
 
 If you are using the provided template spreadsheet, the items created will match what's in this example as well as the queries. Make sure to name your index `uli-pilot` when ingesting data to match the samples.
 
 ## 4. Querying the Pilot Data
 After you have ingested the data, you can query the server using Kibana's [Dev Tools](http://localhost:5601/app/dev_tools#/console). These will connect to the local Elastic instance, and provides a convenient place to try out queries. 
 
-In this case, you'll want to use something similar to the query that's posted in the [ULI Pilot search endpoint](https://github.com/RESOStandards/uli-service/blob/main/uli-pilot-search.txt):
+In this case, you'll want to use something similar to the query that's posted in the [`ULI Pilot Search query` file](https://github.com/RESOStandards/uli-service/blob/main/uli-ranking-formula.json):
 
 ![dev-tools](https://user-images.githubusercontent.com/535358/121968113-7cbacb80-cd26-11eb-917d-1e5093242e09.png)
 
