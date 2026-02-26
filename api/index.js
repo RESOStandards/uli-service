@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const { search, ingest, indexExists } = require("./services/data-access");
-const { ULI_SERVICE_INDEX_NAME } = require("./services/const");
+const { ULI_SERVICE_INDEX_NAME, processSearchRequest } = require("./services/const");
 const { generateUli } = require("./utils");
 const port = 3000;
 
@@ -109,16 +109,14 @@ app.post("/uli-service/v1/search", async (req, res) => {
   try {
     const { explain = false } = req?.query;
 
-    res.send({
-      statusCode: 200,
-      body: await search(req?.body, explain),
-    });
+    if (processSearchRequest(req.body)) {
+      res.status(200).send(await search(criteria, explain)).json;
+    } else {
+      res.status(400).send('Invalid search criteria');
+    }
+    
   } catch (err) {
     console.error(err);
-
-    res.send({
-      statusCode: 400,
-      message: `Error! Message: ${err}`,
-    });
+    res.status(400).send(`Error! Message: ${err}`);
   }
 });

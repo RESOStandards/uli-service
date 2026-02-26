@@ -1,8 +1,27 @@
 "use strict";
 
+const processSearchRequest = (data = []) => {
+  if (!Array.isArray(data)) {
+    throw new Error("data must be an array!");
+  }
+
+  return data.flatMap((item = {}) => {
+    if (typeof item !== "object") return [];
+
+    return [
+      Object.keys(ULI_TEMPLATE).reduce((acc, key) => {
+        if (!acc?.[key] && item?.[key]) {
+          acc[key] = {};
+          acc[key] = item[key];
+        }
+      }, {}),
+    ];
+  });
+};
+
 const ULI_SERVICE_INDEX_NAME = "uli-service";
 
-const ULI_TEMPLATE = {
+const ULI_TEMPLATE = Object.freeze({
   MemberFullName: {
     filter: {
       fuzzy: {
@@ -121,7 +140,7 @@ const ULI_TEMPLATE = {
         },
       },
     },
-    weight: 6,
+    weight: 2,
   },
   MemberMlsId: {
     filter: {
@@ -207,9 +226,10 @@ const ULI_TEMPLATE = {
     },
     weight: 5,
   },
-};
+});
 
 module.exports = {
+  processSearchRequest,
   ULI_TEMPLATE,
-  ULI_SERVICE_INDEX_NAME
+  ULI_SERVICE_INDEX_NAME,
 };

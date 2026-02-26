@@ -1,5 +1,4 @@
 "use strict";
-const { get, post, head } = require("axios");
 const { ULI_TEMPLATE, ULI_SERVICE_INDEX_NAME } = require("./const");
 
 const ES_HOST = process.env.ES_HOST || "localhost";
@@ -7,16 +6,27 @@ const ES_URL = "http://" + ES_HOST + ":9200";
 
 const UNPROCESSED_STATUS = "unprocessed";
 
-
+/**
+ * Checks to see whether an index with the given name exists.
+ * 
+ * @param {String} indexName name of ES index to check for
+ * @returns 
+ */
 const indexExists = async indexName => {
   try {
-    const { status = 404 } = await head(`${ES_URL}/${indexName}`);
-    return status === 200;
+    const response = await fetch(`${ES_URL}/${indexName}`, { method: "HEAD" });
+    return response.status === 200;
   } catch (err) {
     return false;
   }
 };
 
+/**
+ * 
+ * @param {*} fieldValues 
+ * @param {*} uliTemplate 
+ * @returns 
+ */
 const createFilters = (fieldValues = {}, uliTemplate = ULI_TEMPLATE) => {
   return Object.values(fieldValues).flatMap(({fieldName, value }) => {
     if (value && uliTemplate?.[fieldName]) {
@@ -51,10 +61,17 @@ const search = async (fieldValues = {}, explain = false, uliTemplate = ULI_TEMPL
 
     console.debug(`Query is: ${JSON.stringify(queryParams, "  ")}`);
 
-    const { data } = await get(`${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_search`, {
-      data: queryParams,
+    const response = await fetch(`${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_search`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(queryParams),
     });
 
+    if (!response.ok) {
+      throw new Error(`ES search failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
     return data?.hits || [];
   } catch (err) {
     console.error(err);
@@ -90,13 +107,17 @@ const ingest = async (providerUoi, uliData = []) => {
         ]
       }).join("\n") + "\n";
 
-    return await post(
-      `${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_bulk`,
-      ndJson,
-      {
-        headers: { "Content-Type": "application/x-ndjson" },
-      }
-    );
+    const response = await fetch(`${ES_URL}/${ULI_SERVICE_INDEX_NAME}/_bulk`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-ndjson" },
+      body: ndJson,
+    });
+
+    if (!response.ok) {
+      throw new Error(`ES bulk ingest failed with status ${response.status}`);
+    }
+
+    return await response.json();
   } catch (err) {
     console.log(err);
     return [];
