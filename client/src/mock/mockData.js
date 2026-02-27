@@ -1,4 +1,4 @@
-import { getMatchedFields, calculateConfidence } from '../utils/scoring';
+import { getMatchedFields, calculateConfidence, buildCorpusStats } from '../utils/scoring';
 
 export const MOCK_LICENSEES = [
   {
@@ -179,9 +179,11 @@ export const MOCK_CONFLICTS = {
 };
 
 export const createMockSearchResponse = (searchFields) => {
+  const corpusStats = buildCorpusStats(MOCK_LICENSEES);
+
   const results = MOCK_LICENSEES.map((licensee) => {
     const { matched, unmatched } = getMatchedFields(searchFields, licensee._source);
-    const confidence = calculateConfidence(matched);
+    const confidence = calculateConfidence(searchFields, licensee, corpusStats);
     return { ...licensee, matchedFields: matched, unmatchedFields: unmatched, confidence };
   }).filter(({ confidence }) => confidence > 0);
 
