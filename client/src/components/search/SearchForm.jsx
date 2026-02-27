@@ -11,31 +11,27 @@ const SearchForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-slate-800 mb-4">Search Licensees</h2>
+    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow px-4 py-3">
       {FIELD_GROUPS.map(({ label, fields }) => (
-        <div key={label} className="mb-6">
-          <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-3">{label}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <fieldset key={label} className="mb-2">
+          <legend className="text-xs font-medium text-slate-400 uppercase tracking-wide mb-1">{label}</legend>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-1.5">
             {fields.map((fieldName) => (
-              <div key={fieldName}>
-                <label htmlFor={fieldName} className="block text-sm font-medium text-slate-600 mb-1">
-                  {FIELD_LABELS[fieldName]}
-                </label>
-                <input
-                  id={fieldName}
-                  type="text"
-                  value={searchFields[fieldName]}
-                  onChange={(e) => updateField(fieldName, e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-primary focus:border-transparent"
-                  placeholder={FIELD_LABELS[fieldName]}
-                />
-              </div>
+              <input
+                key={fieldName}
+                id={fieldName}
+                type="text"
+                value={searchFields[fieldName]}
+                onChange={(e) => updateField(fieldName, e.target.value)}
+                className="w-full px-2 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-primary focus:border-transparent"
+                placeholder={FIELD_LABELS[fieldName]}
+                aria-label={FIELD_LABELS[fieldName]}
+              />
             ))}
           </div>
-        </div>
+        </fieldset>
       ))}
-      <div className="flex gap-3 justify-end">
+      <div className="flex gap-3 justify-end pt-2">
         <Button variant="secondary" type="button" onClick={clearSearch}>Clear</Button>
         <Button type="submit" disabled={isLoading}>
           {isLoading ? 'Searching...' : 'Search'}

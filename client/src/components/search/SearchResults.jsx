@@ -1,13 +1,23 @@
 import SearchResultRow from './SearchResultRow';
 
-const CONFIDENCE_THRESHOLD = 50;
+const CONFIDENCE_THRESHOLD = 70;
 
 const SearchResults = ({ results, searchFields }) => {
   const hits = results?.hits?.hits || [];
   const filtered = hits.filter(({ confidence }) => confidence >= CONFIDENCE_THRESHOLD);
   const hiddenCount = hits.length - filtered.length;
 
-  if (filtered.length === 0) return null;
+  if (filtered.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow p-6 text-center">
+        <p className="text-slate-500">
+          {hits.length > 0
+            ? `${hits.length} result${hits.length !== 1 ? 's' : ''} found but all below ${CONFIDENCE_THRESHOLD}% confidence threshold.`
+            : 'No matches found.'}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div>

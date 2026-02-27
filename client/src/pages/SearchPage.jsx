@@ -6,9 +6,8 @@ import NoMatchesFound from '../components/search/NoMatchesFound';
 const SearchPage = () => {
   const { results, searchFields, clearSearch, error } = useSearch();
 
-  const hasResults = results?.hits?.hits?.length > 0;
   const hasSearched = results !== null;
-  const noMatches = hasSearched && !hasResults;
+  const hasHits = results?.hits?.hits?.length > 0;
 
   return (
     <div className="space-y-6">
@@ -17,10 +16,10 @@ const SearchPage = () => {
       {error && (
         <p className="text-red-600 text-sm">Error: {error}</p>
       )}
-      {hasResults && (
+      {hasSearched && hasHits && (
         <SearchResults results={results} searchFields={searchFields} />
       )}
-      {noMatches && (
+      {hasSearched && !hasHits && (
         <NoMatchesFound searchFields={searchFields} onClear={clearSearch} />
       )}
     </div>

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router';
 import { searchLicensees } from '../services/api';
 import { ALL_FIELDS } from '../utils/fields';
 
@@ -7,8 +8,25 @@ const SearchContext = createContext(null);
 const createEmptyFields = () =>
   ALL_FIELDS.reduce((acc, field) => ({ ...acc, [field]: '' }), {});
 
+const fieldsFromParams = (searchParams) =>
+  ALL_FIELDS.reduce(
+    (acc, field) => ({ ...acc, [field]: searchParams.get(field) || '' }),
+    {}
+  );
+
+const fieldsToParams = (fields) => {
+  const params = new URLSearchParams();
+  Object.entries(fields).forEach(([key, value]) => {
+    if (value && value.trim().length > 0) {
+      params.set(key, value);
+    }
+  });
+  return params;
+};
+
 export const SearchProvider = ({ children }) => {
-  const [searchFields, setSearchFields] = useState(createEmptyFields);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchFields, setSearchFields] = useState(() => fieldsFromParams(searchParams));
   const [results, setResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,6 +38,7 @@ export const SearchProvider = ({ children }) => {
   const performSearch = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+    setSearchParams(fieldsToParams(searchFields), { replace: true });
     try {
       const data = await searchLicensees(searchFields);
       setResults(data);
@@ -29,13 +48,14 @@ export const SearchProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [searchFields]);
+  }, [searchFields, setSearchParams]);
 
   const clearSearch = useCallback(() => {
     setSearchFields(createEmptyFields());
     setResults(null);
     setError(null);
-  }, []);
+    setSearchParams({}, { replace: true });
+  }, [setSearchParams]);
 
   const value = {
     searchFields,
