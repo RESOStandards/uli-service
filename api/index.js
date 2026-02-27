@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const app = express();
 const { search, ingest, indexExists } = require("./services/data-access");
 const { ULI_SERVICE_INDEX_NAME, processSearchRequest } = require("./services/const");
@@ -114,9 +115,17 @@ app.post("/uli-service/v1/search", async (req, res) => {
     } else {
       res.status(400).send('Invalid search criteria');
     }
-    
+
   } catch (err) {
     console.error(err);
     res.status(400).send(`Error! Message: ${err}`);
   }
+});
+
+// Serve React client build
+app.use(express.static(path.join(__dirname, '..', 'client', 'dist')));
+
+// SPA fallback: serve index.html for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'client', 'dist', 'index.html'));
 });

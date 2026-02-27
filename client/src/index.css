@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+@theme {
+  --color-slate-header: #3c4858;
+  --color-blue-primary: #4a7abf;
+  --color-gray-bg: #f0f2f5;
+}
