@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "name": "ULI Service",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run: debug",
+      "platform": "node"
+    }
+  ]
+}
