@@ -18,20 +18,20 @@ ID while also saying which person it belongs to.
 Nothing is centralized. You search your own data and answer for yourself, you share only the fields
 you choose with the participants you choose, and the network stores no licensee data at all.
 
-## Try It Before You Set Anything Up
+## Before Setting Anything Up
 
-Open the **[playground](/playground/)**. It runs the real matcher in your browser on sample data,
-and you can import your own roster as CSV or XLSX.
+Open the **[playground](/playground/)**. It runs the matcher in the browser on sample data, and
+accepts an imported roster as CSV or XLSX.
 
-Nothing you load leaves your browser. The page carries no code that could send it anywhere and a
-content-security policy that refuses outbound connections even if it did, which you can read in view
-source. Your data stays in that browser's local storage until you clear it, and the Clear control
-shows you what it holds before it wipes it.
+Nothing loaded into the page leaves the browser. The page carries no code that could send it
+anywhere, and a content-security policy that refuses outbound connections regardless, both of which
+are readable in view source. Data remains in that browser's local storage until cleared, and the
+Clear control lists what it holds before removing it.
 
-This is worth doing first. The matcher is the same engine the network runs, so running it over your
-own roster tells you what the network would find, before you have talked to anybody.
+The matcher is the same engine the network runs, so running it over an existing roster shows what
+the network would find before any participant is contacted.
 
-> On a shared or managed machine, clear your browser when you are finished. Local storage survives a
+> On a shared or managed machine, clear the browser when finished. Local storage survives a
 > restart and belongs to whoever next uses that profile.
 
 ## Getting Started
@@ -188,8 +188,8 @@ claim that this person is not already on the network, and only the network can e
 **Someone has her.** You adopt their identifier. Nothing is created, nothing is posted to the thread
 and the other participant's records are untouched. Both of you now point at the same person.
 
-Adoption being silent is deliberate and surprises people. A participant posts to the thread only
-when shared state changes, and adopting an existing identifier changes nothing shared.
+Silent adoption is deliberate. A participant posts to the thread only when shared state changes,
+and adopting an existing identifier changes nothing shared.
 
 ## When You Disagree with a Match
 
@@ -206,10 +206,9 @@ wrongly matched to is untouched.
 
 ## When Two Identifiers Turn Out to Be One Person
 
-It happens. Two participants resolved the same licensee independently before either saw the other.
+Two participants can resolve the same licensee independently, before either sees the other.
 
-**Neither identifier survives**, and this is the part that surprises people. The two are not
-collapsed by picking a winner. Both are excluded from matching, the merged details are resolved on
+**Neither identifier survives.** The two are not collapsed by selecting one over the other. Both are excluded from matching, the merged details are resolved on
 the network as an ordinary question, and the answer becomes the target: a fresh identifier if nobody
 else holds the person, or the existing one if somebody does. Then both originals retire into that
 target.
