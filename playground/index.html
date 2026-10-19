@@ -136,14 +136,19 @@
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+  /* Three rules from assets/site.css, ported in for the same reason the header
+     and footer were: Jekyll copies this file verbatim, so it never gets the
+     stylesheet. A viewport-high flex column on body with flex:1 0 auto on
+     .wrap is what keeps the footer at the bottom of a short page, instead of
+     floating partway up with the page background showing beneath it. */
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
   h1,h2,h3,h4{margin:0;text-wrap:balance}
   p{margin:0}
   button,input,select,textarea{font:inherit;color:inherit}
   a{color:var(--accent)}
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 16px 60px}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px 60px;flex:1 0 auto}
   .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:600}
   header.mast{padding:30px 0 18px}
   .mast h1{font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:8px 0 10px;letter-spacing:-.01em}
