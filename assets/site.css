@@ -109,8 +109,17 @@ body {
 .site-nav a:hover, .site-nav a:focus { opacity: 1; background: var(--header-current); color: var(--header-text); }
 .site-nav a[aria-current="page"] { opacity: 1; background: var(--header-current); }
 @media (max-width: 640px) {
-  .site-nav { margin-left: 0; width: 100%; }
-  .brand-name { font-size: 1rem; }
+  /* The toggle used to wrap to a row of its own below a full-width nav, so the
+     header cost four rows on a narrow window. With flex-wrap the browser picks
+     line breaks from each item's HYPOTHETICAL size, before any shrinking, so
+     the brand at its natural width plus the toggle never fit on one line and
+     the toggle always wrapped. A flex-basis of zero lets the brand be placed
+     first and grow into what is left, which keeps the toggle beside it. */
+  .brand { order: 0; flex: 1 1 0; min-width: 0; gap: .5rem; }
+  .brand img { height: 24px; }
+  .brand-name { min-width: 0; overflow-wrap: anywhere; font-size: 1rem; }
+  .theme-toggle { order: 1; flex: 0 0 auto; margin-left: auto; }
+  .site-nav { order: 2; margin-left: 0; width: 100%; }
 }
 
 /* Content */

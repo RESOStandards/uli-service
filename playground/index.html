@@ -46,8 +46,13 @@
   .reso-header .theme-toggle:hover{background:rgba(255,255,255,.22)}
   .reso-header .theme-toggle:focus-visible{outline:2px solid #ff9900;outline-offset:2px}
   @media (max-width:640px){
-    .reso-header .site-nav{margin-left:0;width:100%}
-    .reso-header .brand{font-size:1rem}
+    /* The toggle used to wrap to a row of its own below a full-width nav. A
+       flex-basis of zero on the brand keeps the toggle beside it instead. */
+    .reso-header .brand{order:0;flex:1 1 0;min-width:0;font-size:1rem;gap:.5rem}
+    .reso-header .brand img{height:24px}
+    .reso-header .brand-name{min-width:0;overflow-wrap:anywhere}
+    .reso-header .theme-toggle{order:1;flex:0 0 auto;margin-left:auto}
+    .reso-header .site-nav{order:2;margin-left:0;width:100%}
   }
 </style>
 
