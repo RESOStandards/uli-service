@@ -1,0 +1,42 @@
+<figure class="diagram" role="group" aria-labelledby="fig-layers-cap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 560" role="img" aria-labelledby="fig-layers-title">
+<title id="fig-layers-title">Three layers, search, scoring and resolution, each held to a different certification bar</title>
+<defs><marker id="arr-lay" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="box" x="20" y="14" width="400" height="112" rx="6"/>
+<text x="36" y="40" class="t-b">1  Search</text>
+<rect class="tag" x="320" y="26" width="84" height="20" rx="10"/>
+<text x="362" y="40" class="t-small" text-anchor="middle">private</text>
+<text x="36" y="62" class="t-mid">Each resolver finds candidates in its own data.</text>
+<text x="36" y="80" class="t-mid">How it searches is its own business.</text>
+<path class="line-emph" d="M36,94 H404"/>
+<text x="36" y="112" class="t-mid t-emph">Certified on recall and precision</text>
+<path class="line" d="M220,126 V158" marker-end="url(#arr-lay)"/>
+<text x="232" y="146" class="t-small t-muted">candidates</text>
+<rect class="box" x="20" y="162" width="400" height="130" rx="6"/>
+<text x="36" y="188" class="t-b">2  Scoring</text>
+<rect class="tag" x="320" y="174" width="84" height="20" rx="10"/>
+<text x="362" y="188" class="t-small" text-anchor="middle">shared</text>
+<text x="36" y="210" class="t-mid">One engine, one published weight set and one</text>
+<text x="36" y="228" class="t-mid">frequency table, so a score means the same thing</text>
+<text x="36" y="246" class="t-mid">to every participant.</text>
+<path class="line-emph" d="M36,260 H404"/>
+<text x="36" y="278" class="t-mid t-emph">Certified on exact parity with the reference</text>
+<path class="line" d="M220,292 V368" marker-end="url(#arr-lay)"/>
+<text x="232" y="312" class="t-small t-muted">an integer score, read against</text>
+<text x="232" y="328" class="t-small t-muted">fixed bands: below 700 rejected,</text>
+<text x="232" y="344" class="t-small t-muted">700 to 1300 review, 1300 and</text>
+<text x="232" y="360" class="t-small t-muted">above a possible match</text>
+<rect class="box" x="20" y="372" width="400" height="112" rx="6"/>
+<text x="36" y="398" class="t-b">3  Resolution</text>
+<rect class="tag" x="306" y="384" width="98" height="20" rx="10"/>
+<text x="355" y="398" class="t-small" text-anchor="middle">the thread</text>
+<text x="36" y="420" class="t-mid">Broadcast, reply, consensus, then mint or adopt.</text>
+<text x="36" y="438" class="t-mid">A match reply carries its score in its payload.</text>
+<path class="line-emph" d="M36,452 H404"/>
+<text x="36" y="470" class="t-mid t-emph">Certified on protocol conformance</text>
+<text x="20" y="512" class="t-small t-muted">A search engine's relevance score depends on what else</text>
+<text x="20" y="528" class="t-small t-muted">is in its own index, so it cannot be compared across</text>
+<text x="20" y="544" class="t-small t-muted">organizations and never crosses the wire.</text>
+</svg>
+<figcaption id="fig-layers-cap">Three layers, three different standards. Search is each participant's own and is measured on recall and precision. Scoring is shared, and a conforming engine must reproduce the reference score exactly. Resolution is the thread, held to protocol conformance (Specification, Sections 2.9 and 3.1).</figcaption>
+</figure>

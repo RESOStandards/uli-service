@@ -1,0 +1,55 @@
+<figure class="diagram" role="group" aria-labelledby="fig-resolution-cap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 690" role="img" aria-labelledby="fig-resolution-title">
+<title id="fig-resolution-title">One resolution thread: a broadcast, the replies, the consensus tally, then mint or adopt</title>
+<defs><marker id="arr-res" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs>
+<rect class="box" x="20" y="14" width="400" height="104" rx="6"/>
+<text x="36" y="38" class="t-b">Broadcast</text>
+<text x="36" y="58" class="t-mid">One Note to the shared resolver collection,</text>
+<text x="36" y="76" class="t-mid">with the licensee's fields behind an</text>
+<text x="36" y="94" class="t-mid">OAuth2-protected link, not in the Note.</text>
+<path class="line" d="M40,118 V291"/>
+<path class="line" d="M40,153 H64"/>
+<rect class="box" x="64" y="136" width="356" height="34" rx="5"/>
+<text x="80" y="158"><tspan class="t-b">Provider 8</tspan>  Match → urn:…9f2c, score 1450</text>
+<path class="line" d="M40,199 H64"/>
+<rect class="box" x="64" y="182" width="356" height="34" rx="5"/>
+<text x="80" y="204"><tspan class="t-b">Provider 2</tspan>  No match</text>
+<rect class="tag" x="348" y="190" width="60" height="18" rx="9"/>
+<text x="378" y="203" class="t-small" text-anchor="middle">counts</text>
+<path class="line" d="M40,245 H64"/>
+<rect class="box" x="64" y="228" width="356" height="34" rx="5"/>
+<text x="80" y="250"><tspan class="t-b">Other resolvers</tspan>  No match</text>
+<rect class="tag" x="348" y="236" width="60" height="18" rx="9"/>
+<text x="378" y="249" class="t-small" text-anchor="middle">counts</text>
+<path class="line-ghost" d="M40,291 H64"/>
+<rect class="box-ghost" x="64" y="274" width="356" height="34" rx="5"/>
+<text x="80" y="296" class="t-muted t-i">… replies accumulate over time</text>
+<text x="36" y="326" class="t-small t-muted">A no-match reply counts toward consensus.</text>
+<text x="36" y="342" class="t-small t-muted">Silence does not.</text>
+<rect class="box-emph" x="20" y="352" width="400" height="110" rx="6"/>
+<text x="36" y="376" class="t-b">Consensus</text>
+<text x="36" y="396" class="t-mid">At least floor(2/3 × R) replies are in, and every</text>
+<text x="36" y="414" class="t-mid">mandatory resolver is among them. R is the pool of</text>
+<text x="36" y="432" class="t-mid">certified, compliant and active resolvers, pinned</text>
+<text x="36" y="450" class="t-mid">at the moment of the broadcast.</text>
+<path class="line" d="M220,462 V480 H118 V500" marker-end="url(#arr-res)"/>
+<path class="line" d="M220,480 H322 V500" marker-end="url(#arr-res)"/>
+<rect class="box-emph" x="20" y="504" width="196" height="144" rx="6"/>
+<text x="36" y="528" class="t-b">Mint</text>
+<text x="36" y="548" class="t-small">No match in the replies.</text>
+<text x="36" y="566" class="t-small">A new ULI is created and</text>
+<text x="36" y="584" class="t-small">posted to the thread as a</text>
+<text x="36" y="602" class="t-small">Create. It is the thread's</text>
+<text x="36" y="620" class="t-small">only closing message.</text>
+<text x="118" y="668" class="t-small t-emph" text-anchor="middle">posted to the thread</text>
+<rect class="box-ghost" x="224" y="504" width="196" height="144" rx="6"/>
+<text x="240" y="528" class="t-b">Adopt</text>
+<text x="240" y="548" class="t-small">A match clears the bar.</text>
+<text x="240" y="566" class="t-small">The existing ULI is bound</text>
+<text x="240" y="584" class="t-small">to the originator's own</text>
+<text x="240" y="602" class="t-small">records, locally. Nothing</text>
+<text x="240" y="620" class="t-small">is posted to the thread.</text>
+<text x="322" y="668" class="t-small t-muted t-i" text-anchor="middle">no thread message</text>
+</svg>
+<figcaption id="fig-resolution-cap">One thread resolves one licensee. The originator broadcasts, each resolver answers from its own data, and once enough replies are in the originator mints a new ULI or adopts an existing one. Only a mint posts to the thread. Adoption changes no shared state, so it is silent (Specification, Sections 2.4 to 2.7).</figcaption>
+</figure>

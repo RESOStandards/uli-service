@@ -1,0 +1,2300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script id="reso-house-chrome-pre">
+(function () {
+  try {
+    var t = localStorage.getItem('dd-theme');
+    if (t === 'dark' || t === 'light') {
+      document.documentElement.setAttribute('data-theme', t);
+    }
+  } catch (e) { /* storage blocked; the OS preference still applies */ }
+})();
+</script>
+
+<style id="reso-house-chrome-css">
+  /* The site header, ported in. Jekyll copies this file verbatim so it never
+     gets _layouts/default.html; these rules mirror assets/site.css exactly so
+     the playground is not the one page with different chrome. */
+  .reso-header{background:#1a2f58;color:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);
+    position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;align-items:center;
+    gap:.5rem 1.5rem;min-height:64px;padding:.7rem 1.5rem}
+  .reso-header .brand{display:inline-flex;align-items:center;gap:.75rem;color:#fff;
+    text-decoration:none;font-weight:700;font-size:1.1rem;letter-spacing:-.01em}
+  .reso-header .brand img{height:36px;width:auto;display:block}
+  .reso-header .site-nav{display:flex;flex-wrap:wrap;gap:.15rem .35rem;margin-left:auto}
+  .reso-header .site-nav a{color:#fff;font-weight:600;font-size:.95rem;text-decoration:none;
+    padding:.3rem .55rem;border-radius:4px;opacity:.88}
+  .reso-header .site-nav a:hover,.reso-header .site-nav a:focus{opacity:1;
+    background:rgba(255,255,255,.14)}
+  .reso-header .site-nav a[aria-current="page"]{opacity:1;background:rgba(255,255,255,.14)}
+  .reso-header .theme-toggle{background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:7px;width:34px;height:34px;
+    margin-left:.75rem;cursor:pointer;display:inline-flex;align-items:center;
+    justify-content:center;font-size:15px;line-height:1;padding:0;flex:0 0 auto}
+  .reso-header .theme-toggle:hover{background:rgba(255,255,255,.22)}
+  .reso-header .theme-toggle:focus-visible{outline:2px solid #ff9900;outline-offset:2px}
+  @media (max-width:640px){
+    .reso-header .site-nav{margin-left:0;width:100%}
+    .reso-header .brand{font-size:1rem}
+  }
+</style>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="color-scheme" content="light dark">
+<title>ULI Resolution Playground</title>
+<link rel="icon" href="../favicon.ico" type="image/x-icon">
+<style>
+  :root {
+    --paper:#f7fafc; --raised:#ffffff; --sunk:#edf2f7;
+    --ink:#1a202c; --soft:#4a5568; --faint:#718096; --rule:#e2e8f0;
+    --accent:#1a2f58; --accent-bg:#e0f4f8;
+    --ok:#38a169; --ok-bg:#e6f7ed; --warn:#b7791f; --warn-bg:#fff3e0; --bad:#c53030; --bad-bg:#fff5f5;
+    --p1:#1a2f58; --p2:#38a169; --p3:#007e9e; --p5:#c05621; --p8:#6b46c1;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
+    --sh:0 1px 2px rgba(26,32,44,.06),0 4px 12px rgba(26,32,44,.05);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#171923; --raised:#1a202c; --sunk:#2d3748;
+    --ink:#e2e8f0; --soft:#a0aec0; --faint:#718096; --rule:#2d3748;
+    --accent:#63b3ed; --accent-bg:#1a365d;
+    --ok:#68d391; --ok-bg:#1c4532; --warn:#f6ad55; --warn-bg:#3d2e12; --bad:#fc8181; --bad-bg:#3b1d1d;
+    --p1:#63b3ed; --p2:#68d391; --p3:#4fd1c5; --p5:#f6ad55; --p8:#b794f4;
+    --sh:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }}
+  :root[data-theme="dark"]{
+    --paper:#171923; --raised:#1a202c; --sunk:#2d3748;
+    --ink:#e2e8f0; --soft:#a0aec0; --faint:#718096; --rule:#2d3748;
+    --accent:#63b3ed; --accent-bg:#1a365d;
+    --ok:#68d391; --ok-bg:#1c4532; --warn:#f6ad55; --warn-bg:#3d2e12; --bad:#fc8181; --bad-bg:#3b1d1d;
+    --p1:#63b3ed; --p2:#68d391; --p3:#4fd1c5; --p5:#f6ad55; --p8:#b794f4;
+    --sh:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+  h1,h2,h3,h4{margin:0;text-wrap:balance}
+  p{margin:0}
+  button,input,select,textarea{font:inherit;color:inherit}
+  a{color:var(--accent)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px 60px}
+  .eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  header.mast{padding:30px 0 18px}
+  .mast h1{font-weight:600;font-size:clamp(26px,4vw,38px);line-height:1.1;margin:8px 0 10px;letter-spacing:-.01em}
+  .mast p.lede{color:var(--soft);max-width:70ch;font-size:15.5px}
+
+  nav.sticky{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--rule);padding:8px 0;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  nav.sticky a{font-size:12.5px;font-weight:600;color:var(--soft);text-decoration:none;padding:5px 9px;border-radius:7px}
+  nav.sticky a:hover{background:var(--raised);color:var(--ink)}
+  nav.sticky .spacer{flex:1}
+  nav.sticky .acting{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--soft)}
+  nav.sticky select{padding:5px 8px;border:1px solid var(--rule);border-radius:7px;background:var(--raised);font-weight:600;font-size:13px}
+
+  .card{background:var(--raised);border:1px solid var(--rule);border-radius:12px;box-shadow:var(--sh);padding:16px 18px;margin-top:18px}
+  .card > h2{font-size:17px;font-weight:600;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .card > p.cap{color:var(--soft);font-size:13.5px;max-width:80ch;margin-bottom:12px}
+  .card h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:600;margin:14px 0 6px}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:20px;white-space:nowrap}
+  .tag.real{background:var(--ok-bg);color:var(--ok)}
+  .tag.model{background:var(--warn-bg);color:var(--warn)}
+  .tag.off{background:var(--bad-bg);color:var(--bad)}
+  .tag.neutral{background:var(--sunk);color:var(--soft);border:1px solid var(--rule)}
+  .fine{font-size:12.5px;color:var(--faint)}
+  .note{font-size:13px;color:var(--soft);background:var(--sunk);border:1px solid var(--rule);border-radius:9px;padding:9px 12px;margin-top:8px}
+  .note.bad{background:var(--bad-bg);border-color:transparent;color:var(--bad)}
+  .note.ok{background:var(--ok-bg);border-color:transparent;color:var(--ok)}
+  .note.warn{background:var(--warn-bg);border-color:transparent;color:var(--warn)}
+  .honest{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:760px){.honest{grid-template-columns:1fr}}
+  .honest ul{margin:4px 0 0;padding-left:18px;font-size:13.5px;color:var(--soft)}
+  .honest li b{color:var(--ink);font-weight:600}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:880px){.grid3{grid-template-columns:1fr}}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:760px){.grid2{grid-template-columns:1fr}}
+  .col{background:var(--sunk);border:1px solid var(--rule);border-radius:10px;padding:10px 12px;min-height:90px}
+  .col h3{margin-top:2px}
+  .col ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+  .col li{background:var(--raised);border:1px solid var(--rule);border-radius:8px;padding:7px 10px;font-size:13px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .col li .grow{flex:1 1 120px}
+  .empty{color:var(--faint);font-size:13px;padding:10px 2px}
+
+  .btn{cursor:pointer;border:1px solid var(--rule);background:var(--raised);color:var(--ink);border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;line-height:1.3}
+  .btn:hover{border-color:var(--faint)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{opacity:.92}
+  .btn.small{padding:4px 9px;font-size:12px;border-radius:7px}
+  .btn.quiet{border-color:transparent;background:transparent;color:var(--accent);padding-inline:6px}
+  .btn.danger{color:var(--bad);border-color:var(--bad)}
+  .row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .row.top{align-items:flex-start}
+  label.lbl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;display:block;margin-bottom:4px}
+  input[type=text],input[type=search],input[type=number],select,textarea{width:100%;font-size:13.5px;padding:7px 9px;border:1px solid var(--rule);border-radius:7px;background:var(--sunk);color:var(--ink)}
+  input[type=number]{font-variant-numeric:tabular-nums;max-width:110px}
+  textarea{font-family:var(--mono);font-size:12px;min-height:90px;resize:vertical}
+  .field{display:grid;gap:2px}
+  .check{display:inline-flex;align-items:center;gap:6px;font-size:13px;margin-right:12px}
+  .check input{margin:0}
+
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--rule);white-space:nowrap}
+  td{padding:6px 8px;border-bottom:1px solid var(--rule);vertical-align:top}
+  tr:last-child td{border-bottom:0}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr.sel td{background:var(--accent-bg)}
+  .mono{font-family:var(--mono);font-size:12px}
+  .uli{font-family:var(--mono);font-size:11.5px;word-break:break-all;color:var(--soft)}
+  .tbl-wrap{overflow-x:auto}
+
+  .net{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+  .node{flex:1 1 180px;border:1px solid var(--rule);border-radius:10px;padding:9px 11px;background:var(--sunk);display:grid;gap:4px;border-left-width:4px}
+  .node .nm{font-weight:600;font-size:13.5px;display:flex;align-items:center;gap:8px}
+  .node .sub{font-size:11.5px;color:var(--faint);font-family:var(--mono)}
+  .node .st{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--faint);display:inline-block;flex:none}
+  .dot.live{background:var(--ok)}
+  .dot.off{background:var(--bad)}
+  .badge{min-width:18px;height:18px;border-radius:9px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;display:inline-grid;place-items:center;padding:0 5px}
+  .tally{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:8px 0}
+  .tally .big{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+  .tally .lab{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  .rlist{display:flex;gap:8px;flex-wrap:wrap}
+  .rchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);border-radius:20px;padding:3px 10px;font-size:12.5px;background:var(--raised)}
+  .rchip.replied{border-color:var(--ok)}
+  .rchip.pruned{opacity:.55;text-decoration:line-through}
+
+  .thread{display:grid;gap:8px;margin-top:10px}
+  .act{border:1px solid var(--rule);border-radius:10px;background:var(--sunk);padding:9px 12px}
+  .act .top{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .act .who{font-weight:600;font-size:13px}
+  .act .when{font-size:11px;color:var(--faint);margin-left:auto;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+  .act .sum{font-size:13.5px;color:var(--soft);margin-top:2px}
+  .act .deliv{font-size:11.5px;color:var(--faint);margin-top:4px}
+  .act details{margin-top:6px}
+  .act summary{cursor:pointer;font-size:12px;font-weight:600;color:var(--accent)}
+  .act .inner{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .act .inner>div,.grid2>div,.honest>div{min-width:0}
+  @media (max-width:880px){.act .inner{grid-template-columns:1fr}}
+  .act h4,.wire h4{margin:0 0 4px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  pre{margin:0;padding:10px 12px;background:var(--raised);border:1px solid var(--rule);border-radius:8px;font-family:var(--mono);font-size:11.5px;line-height:1.55;overflow-x:auto;white-space:pre}
+  pre.hdr{margin-bottom:6px;color:var(--soft)}
+  .k{color:var(--accent)}.s{color:var(--ok)}.n{color:var(--bad)}
+  .pill{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:20px;background:var(--sunk);border:1px solid var(--rule);color:var(--soft)}
+  .pill.note{background:var(--accent-bg);color:var(--accent);border-color:transparent}
+  .pill.create{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+  .pill.delete{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+  .quiet-end{border:1px dashed var(--rule);border-radius:10px;padding:10px 12px;color:var(--soft);font-size:13px}
+
+  .band{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:6px 0 4px}
+  .band .hl{font-size:24px;font-weight:600;line-height:1.1}
+  .band.possible .hl{color:var(--ok)}.band.review .hl{color:var(--warn)}.band.rejected .hl{color:var(--bad)}
+  .band .int{font-size:14px;color:var(--soft);font-variant-numeric:tabular-nums}
+  .gauge2{display:grid;gap:3px;margin:8px 0 2px}
+  .gauge2 .gz,.gauge2 .gf,.gauge2 .gl{display:flex;width:100%}
+  .gauge2 .gz{height:10px;border-radius:5px;overflow:hidden}
+  .gauge2 .gz i.bad{background:var(--bad-bg)}.gauge2 .gz i.warn{background:var(--warn-bg)}.gauge2 .gz i.ok{background:var(--ok-bg)}
+  .gauge2 .gf{height:8px;border-radius:4px;overflow:hidden;background:var(--sunk)}
+  .gauge2 .gf i.ok{background:var(--ok)}.gauge2 .gf i.warn{background:var(--warn)}.gauge2 .gf i.bad{background:var(--bad)}
+  .gauge2 .gl{height:18px;font-family:var(--mono);font-size:11px;color:var(--soft)}
+  .gauge2 .gl b{flex:0 0 0;position:relative;font-weight:600;white-space:nowrap;transform:translateX(-50%);padding-top:3px}
+  .gauge2 .gl b:last-child{transform:translateX(-100%)}
+  .gauge2 .gl b::before{content:"";position:absolute;left:50%;top:-24px;height:24px;border-left:2px solid var(--ink)}
+  .gauge2 .gl b:last-child::before{left:100%}
+  .toast{animation:toastfade 5s forwards}
+  @keyframes toastfade{0%,80%{opacity:1}100%{opacity:0}}
+  .factors td.w{font-variant-numeric:tabular-nums;text-align:right}
+  .factors tr.off td{color:var(--faint)}
+  .factors tr.sup td{color:var(--faint);font-style:italic}
+  .diff{display:grid;grid-template-columns:1.1fr 1.6fr 22px 1.6fr;gap:6px 10px;font-size:13px;align-items:center}
+  .diff .h{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;padding-bottom:4px;border-bottom:1px solid var(--rule)}
+  .diff .f{color:var(--soft)}
+  .diff .v{word-break:break-word}
+  .diff .m{font-weight:700;text-align:center}
+  .diff .m.y{color:var(--ok)}.diff .m.n{color:var(--bad)}
+  .inv{display:grid;gap:8px;margin-top:8px}
+  .inv .it{border-left:4px solid var(--ok);background:var(--sunk);border-radius:8px;padding:8px 12px;font-size:13px}
+  .inv .it.broken{border-left-color:var(--bad)}
+  .inv .it b{display:block;font-size:12.5px}
+  .wt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px 14px}
+  .wt-grid label{font-size:12.5px;display:grid;gap:3px}
+  .wt-grid label span{color:var(--soft)}
+
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:9px;font-size:13.5px;font-weight:500;box-shadow:var(--sh);z-index:20;max-width:min(92vw,520px)}
+  footer{margin-top:28px;font-size:12.5px;color:var(--faint);display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .hidden{display:none!important}
+  .verdict{font-size:20px;font-weight:600;margin:8px 0 4px}
+  .verdict.ok{color:var(--ok)}.verdict.bad{color:var(--bad)}.verdict.off{color:var(--warn)}
+  .seg{display:grid;grid-template-columns:120px 1fr;gap:4px 12px;font-size:12.5px}
+  .seg .l{color:var(--faint)}
+  .seg .v{font-family:var(--mono);font-size:11.5px;word-break:break-all}
+  .stat{display:inline-grid;gap:1px;margin-right:18px}
+  .stat b{font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+  .stat span{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600}
+  .progress{height:6px;background:var(--sunk);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:8px 0}
+  .progress i{display:block;height:100%;background:var(--accent);width:0}
+
+  /* Tabbed layout. Ten cards in one column was too much at once, so the sections carry a
+     data-group and the sidebar shows one group at a time. Nothing about the sections changed. */
+  .shell{display:grid;grid-template-columns:208px minmax(0,1fr);gap:22px;align-items:start}
+  .side{position:sticky;top:12px;display:flex;flex-direction:column;gap:2px}
+  .side .grp{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--soft);margin:12px 0 4px}
+  .side a{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;color:var(--ink);
+    text-decoration:none;font-size:14px;border:1px solid transparent}
+  .side a:hover{background:var(--sunk)}
+  .side a[aria-current="page"]{background:var(--sunk);border-color:var(--rule);font-weight:600}
+  .side a .lab{flex:1;min-width:0}
+  /* A COUNT means work is owed; a DOT means something changed. Keeping them visually distinct is
+     the whole point: a count that sometimes means "nothing to do" stops being acted on. */
+  .bdg{min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--accent);color:#fff;
+    font-size:11.5px;font-weight:700;display:none;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+  .bdg.on{display:inline-flex}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--soft);display:none;flex:none}
+  .dot.on{display:block}
+  @media (max-width:780px){
+    .shell{grid-template-columns:1fr}
+    .side{position:static;flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:6px;
+      border-bottom:1px solid var(--rule);margin-bottom:8px}
+    .side .grp{display:none}
+    .side a{white-space:nowrap}
+  }
+
+  /* Horizontal sub-tabs inside a group. One per section, except the score panel, which is an
+     OUTPUT rather than a destination: it stays pinned below so picking a record in the roster and
+     reading its score do not live on different tabs. */
+  .subs{display:flex;gap:4px;flex-wrap:wrap;min-width:0}
+  /* The view tabs and the desk selector share one rule, so the underline runs
+     the full width instead of stopping short of the control. */
+  .viewbar{display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+           margin:0 0 4px;border-bottom:1px solid var(--rule);padding-bottom:8px}
+  .viewbar .subs{flex:1 1 auto}
+  .viewbar .acting{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .viewbar .acting label{font-size:12px;color:var(--soft);white-space:nowrap}
+  .viewbar .acting select{background:var(--raised);border:1px solid var(--rule);
+    color:var(--ink);border-radius:7px;padding:5px 9px;font:inherit;font-size:12.5px;
+    max-width:230px;cursor:pointer}
+  .viewbar .acting select:hover{border-color:var(--accent)}
+  .viewbar .acting select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (max-width:560px){ .viewbar .acting label{display:none} }
+  .subs button{appearance:none;background:none;border:1px solid transparent;border-radius:8px;padding:6px 11px;
+    font:inherit;font-size:13.5px;color:var(--soft);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+  .subs button:hover{background:var(--sunk);color:var(--ink)}
+  .subs button[aria-selected="true"]{background:var(--sunk);border-color:var(--rule);color:var(--ink);font-weight:600}
+  .subs .bdg{position:static}
+</style>
+</head>
+<body>
+<header class="reso-header" id="resoHeader">
+  <a class="brand" href="../">
+    <img src="data:image/png;base64,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" alt="RESO">
+    <span class="brand-name">Unique Licensee Identifier</span>
+  </a>
+  <nav class="site-nav" aria-label="Site">
+    <a href="../">Home</a>
+    <a href="../white-paper/">White Paper</a>
+    <a href="../methodology/">Methodology</a>
+    <a href="../specification/">Specification</a>
+    <a href="../guide/">Guide</a>
+    <a href="../playground/" aria-current="page">Playground</a>
+    <a href="../tools/">Tools</a>
+  </nav>
+  <button class="theme-toggle" id="resoThemeBtn" type="button"
+          aria-label="Switch between light and dark"><span id="resoThemeIcon">&#9789;</span></button>
+</header>
+
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow">RCP-54 &middot; ULI Resolution Protocol &middot; Playground</div>
+    <h1>Resolve a licensee, with nothing leaving your browser</h1>
+    <p class="lede">A Unique Licensee Identifier links one licensed professional's records across markets. This page runs the
+      protocol's matcher, its scoring, its consensus arithmetic and its Ed25519 signatures for real, over sample records
+      drawn from the specification's worked examples or over a roster you import. The network of other resolvers is
+      modeled inside the page. There is no server: the page's security policy forbids outbound connections.</p>
+  </header>
+
+  <div class="shell">
+  <nav class="side" aria-label="Sections">
+    <div class="grp">Your data</div>
+    <a href="#roster" data-tab="data"><span class="lab">Roster, matching and scoring</span><span class="dot" data-dot="data"></span><span class="bdg" data-bdg="data">0</span></a>
+    <div class="grp">The network</div>
+    <a href="#network" data-tab="net"><span class="lab">Resolvers and threads</span><span class="dot" data-dot="net"></span><span class="bdg" data-bdg="net">0</span></a>
+    <div class="grp">Tools</div>
+    <a href="#tuning" data-tab="tools"><span class="lab">Weights and verification</span><span class="dot" data-dot="tools"></span><span class="bdg" data-bdg="tools">0</span></a>
+    <div class="grp">About</div>
+    <a href="#honesty" data-tab="meta"><span class="lab">What is real, and storage</span><span class="dot" data-dot="meta"></span><span class="bdg" data-bdg="meta">0</span></a>
+  </nav>
+  <main>
+    <div class="viewbar">
+      <div class="subs" id="subs" role="tablist" aria-label="Views"></div>
+      <span class="acting"><label for="deskSel">Acting as</label><select id="deskSel"></select></span>
+    </div>
+
+  <section class="card" data-group="meta" data-sub="honesty" id="honesty" aria-live="polite">
+    <h2>What is real here, and what is modeled</h2>
+    <div class="honest" id="honestBox"></div>
+    <div id="confBox" class="note"></div>
+  </section>
+
+  <section class="card" data-group="net" data-sub="network" id="network">
+    <h2>The resolver network <span class="tag model">Modeled</span></h2>
+    <p class="cap">Five certified resolvers inside this page stand in for organizations on the network. Each is a desk you can
+      act as. <code>R</code> is the set that is certified, compliant and active; consensus needs <code>floor(2/3 &times; R)</code>
+      replies plus every mandatory resolver (&sect;2.6). Marking a node inactive is a modeled governance event: it leaves
+      <code>R</code> for every open thread and never rejoins one mid-flight.</p>
+    <div class="net" id="netBox"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="btnAutoReply">Let the other resolvers reply</button>
+      <button class="btn small" id="btnSolo">Solo (only you)</button>
+      <button class="btn small" id="btnFull">Full network</button>
+      <span class="fine" id="netSummary"></span>
+    </div>
+  </section>
+
+  <section class="card" data-group="data" data-sub="roster" id="roster">
+    <h2>Roster <span class="tag real">Real</span> <span class="fine" id="rosterWho"></span></h2>
+    <p class="cap">The records this desk holds. Search is retrieval, not scoring: it narrows the list and prints no score.
+      Import a CSV or XLSX of your own roster to run the matcher over it; it stays in this browser.</p>
+    <div class="row top">
+      <div class="field" style="flex:1 1 260px"><label class="lbl" for="q">Search the loaded records</label><input type="search" id="q" placeholder="name, license, NRDS, office, MLS id"></div>
+      <div class="field"><label class="lbl" for="csvFile">Import CSV or XLSX</label><input type="file" id="csvFile" accept=".csv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></div>
+      <div class="field"><label class="lbl">&nbsp;</label><div class="row"><button class="btn small" id="btnTemplate">Show a CSV template</button><button class="btn small" id="btnRestore">Restore sample roster</button></div></div>
+    </div>
+    <div id="importNote"></div>
+    <div id="templateBox" class="hidden"><h3>CSV template (Data Dictionary field names as headers)</h3><textarea id="templateTxt" readonly></textarea></div>
+    <div class="tbl-wrap" style="margin-top:10px"><table id="rosterTbl"></table></div>
+    <p class="fine" id="rosterFoot"></p>
+    <div id="broadcastBox"></div>
+  </section>
+
+  <section class="card" data-group="data" data-sub="local" id="local">
+    <h2>Local matching <span class="tag real">Real</span></h2>
+    <p class="cap">The same engine the network uses, run over this desk's own roster to find likely internal duplication before
+      anything is broadcast (&sect;2.9: the engine runs locally and on the network). Records are blocked on surname plus
+      license state, so pairs that differ in either are never compared; that is the recall cost of not comparing every pair.</p>
+    <div class="row"><button class="btn primary" id="btnLocal">Run local matching</button><span class="fine" id="localStat"></span></div>
+    <div class="progress hidden" id="localProg"><i></i></div>
+    <div id="localBox"></div>
+  </section>
+
+  <section class="card" data-group="data" data-sub="dashboard" id="dashboard">
+    <h2>Dashboard <span class="fine" id="dashWho"></span></h2>
+    <p class="cap">What to resolve internally first, what is waiting on the network and what is done.</p>
+    <div class="grid3" id="dashBox"></div>
+  </section>
+
+  <section class="card" data-group="net" data-sub="threads" id="threads">
+    <h2>Resolution threads <span class="tag real">AS2 shapes, consensus arithmetic</span> <span class="tag model">Other resolvers, time</span></h2>
+    <p class="cap">One <code>Note</code> per licensee, addressed to the resolver collection; replies thread beneath it by
+      <code>inReplyTo</code>. The activity carries only who acted and what it answers. Everything about the licensee sits
+      behind the OAuth2-protected link, shown under each activity's disclosure.</p>
+    <div id="threadList" class="row"></div>
+    <div id="threadBox"></div>
+  </section>
+
+  <section class="card" data-group="data" id="compare">
+    <h2>Score a pair <span class="tag real">Real</span></h2>
+    <p class="cap">The band is the headline. The gauge carries the magnitude on the scale of the maximum attainable score under the
+      current weights. The integer is broken down by factor, so what teaches is the composition. There is no percentage
+      anywhere on this page; <a id="lnk6" href="#" target="_blank" rel="noopener">&sect;6 of the specification</a> explains why a
+      percentage would be read as a probability it is not.</p>
+    <div id="compareBox"><p class="empty">Pick a pair from <a href="#local" data-goto="local">local matching</a>, a search result or a thread reply, or start from <a href="#roster" data-goto="roster">your roster</a>.</p></div>
+  </section>
+
+  <section class="card" data-group="tools" data-sub="tuning" id="tuning">
+    <h2>Weights and threshold <span class="tag real">Sandbox (&sect;2.9)</span></h2>
+    <p class="cap">The &sect;2.9 table, editable. The threshold is never typed in: it is derived as the sum of the two smallest
+      primary weights that one candidate can match together, and three invariants are checked on every change. In this
+      playground the sandbox set is also the network's set; on the real network a change is posted to the governance feed
+      and every node reruns matching.</p>
+    <div id="tuningBox"></div>
+  </section>
+
+  <section class="card" data-group="tools" data-sub="verify" id="verify">
+    <h2>Verify a ULI <span class="tag real" id="edTag">Ed25519 via WebCrypto</span></h2>
+    <p class="cap">Paste a ULI. The page splits off the signature, rebuilds the signed bytes and checks them against the minting
+      organization's key on the governance feed, offline (&sect;2.8). The feed here is modeled; the verification is not.</p>
+    <div class="row top">
+      <div class="field" style="flex:1 1 420px"><label class="lbl" for="uliIn">ULI</label><textarea id="uliIn" rows="3" placeholder="urn:reso:uli:1.0:urn:reso:uoi:1.0:T00000012:M00000123:nyxKF6Gyw9Re:..."></textarea></div>
+      <div class="field"><label class="lbl">&nbsp;</label><div class="row"><button class="btn primary" id="btnVerify">Verify</button><button class="btn small" id="btnSpecExample">Use the &sect;2.8 example</button><select id="mintedSel"><option value="">Use one minted here</option></select></div></div>
+    </div>
+    <div id="verifyBox"></div>
+    <h3>Governance feed, modeled: certified keys</h3>
+    <div class="tbl-wrap"><table id="feedTbl"></table></div>
+  </section>
+
+  <section class="card" data-group="meta" data-sub="storage" id="storage">
+    <h2>Storage <span class="tag real">localStorage on this origin</span></h2>
+    <p class="cap">Threads, rosters, keys and tuning live in this browser's local storage so they survive a restart, and the
+      thread store sweeps anything older than seven days. Nothing is sent anywhere. Clear shows what it will wipe, then wipes
+      local storage, session storage and IndexedDB for this origin.</p>
+    <div id="storageBox"></div>
+  </section>
+  </main>
+  </div>
+
+  <footer>
+    <span>No account, no server, no network: the page's Content Security Policy sets <code>connect-src 'none'</code>.</span>
+    <a id="lnkSpec" href="#" target="_blank" rel="noopener">RCP-54 proposal</a>
+  </footer>
+</div>
+<script type="module">
+/* ===================================================================
+ * ap.js, inlined verbatim from the sibling file so the page is one
+ * self-contained document. The export keywords are legal inside an inline
+ * module and export nothing. Diff this block against ap.js to confirm.
+ * =================================================================== */
+/**
+ * A local ActivityPub implementation, in the browser, with no dependencies.
+ *
+ * Shared by the RESO specification playgrounds: the ULI Resolution Protocol
+ * (RCP-54) and Offer Management (RCP-57). Both carry the same hardest rule, and
+ * it is a negative one: an activity uses only standard Activity Streams 2.0
+ * vocabulary, and nothing extends the JSON-LD with custom terms. So the test of
+ * this module is not that it delivers messages. It is that the JSON it emits is
+ * indistinguishable from ordinary ActivityPub, and that everything a
+ * specification adds lives in a payload somewhere else.
+ *
+ * That rule is enforced here rather than trusted: `purity()` refuses any term
+ * outside the vocabulary below, and every build function runs through it.
+ *
+ * What this is NOT: a federation layer. Nothing is signed, no HTTP is spoken,
+ * and delivery is between actors held in one page. The server-side reference
+ * implementations use Fedify for the real thing. Here, "the network" is a map.
+ *
+ * No classes and no `this`: factory functions returning frozen plain objects,
+ * which is also what makes the output trivially JSON-serialisable.
+ */
+
+export const AS2 = 'https://www.w3.org/ns/activitystreams';
+export const PUBLIC = `${AS2}#Public`;
+
+/* ---------------------------------------------------------------------------
+ * The vocabulary, and the purity gate over it
+ * ------------------------------------------------------------------------ */
+
+/** Object types the two specifications use. */
+export const OBJECT_TYPES = Object.freeze(['Note', 'Tombstone', 'Collection', 'OrderedCollection']);
+
+/**
+ * Activity types the two specifications use.
+ * RCP-54 resolution: Create (mint), Note (broadcast and replies), Delete with a
+ * Tombstone (supersession). RCP-57 offers: Offer, Accept, Reject, Note.
+ */
+export const ACTIVITY_TYPES = Object.freeze(['Create', 'Delete', 'Offer', 'Accept', 'Reject', 'Update']);
+
+/** Link and tag types. */
+export const LINK_TYPES = Object.freeze(['Link', 'Mention']);
+
+export const ACTOR_TYPES = Object.freeze(['Person', 'Service', 'Organization', 'Application', 'Group']);
+
+/**
+ * Every Activity Streams term either specification needs. A key outside this
+ * set is the failure both specs forbid, so it is refused rather than passed on.
+ */
+const TERMS = Object.freeze(new Set([
+  '@context', 'id', 'type',
+  'actor', 'object', 'target', 'origin', 'result', 'instrument',
+  'attributedTo', 'inReplyTo', 'context', 'tag', 'url', 'href', 'mediaType', 'rel',
+  'to', 'cc', 'bto', 'bcc', 'audience',
+  'published', 'updated', 'startTime', 'endTime',
+  'name', 'summary', 'content', 'mediaType',
+  'inbox', 'outbox', 'followers', 'following', 'preferredUsername',
+  'items', 'orderedItems', 'totalItems', 'first', 'last', 'next', 'prev', 'partOf', 'current',
+  'replies', 'formerType', 'deleted',
+]));
+
+/**
+ * Refuse anything outside the vocabulary, at every depth.
+ * Returns the offending paths; empty means the document is pure AS2.
+ */
+export const purity = (doc, path = '') => {
+  if (Array.isArray(doc)) return doc.flatMap((v, i) => purity(v, `${path}[${i}]`));
+  if (doc === null || typeof doc !== 'object') return [];
+  return Object.entries(doc).flatMap(([k, v]) =>
+    TERMS.has(k) ? purity(v, path ? `${path}.${k}` : k) : [`${path ? `${path}.` : ''}${k}`]);
+};
+
+/** The context check, kept separate because a wrong context is a different defect. */
+export const contextOk = (doc) => {
+  const c = doc['@context'];
+  return c === AS2 || (Array.isArray(c) && c.length === 1 && c[0] === AS2);
+};
+
+const KNOWN_TYPES = new Set([...OBJECT_TYPES, ...ACTIVITY_TYPES, ...LINK_TYPES, ...ACTOR_TYPES]);
+
+/**
+ * The one place a document becomes real. Drops undefined, freezes the result,
+ * and refuses to emit anything that is not pure AS2 — a programming error here
+ * is worth a throw, because the whole point of the module is that its output
+ * cannot be non-conformant.
+ */
+const seal = (doc) => {
+  const clean = Object.fromEntries(
+    Object.entries(doc).filter(([, v]) => v !== undefined && !(Array.isArray(v) && v.length === 0)));
+  const bad = purity(clean);
+  if (bad.length) throw new Error(`activity carries non-AS2 terms: ${bad.join(', ')}`);
+  if (!KNOWN_TYPES.has(clean.type)) throw new Error(`unknown AS2 type: ${clean.type}`);
+  return Object.freeze(clean);
+};
+
+/* ---------------------------------------------------------------------------
+ * Identifiers
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Activity identifiers are assigned by the server, never by the client — RCP-57
+ * says so explicitly and RCP-54 assumes it. A playground has no server, so this
+ * stands in for one: monotonic per actor, so a thread reads in order.
+ */
+export const makeIdFactory = (origin) => {
+  const counters = new Map();
+  return (actorName, kind) => {
+    const n = (counters.get(actorName) ?? 0) + 1;
+    counters.set(actorName, n);
+    return `${origin}/${actorName}/${kind}/${n}`;
+  };
+};
+
+/* ---------------------------------------------------------------------------
+ * Actors and the local network
+ * ------------------------------------------------------------------------ */
+
+export const actor = ({ id, name, type = 'Service', preferredUsername }) => seal({
+  '@context': AS2,
+  id,
+  type,
+  name,
+  preferredUsername: preferredUsername ?? name,
+  inbox: `${id}/inbox`,
+  outbox: `${id}/outbox`,
+});
+
+/**
+ * A collection an activity may address instead of naming every recipient.
+ * RCP-54's broadcast addresses `reso.org/resolvers` and relies on each member
+ * following it, which is how one Note reaches R resolvers.
+ */
+export const collection = ({ id, name, members }) => seal({
+  '@context': AS2,
+  id,
+  type: 'Collection',
+  name,
+  totalItems: members.length,
+  items: [...members],
+});
+
+/* ---------------------------------------------------------------------------
+ * Vocabulary builders — the union of what RCP-54 and RCP-57 need
+ * ------------------------------------------------------------------------ */
+
+const addressing = ({ to, cc }) => ({
+  to: to === undefined ? undefined : [...to],
+  cc: cc === undefined ? undefined : [...cc],
+});
+
+/** A Note: RCP-54's broadcast and every reply, and RCP-57's state messages. */
+export const note = ({ id, actor: by, inReplyTo, to, cc, published, content, name, url, tag }) => seal({
+  '@context': AS2,
+  id,
+  type: 'Note',
+  attributedTo: by,
+  inReplyTo,
+  ...addressing({ to, cc }),
+  published,
+  name,
+  content,
+  url,
+  tag,
+});
+
+/**
+ * A payload reference. Both specifications keep their actual records out of the
+ * activity and behind an OAuth2-protected URL, so this Link is the only trace
+ * of them on the wire.
+ */
+export const payloadLink = ({ href, mediaType = 'application/json' }) =>
+  seal({ type: 'Link', href, mediaType });
+
+/** A Mention, which is RCP-54's mechanism for designating a mandatory resolver. */
+export const mention = ({ href, name }) => seal({ type: 'Mention', href, name });
+
+/** Create: RCP-54 mints a ULI by posting it to the thread. */
+export const create = ({ id, actor: by, object, inReplyTo, to, cc, published }) => seal({
+  '@context': AS2,
+  id,
+  type: 'Create',
+  actor: by,
+  object,
+  inReplyTo,
+  ...addressing({ to, cc }),
+  published,
+});
+
+/**
+ * A Tombstone with a redirect. RCP-54 supersedes a ULI by tombstoning it toward
+ * its successor, and the redirect target is the successor's URN rather than a
+ * resolvable link, so nothing identifying rides the wire.
+ */
+export const tombstone = ({ id, formerType = 'Note', deleted, url }) => seal({
+  '@context': AS2, id, type: 'Tombstone', formerType, deleted, url,
+});
+
+export const del = ({ id, actor: by, object, inReplyTo, to, cc, published }) => seal({
+  '@context': AS2, id, type: 'Delete', actor: by, object, inReplyTo, ...addressing({ to, cc }), published,
+});
+
+/** RCP-57: an offer, and a counter, which is the same activity on a new parent. */
+export const offer = ({ id, actor: by, inReplyTo, to, cc, attributedTo, published, url }) => seal({
+  '@context': AS2,
+  id, type: 'Offer', actor: by, inReplyTo, ...addressing({ to, cc }),
+  attributedTo: attributedTo === undefined ? undefined : [...attributedTo],
+  published, url,
+});
+
+export const accept = ({ id, actor: by, object, to, cc, published }) => seal({
+  '@context': AS2, id, type: 'Accept', actor: by, object, ...addressing({ to, cc }), published,
+});
+
+export const reject = ({ id, actor: by, object, to, cc, published }) => seal({
+  '@context': AS2, id, type: 'Reject', actor: by, object, ...addressing({ to, cc }), published,
+});
+
+/* ---------------------------------------------------------------------------
+ * Storage
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Storage is pluggable so the same code runs in a page and in a test. The
+ * browser store wraps every call: a private window, blocked site data or a
+ * thumbnail capture makes these throw or return nothing, and a playground must
+ * render correctly anyway.
+ */
+export const memoryStore = () => {
+  const m = new Map();
+  return Object.freeze({
+    get: (k) => m.get(k),
+    set: (k, v) => { m.set(k, v); },
+    keys: () => [...m.keys()],
+    clear: () => { m.clear(); },
+  });
+};
+
+export const localStore = (prefix) => {
+  const key = (k) => `${prefix}:${k}`;
+  const safe = (fn, fallback) => { try { return fn(); } catch { return fallback; } };
+  return Object.freeze({
+    get: (k) => safe(() => {
+      const raw = localStorage.getItem(key(k));
+      return raw === null ? undefined : JSON.parse(raw);
+    }, undefined),
+    set: (k, v) => safe(() => { localStorage.setItem(key(k), JSON.stringify(v)); }, undefined),
+    keys: () => safe(() => Object.keys(localStorage)
+      .filter((k) => k.startsWith(`${prefix}:`))
+      .map((k) => k.slice(prefix.length + 1)), []),
+    clear: () => safe(() => {
+      Object.keys(localStorage)
+        .filter((k) => k.startsWith(`${prefix}:`))
+        .forEach((k) => localStorage.removeItem(k));
+    }, undefined),
+    /** What a Clear control should be able to show before it wipes anything. */
+    stats: () => safe(() => {
+      const ks = Object.keys(localStorage).filter((k) => k.startsWith(`${prefix}:`));
+      return { entries: ks.length, bytes: ks.reduce((n, k) => n + k.length + (localStorage.getItem(k) ?? '').length, 0) };
+    }, { entries: 0, bytes: 0 }),
+  });
+};
+
+/* ---------------------------------------------------------------------------
+ * The network: actors, delivery, and an age sweep
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Delivery resolves each addressee to local inboxes. A collection expands to
+ * its members, which is what lets RCP-54 post one Note to the resolver
+ * collection and have it arrive R times.
+ */
+const expand = (addressees, collections) =>
+  [...new Set(addressees.flatMap((a) => {
+    const c = collections.get(a);
+    return c ? c.items : [a];
+  }))];
+
+/**
+ * A local network. `maxAgeMs` makes persistence ephemeral as the playgrounds
+ * want: threads survive a browser restart and are swept once they are old,
+ * so the page keeps state without becoming a database of licensee records.
+ */
+export const network = ({ store = memoryStore(), origin = 'https://local.example', maxAgeMs = 7 * 24 * 3600 * 1000, now = () => Date.now() } = {}) => {
+  const actors = new Map();
+  const collections = new Map();
+  const nextId = makeIdFactory(origin);
+
+  const load = () => store.get('activities') ?? [];
+  const save = (xs) => store.set('activities', xs);
+
+  /** Drop anything past its age, so "for some time, but ephemeral" is real. */
+  const sweep = () => {
+    const cutoff = now() - maxAgeMs;
+    const kept = load().filter((r) => (r.receivedAt ?? 0) >= cutoff);
+    if (kept.length !== load().length) save(kept);
+    return kept;
+  };
+
+  const addActor = (a) => { actors.set(a.id, a); return a; };
+  const addCollection = (c) => { collections.set(c.id, c); return c; };
+
+  /**
+   * Post an activity. Returns the delivery record rather than throwing on an
+   * unknown addressee: an undeliverable recipient is a normal outcome to show,
+   * not an exception.
+   */
+  const post = (activity) => {
+    const addressed = expand([...(activity.to ?? []), ...(activity.cc ?? [])], collections);
+    const delivered = addressed.filter((a) => actors.has(a) || a === PUBLIC);
+    const undeliverable = addressed.filter((a) => !delivered.includes(a));
+    const record = Object.freeze({
+      activity,
+      from: activity.actor ?? activity.attributedTo,
+      delivered,
+      undeliverable,
+      receivedAt: now(),
+    });
+    save([...sweep(), record]);
+    return record;
+  };
+
+  /** What one actor can see: what it sent, and what was addressed to it. */
+  const inboxOf = (actorId) => sweep().filter((r) =>
+    r.delivered.includes(actorId) || r.from === actorId || r.delivered.includes(PUBLIC));
+
+  return Object.freeze({
+    origin,
+    nextId,
+    addActor,
+    addCollection,
+    actors: () => [...actors.values()],
+    collections: () => [...collections.values()],
+    post,
+    inboxOf,
+    all: () => sweep(),
+    stats: () => (store.stats ? store.stats() : { entries: sweep().length, bytes: null }),
+    clear: () => { store.clear(); },
+  });
+};
+
+/* ---------------------------------------------------------------------------
+ * Threads
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Assemble a thread from `inReplyTo`, which is the only threading mechanism
+ * either specification uses. Returns roots with nested replies, each node
+ * carrying its delivery record so a renderer can show who received what.
+ *
+ * Both playgrounds need a thread view, and RCP-57's needs one it does not yet
+ * have, so this is deliberately shaped around activities and not around either
+ * specification's semantics.
+ */
+export const thread = (records) => {
+  const byId = new Map(records.map((r) => [r.activity.id, { record: r, replies: [] }]));
+  const roots = [];
+  records.forEach((r) => {
+    const node = byId.get(r.activity.id);
+    const parentId = r.activity.inReplyTo;
+    const parent = parentId === undefined ? undefined : byId.get(parentId);
+    // An activity replying to something outside the set is a root here, so a
+    // partial view (one actor's inbox) still renders rather than vanishing.
+    if (parent) parent.replies.push(node); else roots.push(node);
+  });
+  const sortRec = (ns) => {
+    ns.sort((a, b) => (a.record.receivedAt ?? 0) - (b.record.receivedAt ?? 0));
+    ns.forEach((n) => sortRec(n.replies));
+    return ns;
+  };
+  return sortRec(roots);
+};
+
+/** Flatten a thread to rows with depth, which is what a table or list wants. */
+export const flatten = (nodes, depth = 0) =>
+  nodes.flatMap((n) => [{ ...n.record, depth }, ...flatten(n.replies, depth + 1)]);
+
+/* ---------------------------------------------------------------------------
+ * Conformance self-checks
+ * ------------------------------------------------------------------------ */
+
+/**
+ * The checks a playground can run against its own output and display. Both
+ * specifications' negative rule is checkable, so the page can state that it
+ * verified rather than asserting that it complies.
+ */
+export const conformance = (records) => {
+  const docs = records.map((r) => r.activity);
+  const impure = docs.flatMap((d) => purity(d).map((p) => ({ id: d.id, term: p })));
+  const badContext = docs.filter((d) => !contextOk(d)).map((d) => d.id);
+  return Object.freeze({
+    activities: docs.length,
+    pureAS2: impure.length === 0,
+    impure,
+    contextCorrect: badContext.length === 0,
+    badContext,
+  });
+};
+
+/* ===================================================================
+ * End of ap.js. Playground code begins.
+ * =================================================================== */
+
+/* ---------------------------------------------------------------------------
+ * Small utilities
+ * ------------------------------------------------------------------------ */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const fmt = (n) => Number(n).toLocaleString('en-US');
+const nowIso = () => new Date().toISOString();
+const b64u = (bytes) => btoa(Array.from(bytes, (b) => String.fromCharCode(b)).join('')).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const fromB64u = (s) => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (s.length % 4)) % 4)), (c) => c.charCodeAt(0));
+const randB64u = (n) => { const b = new Uint8Array(n); crypto.getRandomValues(b); return b64u(b); };
+const ascii = (s) => new TextEncoder().encode(s);
+const yieldFrame = () => new Promise((r) => requestAnimationFrame(() => r()));
+const SPEC = 'https://github.com/RESOStandards/transport/blob/221-uli-resolution-protocol/proposals/uli-resolution-protocol.md';
+
+/* ---------------------------------------------------------------------------
+ * The seventeen ULI fields of §2.3, all on the Member Resource
+ * ------------------------------------------------------------------------ */
+const FIELDS = Object.freeze([
+  'MemberFullName', 'MemberFirstName', 'MemberMiddleName', 'MemberLastName', 'MemberNickname', 'MemberType',
+  'MemberNationalAssociationId', 'MemberStateLicense', 'MemberStateLicenseType', 'MemberStateLicenseState', 'MemberMlsId',
+  'OfficeName', 'OfficeMlsId', 'SourceSystemID', 'SourceSystemName', 'OriginatingSystemID', 'OriginatingSystemName',
+]);
+const ULI_FIELD = 'UniqueLicenseeIdentifier';
+const LABELS = Object.freeze({
+  MemberFullName: 'Full name', MemberFirstName: 'First name', MemberMiddleName: 'Middle name', MemberLastName: 'Last name',
+  MemberNickname: 'Nickname', MemberType: 'Member type', MemberNationalAssociationId: 'National association id (NRDS)',
+  MemberStateLicense: 'License number', MemberStateLicenseType: 'License type', MemberStateLicenseState: 'License state',
+  MemberMlsId: 'MLS id', OfficeName: 'Office name', OfficeMlsId: 'Office MLS id', SourceSystemID: 'Source system id',
+  SourceSystemName: 'Source system name', OriginatingSystemID: 'Originating system id', OriginatingSystemName: 'Originating system name',
+  [ULI_FIELD]: 'ULI',
+});
+const RCF_CONTEXT = 'urn:reso:metadata:2.0:resource:member';
+const rcfRecord = (r) => Object.fromEntries([...(r[ULI_FIELD] ? [[ULI_FIELD, r[ULI_FIELD]]] : []), ...FIELDS.filter((f) => r[f] !== undefined && r[f] !== '').map((f) => [f, r[f]])]);
+const rcf = (r) => ({ '@reso.context': RCF_CONTEXT, value: [rcfRecord(r)] });
+const displayName = (r) => r.MemberFullName || [r.MemberFirstName, r.MemberLastName].filter(Boolean).join(' ') || r.id;
+
+/* ---------------------------------------------------------------------------
+ * Normalization. §2.9 pins case folding, accent and whitespace handling and
+ * nickname expansion to a reference harness and test vectors that do not
+ * exist yet, so this is the page's own choice and is labeled as such on the
+ * page: accents folded, case ignored, whitespace collapsed, periods and
+ * apostrophes dropped from names, whitespace dropped from identifiers.
+ * Nickname expansion (Robert to Bob) is NOT performed.
+ * ------------------------------------------------------------------------ */
+const strip = (s) => String(s ?? '').normalize('NFKD').replace(/[̀-ͯ]/g, '');
+const foldName = (s) => strip(s).toLowerCase().replace(/[.,'’]/g, '').replace(/\s+/g, ' ').trim();
+const foldId = (s) => strip(s).toUpperCase().replace(/\s+/g, '');
+const normalize = (r) => Object.freeze({
+  full: foldName(r.MemberFullName), first: foldName(r.MemberFirstName), middle: foldName(r.MemberMiddleName),
+  last: foldName(r.MemberLastName), nick: foldName(r.MemberNickname), nrds: foldId(r.MemberNationalAssociationId),
+  lic: foldId(r.MemberStateLicense), state: foldId(r.MemberStateLicenseState), ltype: foldName(r.MemberStateLicenseType),
+  officeId: foldId(r.OfficeMlsId), officeName: foldName(r.OfficeName),
+});
+
+/* ---------------------------------------------------------------------------
+ * The §2.9 table. Two tiers: a named primary, and everything else is a
+ * secondary (the spec's "Other" row is secondary). The license forms are a
+ * cluster like office: the strongest matched member counts, never the sum.
+ * ------------------------------------------------------------------------ */
+const both = (a, b, k) => a[k] !== '' && a[k] === b[k];
+const FACTORS = Object.freeze([
+  { id: 'nrds', tier: 'primary', label: 'MemberNationalAssociationId (NRDS)', cluster: null, weight: 800, match: (a, b) => both(a, b, 'nrds') },
+  { id: 'fullName', tier: 'primary', label: 'Full Name (or First Name + Last Name)', cluster: null, weight: 700, match: (a, b) => both(a, b, 'full') || (both(a, b, 'first') && both(a, b, 'last')) },
+  { id: 'fullNickname', tier: 'primary', label: 'Full Nickname (or Nickname + Last Name)', cluster: null, weight: 650, match: (a, b) => both(a, b, 'nick') && both(a, b, 'last') },
+  { id: 'licenseNST', tier: 'primary', label: 'License (Number + State + Type)', cluster: 'license', weight: 625, match: (a, b) => both(a, b, 'lic') && both(a, b, 'state') && both(a, b, 'ltype') },
+  { id: 'licenseNS', tier: 'primary', label: 'License (Number + State)', cluster: 'license', weight: 600, match: (a, b) => both(a, b, 'lic') && both(a, b, 'state') },
+  { id: 'officeId', tier: 'secondary', label: 'Office ID', cluster: 'office', weight: 100, match: (a, b) => both(a, b, 'officeId') },
+  { id: 'officeName', tier: 'secondary', label: 'Office Name', cluster: 'office', weight: 80, match: (a, b) => both(a, b, 'officeName') },
+  { id: 'oLast', tier: 'secondary', label: 'Last Name', cluster: null, weight: 10, match: (a, b) => both(a, b, 'last') },
+  { id: 'oFirst', tier: 'secondary', label: 'First Name', cluster: null, weight: 10, match: (a, b) => both(a, b, 'first') },
+  { id: 'oMiddle', tier: 'secondary', label: 'Middle Name', cluster: null, weight: 10, match: (a, b) => both(a, b, 'middle') },
+  { id: 'oNickname', tier: 'secondary', label: 'Nickname', cluster: null, weight: 10, match: (a, b) => both(a, b, 'nick') },
+  { id: 'oLicenseType', tier: 'secondary', label: 'License Type', cluster: null, weight: 10, match: (a, b) => both(a, b, 'ltype') },
+]);
+const DEFAULT_TUNING = Object.freeze({
+  weights: Object.freeze(Object.fromEntries(FACTORS.map((f) => [f.id, f.weight]))),
+  rejectFloor: 700,
+  override: null,
+  hypothetical: null,
+});
+/** The factor list under a tuning: table weights replaced, plus an optional unbacked primary for testing the rule. */
+const factorsOf = (t) => [
+  ...FACTORS.map((f) => ({ ...f, weight: Number(t.weights[f.id] ?? f.weight) })),
+  ...(t.hypothetical ? [{ id: 'hypo', tier: 'primary', label: `Hypothetical primary${t.hypothetical.cluster ? ` (${t.hypothetical.cluster} cluster)` : ''}`, cluster: t.hypothetical.cluster ?? null, weight: Number(t.hypothetical.weight), match: () => false }] : []),
+];
+/** Sum with each cluster counted once at its strongest member. */
+const clusterSum = (fs) => {
+  const best = new Map();
+  fs.forEach((f) => { if (f.cluster) { const c = best.get(f.cluster); if (!c || f.weight > c.weight) best.set(f.cluster, f); } });
+  return fs.filter((f) => !f.cluster).reduce((s, f) => s + f.weight, 0) + [...best.values()].reduce((s, f) => s + f.weight, 0);
+};
+/**
+ * The threshold is derived, never typed: the smallest sum of two primary
+ * weights that one candidate can match together. Two members of one cluster
+ * are not co-matchable, so the two license forms never pair.
+ */
+const threshold = (t) => {
+  const factors = factorsOf(t);
+  const prim = factors.filter((f) => f.tier === 'primary');
+  const pairs = prim.flatMap((a, i) => prim.slice(i + 1).map((b) => ({ a, b, sum: a.weight + b.weight, coMatchable: !(a.cluster && a.cluster === b.cluster) }))).sort((x, y) => x.sum - y.sum);
+  const co = pairs.filter((p) => p.coMatchable);
+  const derived = co.length ? co[0].sum : Infinity;
+  const override = t.override === null || t.override === undefined || t.override === '' ? null : Number(t.override);
+  return { factors, pairs: co, excluded: pairs.filter((p) => !p.coMatchable), derived, pair: co[0] ?? null, override, effective: override ?? derived, overridden: override !== null && override !== derived, max: clusterSum(factors) };
+};
+/** The three invariants of the brief, checked on every change. */
+const invariants = (t) => {
+  const th = threshold(t);
+  const T = th.effective;
+  const prim = th.factors.filter((f) => f.tier === 'primary');
+  const sec = th.factors.filter((f) => f.tier === 'secondary');
+  const maxPrimary = prim.reduce((m, f) => (f.weight > m.weight ? f : m), prim[0]);
+  const secSum = clusterSum(sec);
+  return {
+    th, T, maxPrimary, secSum,
+    inv1: { ok: !th.overridden, notClearing: th.pairs.filter((p) => p.sum < T) },
+    inv2: { ok: maxPrimary.weight + secSum < T, headroom: T - maxPrimary.weight - secSum },
+    inv3: { ok: maxPrimary.weight < T, reaching: prim.filter((f) => f.weight >= T) },
+  };
+};
+/** A scorer closed over one tuning, so a million-pair loop derives the threshold once. */
+const makeScorer = (t) => {
+  const th = threshold(t);
+  const floor = Number(t.rejectFloor);
+  return (a, b) => {
+    const best = new Map();
+    const hits = th.factors.map((f) => { const m = f.match(a, b); if (m && f.cluster) { const c = best.get(f.cluster); if (!c || f.weight > c.weight) best.set(f.cluster, f); } return m; });
+    const rows = th.factors.map((f, i) => ({ id: f.id, label: f.label, tier: f.tier, cluster: f.cluster, weight: f.weight, matched: hits[i], counted: hits[i] && (!f.cluster || best.get(f.cluster) === f) }));
+    const total = rows.reduce((s, r) => (r.counted ? s + r.weight : s), 0);
+    const primaries = rows.reduce((n, r) => (r.counted && r.tier === 'primary' ? n + 1 : n), 0);
+    const gate = primaries >= 2;
+    const band = total < floor ? 'rejected' : total >= th.effective && gate ? 'possible' : 'review';
+    return { total, rows, primaries, gate, band, T: th.effective, floor, max: th.max };
+  };
+};
+const score = (a, b, t) => makeScorer(t)(a, b);
+/** §2.4: could a full match of this record reach the bar? Score it against itself. */
+const identifiability = (r, t) => { const n = normalize(r); const s = score(n, n, t); return { ...s, passes: s.total >= s.T && s.gate }; };
+
+/* ---------------------------------------------------------------------------
+ * Local matching with blocking on surname plus license state
+ * ------------------------------------------------------------------------ */
+const blockKey = (n) => `${n.last}|${n.state}`;
+const localMatches = async (records, t, onProgress) => {
+  const t0 = performance.now();
+  const scorer = makeScorer(t);
+  const views = records.map((r) => ({ r, n: normalize(r) }));
+  const blocks = views.reduce((m, v) => { const k = blockKey(v.n); const arr = m.get(k); if (arr) arr.push(v); else m.set(k, [v]); return m; }, new Map());
+  const list = [...blocks.values()];
+  const totalWork = list.reduce((s, b) => s + (b.length * (b.length - 1)) / 2, 0);
+  const pairs = [];
+  let compared = 0; // counters local to this closure
+  let sinceYield = 0;
+  for (const members of list) {
+    for (let i = 0; i < members.length; i++) {
+      for (let j = i + 1; j < members.length; j++) {
+        compared += 1;
+        const s = scorer(members[i].n, members[j].n);
+        if (s.total >= Number(t.rejectFloor)) pairs.push({ a: members[i].r, b: members[j].r, s });
+      }
+    }
+    sinceYield += (members.length * (members.length - 1)) / 2;
+    if (sinceYield > 25000) { sinceYield = 0; onProgress?.(compared / Math.max(totalWork, 1)); await yieldFrame(); }
+  }
+  pairs.sort((x, y) => y.s.total - x.s.total);
+  const n = records.length;
+  return { pairs, stats: { records: n, blocks: blocks.size, largest: list.reduce((m, b) => Math.max(m, b.length), 0), compared, allPairs: (n * (n - 1)) / 2, ms: Math.round(performance.now() - t0) } };
+};
+
+/**
+ * A dependency-free XLSX reader, for the playground.
+ *
+ * The playground must make zero network calls – its content-security policy refuses them and that
+ * is a verified property – so a CDN parser is not available, and inlining one would add a hundred
+ * kilobytes to a file that is deliberately one file. An XLSX is a ZIP of XML, and the browser
+ * already has everything needed: DecompressionStream('deflate-raw') for the ZIP entries, and the
+ * worksheet XML is machine-generated and regular enough to read without a parser.
+ *
+ * DOMParser is deliberately not used, although the browser has it, because Node does not. The same
+ * code then runs under the test suite and in the page, and a reader that cannot be tested is not
+ * worth having.
+ *
+ * Scope: enough of SpreadsheetML to read a roster. Shared strings including rich-text runs, inline
+ * strings, formula results, sparse rows, and the sheet order and names as the workbook declares
+ * them. Not dates (a roster carries none and a serial date needs the number format table), not
+ * formulas themselves, and not Zip64, which is detected and refused rather than misread.
+ */
+
+const EOCD_SIG = 0x06054b50;
+const CEN_SIG = 0x02014b50;
+const LOC_SIG = 0x04034b50;
+const ZIP64_EOCD_LOCATOR_SIG = 0x07064b50;
+
+const u16 = (view, at) => view.getUint16(at, true);
+const u32 = (view, at) => view.getUint32(at, true);
+
+/** The end-of-central-directory record sits at the end, after a comment of unknown length. */
+const findEocd = (view) => {
+  const maxComment = 0xffff;
+  const earliest = Math.max(0, view.byteLength - maxComment - 22);
+  for (let at = view.byteLength - 22; at >= earliest; at -= 1) {
+    if (u32(view, at) === EOCD_SIG) return at;
+  }
+  return -1;
+};
+
+const utf8 = new TextDecoder('utf-8');
+
+/** The central directory, as a map from entry name to what is needed to extract it. */
+const readCentralDirectory = (bytes) => {
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const eocd = findEocd(view);
+  if (eocd < 0) throw new Error('not a ZIP archive: no end-of-central-directory record');
+
+  // A Zip64 archive puts the real offsets in a separate record. Reading the 32-bit fields would
+  // give a plausible wrong answer, so refuse instead.
+  for (let at = eocd - 20; at >= 0 && at > eocd - 100; at -= 1) {
+    if (u32(view, at) === ZIP64_EOCD_LOCATOR_SIG) {
+      throw new Error('Zip64 archives are not supported; re-save the workbook');
+    }
+  }
+
+  const count = u16(view, eocd + 10);
+  const entries = new Map();
+  let at = u32(view, eocd + 16);
+  for (let i = 0; i < count; i += 1) {
+    if (u32(view, at) !== CEN_SIG) throw new Error(`corrupt central directory at entry ${i}`);
+    const method = u16(view, at + 10);
+    const compressedSize = u32(view, at + 20);
+    const nameLength = u16(view, at + 28);
+    const extraLength = u16(view, at + 30);
+    const commentLength = u16(view, at + 32);
+    const localOffset = u32(view, at + 42);
+    const name = utf8.decode(bytes.subarray(at + 46, at + 46 + nameLength));
+    entries.set(name, { method, compressedSize, localOffset });
+    at += 46 + nameLength + extraLength + commentLength;
+  }
+  return { bytes, view, entries };
+};
+
+const inflateRaw = async (slice) => {
+  const stream = new Blob([slice]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+  return new Uint8Array(await new Response(stream).arrayBuffer());
+};
+
+/** Read one entry's bytes. The local header repeats the name and extra fields, so data sits past them. */
+const readEntry = async (zip, name) => {
+  const entry = zip.entries.get(name);
+  if (entry === undefined) return undefined;
+  const { view, bytes } = zip;
+  const at = entry.localOffset;
+  if (u32(view, at) !== LOC_SIG) throw new Error(`corrupt local header for ${name}`);
+  const dataAt = at + 30 + u16(view, at + 26) + u16(view, at + 28);
+  const slice = bytes.subarray(dataAt, dataAt + entry.compressedSize);
+  if (entry.method === 0) return utf8.decode(slice);
+  if (entry.method === 8) return utf8.decode(await inflateRaw(slice));
+  throw new Error(`unsupported compression method ${entry.method} for ${name}`);
+};
+
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+
+const decodeXml = (s) =>
+  s.replace(/&(#x?[0-9a-fA-F]+|amp|lt|gt|quot|apos);/g, (whole, body) => {
+    if (body.startsWith('#x') || body.startsWith('#X')) return String.fromCodePoint(parseInt(body.slice(2), 16));
+    if (body.startsWith('#')) return String.fromCodePoint(parseInt(body.slice(1), 10));
+    return ENTITIES[body] ?? whole;
+  });
+
+/** Every <t> in a fragment, concatenated: a shared string may be split across rich-text runs. */
+const textOf = (fragment) =>
+  [...fragment.matchAll(/<t(?:\s[^>]*)?>([\s\S]*?)<\/t>|<t(?:\s[^>]*)?\/>/g)]
+    .map((m) => decodeXml(m[1] ?? ''))
+    .join('');
+
+const sharedStrings = (xml) =>
+  xml === undefined ? [] : [...xml.matchAll(/<si(?:\s[^>]*)?>([\s\S]*?)<\/si>|<si(?:\s[^>]*)?\/>/g)].map((m) => textOf(m[1] ?? ''));
+
+/** "AA12" -> 26. Only the letters matter; the row number is read separately. */
+const columnIndex = (ref) => {
+  const letters = /^([A-Z]+)/.exec(ref)?.[1] ?? '';
+  return [...letters].reduce((acc, ch) => acc * 26 + (ch.charCodeAt(0) - 64), 0) - 1;
+};
+
+const cellValue = (attrs, inner, strings) => {
+  const type = /\bt="([^"]*)"/.exec(attrs)?.[1] ?? 'n';
+  if (type === 's') {
+    const index = Number(/<v(?:\s[^>]*)?>([\s\S]*?)<\/v>/.exec(inner)?.[1] ?? '');
+    return strings[index] ?? '';
+  }
+  if (type === 'inlineStr') return textOf(inner);
+  if (type === 'e') return /<v(?:\s[^>]*)?>([\s\S]*?)<\/v>/.exec(inner)?.[1] ?? '';
+  // n, str, b, d: the stored value is already the text we want, with one exception. A boolean
+  // stores 0 or 1 and Excel shows TRUE or FALSE, so return what the person sees in their own file
+  // rather than the encoding underneath it.
+  const raw = decodeXml(/<v(?:\s[^>]*)?>([\s\S]*?)<\/v>/.exec(inner)?.[1] ?? '');
+  // Excel stores a whole number as "14.0", and an MLS ID typed as a number would then read as
+  // "14.0" and fail to match the same roster loaded from CSV as "14". Trim exactly a trailing
+  // ".0" and nothing else: "0.0088" and "14.50" are left alone, and a license number stored as
+  // text was never a number cell in the first place.
+  if (type === 'b') return raw === '1' ? 'TRUE' : 'FALSE';
+  return type === 'n' ? raw.replace(/^(-?\d+)\.0+$/, '$1') : raw;
+};
+
+/** A worksheet as a dense 2-D array of strings, placing each cell by its own reference. */
+const sheetRows = (xml, strings) =>
+  [...xml.matchAll(/<row(?:\s[^>]*)?>([\s\S]*?)<\/row>|<row(?:\s[^>]*)?\/>/g)].map((rowMatch) => {
+    const cells = [...(rowMatch[1] ?? '').matchAll(/<c([^>]*?)(?:\/>|>([\s\S]*?)<\/c>)/g)];
+    return cells.reduce((row, c) => {
+      const ref = /\br="([^"]*)"/.exec(c[1])?.[1];
+      const at = ref === undefined ? row.length : columnIndex(ref);
+      while (row.length < at) row.push('');
+      row[at] = cellValue(c[1], c[2] ?? '', strings);
+      return row;
+    }, []);
+  });
+
+/**
+ * Read a workbook. Returns its sheets in the order the workbook declares, each with its name and
+ * rows, so a caller can let the user choose rather than guessing that the first sheet is the data.
+ */
+const readXlsx = async (arrayBuffer) => {
+  const zip = readCentralDirectory(new Uint8Array(arrayBuffer));
+  const workbook = await readEntry(zip, 'xl/workbook.xml');
+  if (workbook === undefined) throw new Error('not an XLSX workbook: xl/workbook.xml is missing');
+
+  const rels = (await readEntry(zip, 'xl/_rels/workbook.xml.rels')) ?? '';
+  const target = new Map(
+    [...rels.matchAll(/<Relationship\b([^>]*)\/?>/g)].map((m) => [
+      /\bId="([^"]*)"/.exec(m[1])?.[1] ?? '',
+      (/\bTarget="([^"]*)"/.exec(m[1])?.[1] ?? '').replace(/^\/?xl\//, '').replace(/^\//, ''),
+    ]),
+  );
+
+  const strings = sharedStrings(await readEntry(zip, 'xl/sharedStrings.xml'));
+
+  const declared = [...workbook.matchAll(/<sheet\b([^>]*)\/?>/g)].map((m, i) => ({
+    name: decodeXml(/\bname="([^"]*)"/.exec(m[1])?.[1] ?? `Sheet${i + 1}`),
+    rid: /\br:id="([^"]*)"/.exec(m[1])?.[1] ?? '',
+  }));
+
+  const sheets = await declared.reduce(async (acc, sheet, i) => {
+    const out = await acc;
+    const path = target.get(sheet.rid) ?? `worksheets/sheet${i + 1}.xml`;
+    const xml = (await readEntry(zip, `xl/${path}`)) ?? (await readEntry(zip, path));
+    return [...out, { name: sheet.name, rows: xml === undefined ? [] : sheetRows(xml, strings) }];
+  }, Promise.resolve([]));
+
+  return { sheets };
+};
+
+/* ---------------------------------------------------------------------------
+ * CSV, both directions. Headers are Data Dictionary field names.
+ * ------------------------------------------------------------------------ */
+const parseCsv = (text) => {
+  const rows = [];
+  let row = []; let cell = ''; let quoted = false; // scanner state, local to this closure
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) { if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else quoted = false; } else cell += c; }
+    else if (c === '"') quoted = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+    else cell += c;
+  }
+  if (cell !== '' || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter((r) => r.some((v) => v.trim() !== ''));
+};
+const csvCell = (v) => (/[",\n\r]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+const toCsv = (records) => [[ULI_FIELD, ...FIELDS], ...records.map((r) => [r[ULI_FIELD] ?? '', ...FIELDS.map((f) => r[f] ?? '')])].map((r) => r.map(csvCell).join(',')).join('\n');
+const KNOWN_HEADERS = new Map([...FIELDS, ULI_FIELD].map((f) => [f.toLowerCase(), f]));
+/** Columns the 2024 pilot template carries that the protocol does not use, and what to say. */
+const HEADER_HINTS = new Map([
+  ['membermiddleinitial', 'MemberMiddleInitial is not a Data Dictionary field. The field is MemberMiddleName.'],
+  ['originatingsystemmemberkey', 'OriginatingSystemMemberKey is a Data Dictionary field but is not one of the seventeen the protocol scores on.'],
+]);
+const hintsFor = (ignored) => ignored.map((h) => HEADER_HINTS.get(h.trim().toLowerCase())).filter(Boolean);
+
+const recordsFromRows = (rows, idPrefix) => {
+  if (rows.length < 2) return { records: [], recognized: [], ignored: [], error: 'The file needs a header row and at least one record.' };
+  const headers = rows[0].map((h) => h.trim());
+  const mapped = headers.map((h) => KNOWN_HEADERS.get(h.toLowerCase()) ?? null);
+  const recognized = mapped.filter(Boolean);
+  const ignored = headers.filter((h, i) => !mapped[i]);
+  if (!recognized.length) return { records: [], recognized, ignored, error: 'No column matched a Data Dictionary field name.' };
+  const records = rows.slice(1).map((r, i) => Object.fromEntries([['id', `${idPrefix}-${i + 1}`], ...mapped.map((f, j) => (f ? [f, String(r[j] ?? '').trim()] : null)).filter(Boolean)]));
+  return { records, recognized, ignored, error: null };
+};
+const recordsFromCsv = (text, idPrefix) => recordsFromRows(parseCsv(text.replace(/^﻿/, '')), idPrefix);
+
+/**
+ * A workbook may hold several sheets, and the pilot template holds three. Rather than assume the
+ * first one is the data, score each sheet by how many columns it recognizes and how many rows it
+ * carries, take the best, and say which one was read.
+ */
+const recordsFromWorkbook = async (buffer, idPrefix) => {
+  const { sheets } = await readXlsx(buffer);
+  const scored = sheets
+    .map((sheet) => ({ sheet, result: recordsFromRows(sheet.rows, idPrefix) }))
+    .map((c) => ({ ...c, rank: c.result.recognized.length * 1000 + c.result.records.length }));
+  const best = scored.reduce((a, b) => (b.rank > a.rank ? b : a), scored[0] ?? { rank: -1 });
+  if (best.rank < 0) return { records: [], recognized: [], ignored: [], error: 'The workbook has no sheets.' };
+  const others = sheets.filter((s) => s !== best.sheet).map((s) => s.name);
+  return { ...best.result, sheetName: best.sheet.name, otherSheets: others };
+};
+
+/* ---------------------------------------------------------------------------
+ * Providers, the modeled governance feed and the keys behind it
+ * ------------------------------------------------------------------------ */
+const PROVIDERS = Object.freeze([
+  { key: 'p1', n: 1, org: 'M00000123', name: 'Provider 1', mls: 'Source MLS', color: 'var(--p1)' },
+  { key: 'p2', n: 2, org: 'M00000222', name: 'Provider 2', mls: 'Resolver 2 MLS', color: 'var(--p2)' },
+  { key: 'p3', n: 3, org: 'M00000333', name: 'Provider 3', mls: 'Resolver 3 MLS', color: 'var(--p3)' },
+  { key: 'p5', n: 5, org: 'M00000555', name: 'Provider 5', mls: 'Resolver 5 MLS', color: 'var(--p5)' },
+  { key: 'p8', n: 8, org: 'M00000888', name: 'Provider 8', mls: 'Resolver 8 MLS', color: 'var(--p8)' },
+].map((p) => Object.freeze({ ...p, uoi: `urn:reso:uoi:1.0:T00000012:${p.org}`, host: `provider${p.n}.example.com`, actor: `https://provider${p.n}.example.com/actor` })));
+const P = Object.freeze(Object.fromEntries(PROVIDERS.map((p) => [p.key, p])));
+const byActor = (id) => PROVIDERS.find((p) => p.actor === id);
+const RESOLVERS = 'https://reso.org/resolvers';
+/** The key and identifier of the §2.8 worked example, which the page verifies for real. */
+const SPEC_KEY = Object.freeze({ pub: '3F0yXARgFnOg1PnvBNs-PEsNA-I4VLafdjmlklecppw', label: 'published in §2.8 of the specification' });
+const SPEC_ULI = 'urn:reso:uli:1.0:urn:reso:uoi:1.0:T00000012:M00000123:nyxKF6Gyw9Re:zByDTVoX3z7TNVgH3SVKVQCaA2RcUK7dAJK70Pu48rExxBiCGu5Sz6lhPAChBPEs-Gb3TXjEkJOspFZkDjiABg';
+
+/* ---------------------------------------------------------------------------
+ * Ed25519 through WebCrypto. Real signatures, real verification, no library.
+ * ------------------------------------------------------------------------ */
+const ED = Object.freeze({ name: 'Ed25519' });
+const ULI_PREFIX = 'urn:reso:uli:1.0';
+const edAvailable = async () => { try { return !!(await crypto.subtle.importKey('raw', fromB64u(SPEC_KEY.pub), ED, true, ['verify'])); } catch { return false; } };
+const genKey = async () => {
+  const kp = await crypto.subtle.generateKey(ED, true, ['sign', 'verify']);
+  return { pub: b64u(new Uint8Array(await crypto.subtle.exportKey('raw', kp.publicKey))), priv: await crypto.subtle.exportKey('jwk', kp.privateKey) };
+};
+const signBytes = async (privJwk, bytes) => new Uint8Array(await crypto.subtle.sign(ED, await crypto.subtle.importKey('jwk', privJwk, ED, false, ['sign']), bytes));
+const verifyBytes = async (pub, sig, bytes) => { try { return await crypto.subtle.verify(ED, await crypto.subtle.importKey('raw', fromB64u(pub), ED, false, ['verify']), sig, bytes); } catch { return false; } };
+/** §2.8: sign the US-ASCII bytes of the lowercase prefix, the UOI and the nonce; append the base64url signature. */
+const mintUli = async (provider, privJwk, nonce = randB64u(9)) => {
+  const signed = `${ULI_PREFIX}:${provider.uoi}:${nonce}`;
+  return `${signed}:${b64u(await signBytes(privJwk, ascii(signed)))}`;
+};
+/** §2.8: parse by position. Twelve segments; the last is the signature, the one before it the nonce, the six before those the UOI. */
+const parseUli = (s) => {
+  const parts = String(s ?? '').trim().split(':');
+  if (parts.length !== 12) return { error: `A ULI has exactly twelve colon-separated segments (§2.8); this has ${parts.length}.` };
+  const prefix = parts.slice(0, 4).join(':');
+  if (prefix.toLowerCase() !== ULI_PREFIX) return { error: `The prefix must be ${ULI_PREFIX}, compared case-insensitively; found "${prefix}".` };
+  const uoi = parts.slice(4, 10).join(':');
+  if (!/^urn:reso:uoi:1\.0:/i.test(uoi)) return { error: `Segments five to ten must be a UOI of the form urn:reso:uoi:1.0:<issuer>:<id>; found "${uoi}".` };
+  const nonce = parts[10];
+  const signature = parts[11];
+  const sigBytes = (() => { try { return fromB64u(signature); } catch { return null; } })();
+  if (!sigBytes || sigBytes.length !== 64 || signature.length !== 86) return { error: `The signature must be 64 bytes as 86 unpadded base64url characters; found ${signature.length} characters.` };
+  return { prefix, uoi, nonce, signature, sigBytes, signed: `${ULI_PREFIX}:${uoi}:${nonce}`, prefixNotLowercase: prefix !== ULI_PREFIX };
+};
+const uliTail = (uli) => { const p = parseUli(uli); return p.error ? '…' : p.nonce.slice(0, 4); };
+
+/* ---------------------------------------------------------------------------
+ * Page state. One mutable binding, reassigned only in commit(); everything
+ * persisted goes through ap.js's localStore under one prefix.
+ * ------------------------------------------------------------------------ */
+const PREFIX = 'uli-playground';
+const MAX_ROSTER_CHARS = 2500000; // a roster larger than this stays in memory for the tab, so a 50,000-row import never hits the quota
+const store = localStore(PREFIX);
+const net = network({ store, origin: 'https://playground.invalid' });
+PROVIDERS.forEach((p) => net.addActor(actor({ id: p.actor, name: p.name, type: 'Organization', preferredUsername: p.key })));
+net.addCollection(collection({ id: RESOLVERS, name: 'RESO certified ULI resolvers', members: PROVIDERS.map((p) => p.actor) }));
+
+const PERSISTED = Object.freeze(['desk', 'gov', 'keys', 'tokens', 'threads', 'payloads', 'links', 'redirects', 'tuning', 'rosterMeta']);
+const blank = () => ({
+  desk: 'p1',
+  gov: { status: Object.fromEntries(PROVIDERS.map((p) => [p.key, 'active'])), position: 0, events: [] },
+  keys: {}, tokens: {}, threads: {}, payloads: {}, links: {}, redirects: {},
+  tuning: { ...DEFAULT_TUNING, weights: { ...DEFAULT_TUNING.weights } },
+  rosterMeta: {},
+  rosters: {},
+});
+const loadState = () => {
+  const b = blank();
+  const persisted = Object.fromEntries(PERSISTED.map((k) => [k, store.get(k) ?? b[k]]));
+  const rosters = Object.fromEntries(PROVIDERS.map((p) => [p.key, store.get(`roster:${p.key}`) ?? []]));
+  return { ...b, ...persisted, rosters };
+};
+let state = loadState(); // the one mutable binding on the page; see commit()
+let volatile = { localRuns: {}, compare: null, thread: null, verify: null, ed: null, broadcastFor: null, declineFor: null, clearing: false }; // never persisted
+const saveRoster = (key) => {
+  const json = JSON.stringify(state.rosters[key] ?? []);
+  const fits = json.length <= MAX_ROSTER_CHARS;
+  if (fits) store.set(`roster:${key}`, state.rosters[key]); else store.set(`roster:${key}`, []);
+  state = { ...state, rosterMeta: { ...state.rosterMeta, [key]: { persisted: fits, chars: json.length, rows: (state.rosters[key] ?? []).length } } };
+  store.set('rosterMeta', state.rosterMeta);
+};
+const commit = (patch, persist = Object.keys(patch)) => {
+  state = { ...state, ...patch };
+  persist.forEach((k) => { if (k === 'rosters') Object.keys(patch.rosters ?? {}).forEach((rk) => saveRoster(rk)); else if (PERSISTED.includes(k)) store.set(k, state[k]); });
+  render();
+};
+const setVolatile = (patch) => { volatile = { ...volatile, ...patch }; render(); };
+const roster = (key = state.desk) => state.rosters[key] ?? [];
+const recordOf = (key, id) => roster(key).find((r) => r.id === id);
+const updateRecord = (key, id, patch) => ({ rosters: { ...state.rosters, [key]: roster(key).map((r) => (r.id === id ? { ...r, ...patch } : r)) } });
+
+/* ---------------------------------------------------------------------------
+ * Sample rosters. Rows marked "spec" are the §2.12 worked-example payloads
+ * verbatim; rows marked "synthetic" are invented so the page has something
+ * to search, block and resolve. Nobody here is a real person.
+ * ------------------------------------------------------------------------ */
+const rec = (id, src, fields) => ({ id, _src: src, ...fields });
+const sys = (p, source = p.mls, originating = p.mls) => ({ SourceSystemID: p.org, SourceSystemName: source, OriginatingSystemID: p.org, OriginatingSystemName: originating });
+const SALES = 'REALTOR Salesperson';
+const SAMPLE = Object.freeze({
+  p1: [
+    rec('licensee-123', 'spec', { MemberFullName: 'Jane A Smith', MemberFirstName: 'Jane', MemberMiddleName: 'A', MemberLastName: 'Smith', MemberNickname: 'Janie', MemberType: SALES, MemberNationalAssociationId: '999000111', MemberStateLicense: 'SL123456', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'A0001', OfficeName: 'Smith Realty Group', OfficeMlsId: 'OFF001', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-124', 'synthetic', { MemberFullName: 'Jane Smith', MemberFirstName: 'Jane', MemberLastName: 'Smith', MemberType: SALES, MemberNationalAssociationId: '999000111', MemberStateLicense: 'SL123456', MemberStateLicenseState: 'CA', MemberMlsId: 'A0099', OfficeName: 'Smith Realty Group', OfficeMlsId: 'OFF001', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-200', 'spec', { MemberFullName: 'Robert Chen Jr.', MemberFirstName: 'Robert', MemberLastName: 'Chen', MemberType: SALES, MemberNationalAssociationId: '555000222', MemberStateLicense: 'SL778899', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'J2001', OfficeName: 'Chen Realty', OfficeMlsId: 'OFF300', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-301', 'synthetic', { MemberFullName: 'Wei Zhang', MemberFirstName: 'Wei', MemberLastName: 'Zhang', MemberType: SALES, MemberNationalAssociationId: '111222333', MemberStateLicense: 'SL200100', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'W1001', OfficeName: 'Golden Gate Homes', OfficeMlsId: 'OFF410', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-302', 'synthetic', { MemberFullName: 'Wei Zhang', MemberFirstName: 'Wei', MemberLastName: 'Zhang', MemberType: SALES, MemberNationalAssociationId: '111222999', MemberStateLicense: 'SL200777', MemberStateLicenseType: 'Broker', MemberStateLicenseState: 'CA', MemberMlsId: 'W1002', OfficeName: 'Bay Crest Realty', OfficeMlsId: 'OFF411', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-303', 'synthetic', { MemberFullName: 'Priya Natarajan', MemberFirstName: 'Priya', MemberLastName: 'Natarajan', MemberType: SALES, MemberNationalAssociationId: '444555666', MemberStateLicense: '0712345', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'TX', MemberMlsId: 'P3301', OfficeName: 'Lone Star Living', OfficeMlsId: 'OFF520', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-304', 'synthetic', { MemberFullName: "Daniel O'Keefe", MemberFirstName: 'Daniel', MemberLastName: "O'Keefe", MemberNickname: 'Danny', MemberType: SALES, MemberNationalAssociationId: '777888999', MemberStateLicense: 'SL310444', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'D4401', OfficeName: 'Smith Realty Group', OfficeMlsId: 'OFF001', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+    rec('licensee-305', 'synthetic', { MemberFullName: 'Ana María Núñez', MemberFirstName: 'Ana María', MemberLastName: 'Núñez', MemberType: SALES, MemberNationalAssociationId: '123123123', MemberStateLicense: 'BR654321', MemberStateLicenseType: 'Broker', MemberStateLicenseState: 'AZ', MemberMlsId: 'N5501', OfficeName: 'Desert Vista Brokers', OfficeMlsId: 'OFF630', ...sys(P.p1, 'Source MLS', 'Originating MLS') }),
+  ],
+  p2: [
+    rec('r2-reyes', 'synthetic', { MemberFullName: 'Tomás Reyes', MemberFirstName: 'Tomás', MemberLastName: 'Reyes', MemberType: SALES, MemberNationalAssociationId: '303404505', MemberStateLicense: 'SL330011', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'T2201', OfficeName: 'Coastal Living Group', OfficeMlsId: 'OFF140', ...sys(P.p2), _nonce: '4f8a2d6c0e19' }),
+    rec('r2-lindqvist', 'synthetic', { MemberFullName: 'Grace Lindqvist', MemberFirstName: 'Grace', MemberLastName: 'Lindqvist', MemberType: SALES, MemberNationalAssociationId: '606707808', MemberStateLicense: 'BR220099', MemberStateLicenseType: 'Broker', MemberStateLicenseState: 'CA', MemberMlsId: 'G2202', OfficeName: 'Northstar Realty', OfficeMlsId: 'OFF150', ...sys(P.p2), _nonce: 'b2c4e6a8d0f1' }),
+  ],
+  p3: [
+    rec('r3-zhang', 'synthetic', { MemberFullName: 'Wei Zhang', MemberFirstName: 'Wei', MemberLastName: 'Zhang', MemberType: SALES, MemberNationalAssociationId: '111999000', MemberStateLicense: 'SL209999', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'Z3301', OfficeName: 'Pacific Rim Homes', OfficeMlsId: 'OFF230', ...sys(P.p3), _nonce: '0e7c5a3b9d18' }),
+    rec('r3-adeyemi', 'synthetic', { MemberFullName: 'Samuel Adeyemi', MemberFirstName: 'Samuel', MemberLastName: 'Adeyemi', MemberType: SALES, MemberNationalAssociationId: '515161718', MemberStateLicense: 'SL998877', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'S3301', OfficeName: 'Blue Door Realty', OfficeMlsId: 'OFF220', ...sys(P.p3), _nonce: '9c1d3e5f7a2b' }),
+  ],
+  p5: [
+    rec('r5-a1b2', 'spec', { MemberFullName: 'Jane Smith', MemberFirstName: 'Jane', MemberMiddleName: 'A', MemberLastName: 'Smith', MemberType: SALES, MemberNationalAssociationId: '999000111', MemberStateLicense: 'SL123456', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'C9012', OfficeName: 'Smith Realty Group', OfficeMlsId: 'OFF099', ...sys(P.p5), _nonce: 'a1b27c5d4a8e' }),
+    rec('r5-natarajan', 'synthetic', { MemberFullName: 'Priya Natarajan', MemberFirstName: 'Priya', MemberLastName: 'Natarajan', MemberType: SALES, MemberNationalAssociationId: '444555666', MemberStateLicense: '0712345', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'TX', MemberMlsId: 'P7701', OfficeName: 'Lone Star Living', OfficeMlsId: 'OFF520', ...sys(P.p5), _nonce: 'e3f1b2c4d5a6' }),
+    rec('r5-okafor', 'synthetic', { MemberFullName: 'Helen Okafor', MemberFirstName: 'Helen', MemberLastName: 'Okafor', MemberType: SALES, MemberNationalAssociationId: '909090909', MemberStateLicense: 'SL612345', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'H1101', OfficeName: 'Sunrise Properties', OfficeMlsId: 'OFF880', ...sys(P.p5), _nonce: '7d2b9e4f1c03' }),
+  ],
+  p8: [
+    rec('r8-9f2c', 'spec', { MemberFullName: 'Jane Smith', MemberFirstName: 'Jane', MemberMiddleName: 'A', MemberLastName: 'Smith', MemberNickname: 'Janie', MemberType: SALES, MemberNationalAssociationId: '999000111', MemberStateLicense: 'SL123456', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'B7788', OfficeName: 'Smith Realty Group', OfficeMlsId: 'OFF042', ...sys(P.p8), _nonce: '9f2c2b6e4f1a' }),
+    rec('r8-chen-sr', 'synthetic', { MemberFullName: 'Robert Chen Sr.', MemberFirstName: 'Robert', MemberLastName: 'Chen', MemberType: SALES, MemberNationalAssociationId: '555000222', MemberStateLicense: 'SL778899', MemberStateLicenseType: 'Broker', MemberStateLicenseState: 'CA', MemberMlsId: 'J1001', OfficeName: 'Chen Realty', OfficeMlsId: 'OFF300', ...sys(P.p8), _nonce: 'd41b7e2c9a06' }),
+    rec('r8-bellweather', 'synthetic', { MemberFullName: 'Marcus Bellweather', MemberFirstName: 'Marcus', MemberLastName: 'Bellweather', MemberType: SALES, MemberNationalAssociationId: '202303404', MemberStateLicense: 'SL455600', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'B9001', OfficeName: 'Harbor Lights Realty', OfficeMlsId: 'OFF777', ...sys(P.p8), _nonce: 'c81e4f0a9d27' }),
+    rec('r8-zhang', 'synthetic', { MemberFullName: 'Wei Zhang', MemberFirstName: 'Wei', MemberLastName: 'Zhang', MemberType: SALES, MemberNationalAssociationId: '111222333', MemberStateLicense: 'SL200100', MemberStateLicenseType: 'Salesperson', MemberStateLicenseState: 'CA', MemberMlsId: 'B9002', OfficeName: 'Golden Gate Homes', OfficeMlsId: 'OFF410', ...sys(P.p8), _nonce: '5a9d3c7e1b04' }),
+  ],
+});
+
+/** Keys and bearer tokens for every provider, generated once and kept so minted ULIs stay verifiable across reloads. */
+const ensureKeys = async () => {
+  const missing = PROVIDERS.filter((p) => !state.keys[p.key]);
+  if (!missing.length) return;
+  const made = await Promise.all(missing.map(async (p) => [p.key, await genKey()]));
+  const keys = { ...state.keys, ...Object.fromEntries(made) };
+  const tokens = { ...state.tokens, ...Object.fromEntries(missing.map((p) => [p.key, `uli_${p.key}_${randB64u(9)}`])) };
+  state = { ...state, keys, tokens };
+  store.set('keys', keys); store.set('tokens', tokens);
+};
+/** Seed a desk's sample roster, minting the sample ULIs with that provider's own key. */
+const seedRoster = async (key) => {
+  const p = P[key];
+  const rows = await Promise.all(SAMPLE[key].map(async ({ _nonce, ...r }) => {
+    if (!_nonce) return r;
+    if (!volatile.ed) return { ...r, [ULI_FIELD]: `${ULI_PREFIX}:${p.uoi}:${_nonce}:<unsigned: Ed25519 unavailable in this browser>` };
+    return { ...r, [ULI_FIELD]: await mintUli(p, state.keys[key].priv, _nonce) };
+  }));
+  const payloads = { ...state.payloads };
+  rows.filter((r) => r[ULI_FIELD] && volatile.ed).forEach((r) => { payloads[`https://${p.host}/rcf/uli/${uliTail(r[ULI_FIELD])}`] = { kind: 'uli', owner: key, readers: [], body: rcf(r) }; });
+  state = { ...state, payloads, rosters: { ...state.rosters, [key]: rows } };
+  store.set('payloads', payloads);
+  saveRoster(key);
+};
+
+/* ---------------------------------------------------------------------------
+ * Protocol flows. Each function is the page's reading of one part of the
+ * specification, cited beside it. Where the specification leaves something
+ * open, the choice is marked here and on the page.
+ * ------------------------------------------------------------------------ */
+const isActive = (key) => state.gov.status[key] === 'active';
+const activeKeys = () => PROVIDERS.filter((p) => isActive(p.key)).map((p) => p.key);
+const newId = (p, kind) => `https://${p.host}/${kind}/${randB64u(6)}`;
+const bearer = (key) => state.tokens[key] ?? '<none>';
+const canRead = (payload, key) => payload.owner === key || (payload.readers ?? []).includes(key);
+const linkKey = (a, b) => [a, b].sort().join('~');
+
+/** §2.10: a status change is a governance event. §2.6: R is pinned at broadcast and only shrinks mid-thread. */
+const setStatus = (key, status) => {
+  const position = state.gov.position + 1;
+  const gov = { ...state.gov, status: { ...state.gov.status, [key]: status }, position, events: [...state.gov.events, { position, at: nowIso(), org: P[key].uoi, status }].slice(-30) };
+  const threads = status === 'active' ? state.threads : Object.fromEntries(Object.entries(state.threads).map(([id, th]) => [id, th.status === 'open' ? { ...th, rPinned: th.rPinned.filter((k) => k !== key), mandatory: th.mandatory.filter((k) => k !== key) } : th]));
+  commit({ gov, threads });
+};
+
+/** Internal resolution: a pair judged the same person shares one identifier from then on (§2.7 placeholder, then the ULI). */
+const setLink = (key, a, b, verdict) => commit({ links: { ...state.links, [key]: { ...(state.links[key] ?? {}), [linkKey(a, b)]: { verdict, at: nowIso() } } } });
+const linkVerdict = (key, a, b) => state.links[key]?.[linkKey(a, b)]?.verdict ?? null;
+const linkedIds = (key, id) => {
+  const same = Object.entries(state.links[key] ?? {}).filter(([, v]) => v.verdict === 'same').map(([k]) => k.split('~'));
+  const seen = new Set([id]);
+  let grew = true; // closure-local
+  while (grew) { grew = false; same.forEach(([a, b]) => { if (seen.has(a) !== seen.has(b)) { seen.add(a); seen.add(b); grew = true; } }); }
+  return [...seen];
+};
+
+/** Thread bookkeeping. A thread is the root request plus everything replying to it or to a rebroadcast inside it. */
+const requestIds = (th) => th.requests;
+const currentRequest = (th) => th.requests[th.requests.length - 1];
+const threadRecords = (th) => net.all().filter((r) => r.activity.id === th.id || r.activity.inReplyTo === th.id || requestIds(th).includes(r.activity.inReplyTo));
+const isReply = (a) => a.type === 'Note' && (a.content === 'No Match' || a.content === 'Matches Found');
+const repliesTo = (requestId) => net.all().filter((r) => isReply(r.activity) && r.activity.inReplyTo === requestId);
+const replyOf = (th, key) => repliesTo(currentRequest(th)).find((r) => byActor(r.activity.attributedTo)?.key === key);
+const payloadOf = (a) => state.payloads[a.url?.href];
+const activityById = (id) => net.all().find((r) => r.activity.id === id);
+
+/** §2.6: floor(2/3 × R) replies, and every mandatory resolver among them. The originator is in R and does not reply to itself. */
+const consensus = (th) => {
+  const R = th.rPinned.length;
+  const needed = Math.floor((2 / 3) * R);
+  const replies = repliesTo(currentRequest(th)).map((r) => ({ record: r, key: byActor(r.activity.attributedTo)?.key })).filter((x) => x.key && x.key !== th.originator);
+  const counted = replies.filter((x) => th.rPinned.includes(x.key));
+  const repliedKeys = [...new Set(counted.map((x) => x.key))];
+  const mandatoryPending = th.mandatory.filter((k) => !repliedKeys.includes(k));
+  const matches = replies.filter((x) => x.record.activity.content === 'Matches Found').map((x) => ({ ...x, score: payloadOf(x.record.activity)?.body?.score ?? null, uli: payloadOf(x.record.activity)?.body?.uli ?? null })).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
+  return { R, needed, count: repliedKeys.length, repliedKeys, mandatoryPending, reached: repliedKeys.length >= needed && mandatoryPending.length === 0, matches, best: matches[0] ?? null, distinctUlis: [...new Set(matches.map((m) => m.uli).filter(Boolean))] };
+};
+/** §2.7, §2.12.3: a match that clears the bar, arriving after the mint, obliges the holder to tombstone and redirect. */
+const lateMatches = (th) => (th.status === 'minted' ? consensus(th).matches.filter((m) => m.uli && m.score !== null && m.score >= threshold(state.tuning).effective && m.record.receivedAt > Date.parse(th.outcome.at)) : []);
+
+/** §2.4: local search first, the identifiability threshold, then one Note to the resolver collection with a Mention per mandatory resolver. */
+const broadcast = (key, recordId, mandatory, authorized) => {
+  const p = P[key];
+  const r = recordOf(key, recordId);
+  const ident = identifiability(r, state.tuning);
+  if (!ident.passes) return { error: 'identifiability', ident };
+  const rPinned = activeKeys();
+  const mand = mandatory.filter((k) => rPinned.includes(k) && k !== key);
+  const href = `https://${p.host}/rcf/member/${encodeURIComponent(recordId)}`;
+  const id = newId(p, 'threads');
+  net.post(note({ id, actor: p.actor, to: [RESOLVERS], published: nowIso(), content: 'ULI Resolution Request', url: payloadLink({ href }), tag: mand.length ? mand.map((k) => mention({ href: P[k].actor, name: `@${P[k].key}` })) : undefined }));
+  const th = { id, originator: key, recordId, rPinned, mandatory: mand, authorized: authorized.filter((k) => k !== key), requests: [id], status: 'open', outcome: null, feedPosition: state.gov.position, at: nowIso() };
+  commit({ threads: { ...state.threads, [id]: th }, payloads: { ...state.payloads, [href]: { kind: 'member', owner: key, readers: th.authorized, body: rcf(r) } }, ...updateRecord(key, recordId, { placeholder: `local:${id.slice(-6)}` }) });
+  return { id };
+};
+
+/** §2.5: what one resolver may reply, computed by the real matcher over its own roster against the request payload. */
+const replyOptions = (key, th) => {
+  const req = activityById(currentRequest(th));
+  const payload = req ? payloadOf(req.activity) : null;
+  if (!payload) return { reason: 'The request payload is no longer held; threads are ephemeral.' };
+  if (!canRead(payload, key)) return { unauthorized: true, href: req.activity.url.href };
+  const q = payload.body.value[0];
+  const scorer = makeScorer(state.tuning);
+  const qn = normalize(q);
+  const scored = roster(key).map((r) => ({ r, s: scorer(qn, normalize(r)) })).sort((a, b) => b.s.total - a.s.total);
+  const best = scored[0] ?? null;
+  const clears = !!best && best.s.band === 'possible';
+  const hasUli = !!best?.r[ULI_FIELD] && !String(best.r[ULI_FIELD]).includes('<unsigned');
+  return { href: req.activity.url.href, query: q, best, clears, hasUli, canMatch: clears && hasUli, top: scored.slice(0, 3) };
+};
+/** Post the reply. A match carries its score in the referenced payload, never in the activity (§2.2, §2.5). */
+const reply = (key, th, kind) => {
+  const p = P[key];
+  const o = replyOptions(key, th);
+  if (o.reason || o.unauthorized || (kind === 'match' && !o.canMatch)) return false;
+  const id = newId(p, 'replies');
+  const href = kind === 'match' ? `https://${p.host}/rcf/uli/${uliTail(o.best.r[ULI_FIELD])}/resolution/${randB64u(4)}` : null;
+  net.post(note({ id, actor: p.actor, inReplyTo: currentRequest(th), to: [RESOLVERS], published: nowIso(), content: kind === 'match' ? 'Matches Found' : 'No Match', url: href ? payloadLink({ href }) : undefined }));
+  commit({ payloads: href ? { ...state.payloads, [href]: { kind: 'resolution', owner: key, readers: [th.originator], body: { uli: o.best.r[ULI_FIELD], score: o.best.s.total, licensee: rcf(o.best.r) } } } : state.payloads });
+  return true;
+};
+/** Modeled time: every other active, authorized resolver that has not replied runs the real matcher now and replies. */
+const autoReply = () => Object.values(state.threads).flatMap((th) => {
+  if (th.status === 'adopted' || th.status === 'retired') return [];
+  return PROVIDERS.flatMap((p) => {
+    const k = p.key;
+    if (k === state.desk || k === th.originator || !isActive(k) || replyOf(th, k)) return [];
+    if (th.status === 'open' && !th.rPinned.includes(k)) return [];
+    const o = replyOptions(k, th);
+    if (o.reason || o.unauthorized) return [];
+    if (th.status === 'minted' && !o.canMatch) return [];
+    return reply(k, th, o.canMatch ? 'match' : 'nomatch') ? [`${p.name}: ${o.canMatch ? 'Matches Found' : 'No Match'}`] : [];
+  });
+});
+
+const bindUli = (key, ids, uli) => ({ rosters: { ...state.rosters, [key]: roster(key).map((r) => (ids.includes(r.id) ? { ...r, [ULI_FIELD]: uli, placeholder: undefined } : r)) } });
+/** §2.7 Adopt: bind locally, post nothing. */
+const adopt = (th, best) => commit({
+  threads: { ...state.threads, [th.id]: { ...th, status: 'adopted', outcome: { kind: 'adopted', uli: best.uli, from: best.key, score: best.score, at: nowIso() } } },
+  ...bindUli(th.originator, linkedIds(th.originator, th.recordId), best.uli),
+});
+/** §2.7 Mint: only at a no-match consensus. The Create is a thread message; the ULI is signed for real. */
+const mint = async (th) => {
+  const key = th.originator;
+  const p = P[key];
+  const uli = await mintUli(p, state.keys[key].priv);
+  const tail = uliTail(uli);
+  const noteId = `https://${p.host}/uli/${tail}`;
+  const href = `https://${p.host}/rcf/uli/${tail}`;
+  net.post(create({ id: newId(p, 'activities'), actor: p.actor, inReplyTo: th.id, to: [RESOLVERS], published: nowIso(), object: { type: 'Note', id: noteId, attributedTo: p.actor, inReplyTo: th.id, content: 'ULI Created', url: payloadLink({ href }) } }));
+  const bound = bindUli(key, linkedIds(key, th.recordId), uli);
+  const body = rcf(bound.rosters[key].find((r) => r.id === th.recordId));
+  commit({ threads: { ...state.threads, [th.id]: { ...th, status: 'minted', outcome: { kind: 'minted', uli, noteId, at: nowIso() } } }, payloads: { ...state.payloads, [href]: { kind: 'uli', owner: key, readers: th.authorized, body } }, ...bound });
+  return uli;
+};
+/** §2.7 Decline: not a verb. The corrected criteria are rebroadcast into the same thread and resolution runs again. */
+const decline = (th, corrected) => {
+  const key = th.originator;
+  const p = P[key];
+  const ident = identifiability(corrected, state.tuning);
+  if (!ident.passes) return { error: 'identifiability', ident };
+  const id = newId(p, 'threads');
+  const href = `https://${p.host}/rcf/member/${encodeURIComponent(th.recordId)}/${randB64u(4)}`;
+  net.post(note({ id, actor: p.actor, inReplyTo: th.id, to: [RESOLVERS], published: nowIso(), content: 'ULI Resolution Request', url: payloadLink({ href }), tag: th.mandatory.length ? th.mandatory.map((k) => mention({ href: P[k].actor, name: `@${P[k].key}` })) : undefined }));
+  commit({ threads: { ...state.threads, [th.id]: { ...th, requests: [...th.requests, id] } }, payloads: { ...state.payloads, [href]: { kind: 'member', owner: key, readers: th.authorized, body: rcf(corrected) } }, ...updateRecord(key, th.recordId, corrected) });
+  return { id };
+};
+/** §2.7, §2.12.3: tombstone the created Note and redirect it to the better ULI. The holder acts alone; no fresh consensus. */
+const retire = (th, better) => {
+  const key = th.originator;
+  const p = P[key];
+  const when = nowIso();
+  net.post(del({ id: newId(p, 'activities'), actor: p.actor, inReplyTo: th.id, to: [RESOLVERS], published: when, object: tombstone({ id: th.outcome.noteId, deleted: when, url: { type: 'Link', href: better.uli } }) }));
+  commit({
+    threads: { ...state.threads, [th.id]: { ...th, status: 'retired', outcome: { ...th.outcome, kind: 'retired', successor: better.uli, from: better.key, at: when } } },
+    redirects: { ...state.redirects, [th.outcome.uli]: better.uli },
+    rosters: { ...state.rosters, [key]: roster(key).map((r) => (r[ULI_FIELD] === th.outcome.uli ? { ...r, [ULI_FIELD]: better.uli } : r)) },
+  });
+};
+/** Follow a redirect chain to the current ULI (§1: a record always resolves to its current ULI). */
+const resolveRedirects = (uli, seen = new Set()) => (state.redirects[uli] && !seen.has(uli) ? resolveRedirects(state.redirects[uli], seen.add(uli)) : uli);
+
+/** Modeled OAuth2: the originator's prearranged authorization decides who may dereference (§2.1, §2.11). */
+const dereference = (href, viewerKey) => {
+  const request = `GET ${href}\nAuthorization: Bearer ${bearer(viewerKey)}\nAccept: application/json`;
+  const p = state.payloads[href];
+  if (!p) return { request, status: 'HTTP/2 404 Not Found', body: null, note: 'This payload is no longer held. Threads are ephemeral and the store sweeps after seven days.' };
+  const ok = canRead(p, viewerKey);
+  return { request, status: ok ? 'HTTP/2 200 OK\nContent-Type: application/json' : 'HTTP/2 401 Unauthorized', body: ok ? p.body : null, note: ok ? null : `${P[viewerKey].name} holds no grant from the owner of this payload (§2.1 prearranged authorization). The refusal is modeled; the rule is the specification's.` };
+};
+
+/** What the Clear control shows before it wipes, and the wipe itself. */
+const storageStats = () => {
+  const safe = (fn, fb) => { try { return fn(); } catch { return fb; } };
+  return {
+    mine: net.stats(),
+    all: safe(() => ({ entries: localStorage.length, bytes: Object.keys(localStorage).reduce((n, k) => n + k.length + (localStorage.getItem(k) ?? '').length, 0) }), { entries: 0, bytes: 0 }),
+    session: safe(() => sessionStorage.length, 0),
+  };
+};
+const wipeAll = async () => {
+  try { localStorage.clear(); } catch { /* blocked storage is already empty for our purposes */ }
+  try { sessionStorage.clear(); } catch { /* same */ }
+  const dbs = await (async () => { try { return await indexedDB.databases(); } catch { return []; } })();
+  await Promise.all(dbs.map((d) => new Promise((res) => { try { const rq = indexedDB.deleteDatabase(d.name); rq.onsuccess = () => res(); rq.onerror = () => res(); rq.onblocked = () => res(); } catch { res(); } })));
+  return dbs.length;
+};
+
+/* ===== DOM ===== */
+
+/* ---------------------------------------------------------------------------
+ * Rendering. Each function is a read of state and volatile; handlers are
+ * attached once by delegation in wire(), keyed on data-act attributes.
+ * ------------------------------------------------------------------------ */
+const paint = (v) => esc(JSON.stringify(v, null, 2))
+  .replace(/^(\s*)&quot;([^&]+)&quot;:/gm, '$1<span class="k">"$2"</span>:')
+  .replace(/: (&quot;[^\n]*&quot;)(,?)$/gm, ': <span class="s">$1</span>$2')
+  .replace(/: (-?\d+)(,?)$/gm, ': <span class="n">$1</span>$2');
+const BAND = Object.freeze({ possible: 'Possible match', review: 'Review', rejected: 'Rejected' });
+const primariesText = (n) => (n <= 2 ? `${n} of 2 primary identifiers matched` : `${n} primary identifiers matched, 2 required`);
+const primariesShort = (n) => (n <= 2 ? `${n} of 2` : `${n}, 2 required`);
+const pillFor = (band) => `<span class="pill" style="color:var(--${band === 'possible' ? 'ok' : band === 'review' ? 'warn' : 'bad'})">${BAND[band]}</span>`;
+const shortUli = (u) => { const p = parseUli(u); return p.error ? `${String(u).slice(0, 48)}…` : `urn:…${p.nonce.slice(0, 4)} (${p.uoi.split(':').pop()})`; };
+const srcLabel = (r) => (r._src === 'spec' ? '§2.12 example' : r._src === 'synthetic' ? 'synthetic' : 'imported');
+const whenShort = (iso) => (iso ? new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' }) : '');
+const owedReplies = (key) => Object.values(state.threads).filter((th) => th.status === 'open' && th.originator !== key && th.rPinned.includes(key) && isActive(key) && !replyOf(th, key));
+const findRecordAnywhere = (id) => PROVIDERS.map((p) => recordOf(p.key, id)).find(Boolean);
+
+const renderHonesty = () => {
+  const conf = conformance(net.all());
+  const ed = volatile.ed === null ? 'being checked' : volatile.ed ? `available in this browser; the §2.8 worked example ${volatile.specVerified ? 'verified' : 'did NOT verify'}` : 'not available in this browser, so nothing here can sign or verify; minting is disabled rather than simulated';
+  $('honestBox').innerHTML = `
+    <div><span class="tag real">Real</span><ul>
+      <li><b>The matcher and its scores.</b> The §2.9 engine, run over the records this page holds. Same code locally and for every modeled resolver.</li>
+      <li><b>Ed25519 verification and signing.</b> WebCrypto, ${ed}.</li>
+      <li><b>The Activity Streams shapes.</b> Built by ap.js, which refuses any term outside the AS2 vocabulary before an activity exists.</li>
+      <li><b>The consensus arithmetic.</b> floor(2/3 &times; R) plus every mandatory resolver, with R pinned at broadcast (§2.6).</li>
+      <li><b>The identifiability gate.</b> A record is scored against itself before it may broadcast (§2.4).</li>
+    </ul></div>
+    <div><span class="tag model">Modeled</span><ul>
+      <li><b>The network of resolvers.</b> Five nodes inside this page rather than organizations on the internet; delivery is a map, not HTTP.</li>
+      <li><b>The other organizations' rosters.</b> Synthetic people, some of them the specification's own worked examples.</li>
+      <li><b>The OAuth2 refusal.</b> A grant list stands in for a token server; the 401 is a rule applied, not a request refused.</li>
+      <li><b>Time.</b> Replies arrive when you ask for them, not over minutes; the seven-day sweep uses the real clock.</li>
+    </ul></div>`;
+  const ok = conf.pureAS2 && conf.contextCorrect;
+  $('confBox').className = `note ${ok ? 'ok' : 'bad'}`;
+  $('confBox').innerHTML = `<b>Conformance check, run just now over ${conf.activities} held activit${conf.activities === 1 ? 'y' : 'ies'}:</b> pure AS2 vocabulary ${conf.pureAS2 ? 'yes' : `no (${esc(conf.impure.map((i) => `${i.id} carries ${i.term}`).join('; '))})`}; @context correct ${conf.contextCorrect ? 'yes' : `no (${esc(conf.badContext.join(', '))})`}. This is a check the page performed, not a claim it makes.`;
+};
+
+const renderDeskSel = () => {
+  $('deskSel').innerHTML = PROVIDERS.map((p) => `<option value="${p.key}" ${p.key === state.desk ? 'selected' : ''}>${p.name} · ${p.org}${isActive(p.key) ? '' : ' (inactive)'}</option>`).join('');
+};
+
+const renderNetwork = () => {
+  const R = activeKeys().length;
+  $('netBox').innerHTML = PROVIDERS.map((p) => {
+    const st = state.gov.status[p.key];
+    const owed = owedReplies(p.key).length;
+    return `<div class="node" style="border-left-color:${p.color}">
+      <div class="nm"><span class="dot ${st === 'active' ? 'live' : 'off'}"></span>${p.name}${p.key === state.desk ? ' <span class="pill note">you</span>' : ''}${owed ? ` <span class="badge" title="replies owed">${owed}</span>` : ''}</div>
+      <div class="sub">${esc(p.uoi)}</div>
+      <div class="st"><span>${st}</span><span>&middot;</span><span>${fmt(roster(p.key).length)} records</span>
+        <button class="btn small" data-act="status" data-key="${p.key}" data-to="${st === 'active' ? 'inactive' : 'active'}">${st === 'active' ? 'Mark inactive' : 'Reactivate'}</button>
+        ${p.key === state.desk ? '' : `<button class="btn small quiet" data-act="desk" data-key="${p.key}">Act as</button>`}</div></div>`;
+  }).join('');
+  $('netSummary').textContent = `R = ${R}; a thread broadcast now would need floor(2/3 × ${R}) = ${Math.floor((2 * R) / 3)} replies. Governance feed position ${state.gov.position}.`;
+};
+
+const matchesQuery = (r, q) => {
+  const toks = foldName(q).split(' ').filter(Boolean);
+  if (!toks.length) return true;
+  const hay = foldName([...FIELDS, ULI_FIELD].map((f) => r[f] ?? '').join(' '));
+  return toks.every((t) => hay.includes(t));
+};
+const uliCell = (r) => {
+  if (r[ULI_FIELD]) return `<span class="uli" title="${esc(r[ULI_FIELD])}">${esc(shortUli(r[ULI_FIELD]))}</span>${state.redirects[r[ULI_FIELD]] ? `<div class="fine">retired &rarr; ${esc(shortUli(resolveRedirects(r[ULI_FIELD])))}</div>` : ''}`;
+  if (r.placeholder) return `<span class="pill">resolving &middot; ${esc(r.placeholder)}</span>`;
+  return '<span class="fine">none</span>';
+};
+const renderRoster = () => {
+  const key = state.desk;
+  const all = roster(key);
+  const q = $('q').value;
+  const rows = all.filter((r) => matchesQuery(r, q));
+  const shown = rows.slice(0, 200);
+  const a = volatile.compare?.a;
+  $('rosterWho').textContent = `${P[key].name} · ${fmt(all.length)} record${all.length === 1 ? '' : 's'}`;
+  $('rosterTbl').innerHTML = `<thead><tr><th>Name</th><th>NRDS</th><th>License</th><th>Office</th><th>MLS id</th><th>ULI</th><th></th></tr></thead><tbody>${shown.map((r) => `
+    <tr class="${a && a.id === r.id ? 'sel' : ''}">
+      <td><b>${esc(displayName(r))}</b>${r.MemberNickname ? ` <span class="fine">&ldquo;${esc(r.MemberNickname)}&rdquo;</span>` : ''}<div class="fine">${srcLabel(r)}</div></td>
+      <td class="mono">${esc(r.MemberNationalAssociationId ?? '')}</td>
+      <td class="mono">${esc([r.MemberStateLicense, r.MemberStateLicenseState, r.MemberStateLicenseType].filter(Boolean).join(' · '))}</td>
+      <td>${esc(r.OfficeName ?? '')}<div class="fine mono">${esc(r.OfficeMlsId ?? '')}</div></td>
+      <td class="mono">${esc(r.MemberMlsId ?? '')}</td>
+      <td>${uliCell(r)}</td>
+      <td><div class="row">
+        <button class="btn small" data-act="resolve" data-id="${esc(r.id)}" ${r[ULI_FIELD] || r.placeholder || !isActive(key) ? 'disabled' : ''} title="${r[ULI_FIELD] ? 'Already holds a ULI. The changed-data rebroadcast of §2.4 is not built here; see the report.' : r.placeholder ? 'Resolution in flight.' : ''}">Resolve on the network</button>
+        ${a && a.id !== r.id ? `<button class="btn small quiet" data-act="pickB" data-id="${esc(r.id)}">Score with this</button>` : `<button class="btn small quiet" data-act="pickA" data-id="${esc(r.id)}">Score against&hellip;</button>`}
+      </div></td></tr>`).join('')}</tbody>`;
+  const meta = state.rosterMeta[key];
+  $('rosterFoot').textContent = [
+    shown.length < rows.length ? `Showing ${shown.length} of ${fmt(rows.length)}.` : '',
+    rows.length !== all.length ? `${fmt(rows.length)} of ${fmt(all.length)} match the search.` : '',
+    meta && meta.persisted === false ? `This roster (${fmt(meta.rows)} rows) is held in memory for this tab only: it is too large for local storage, so closing the tab drops it.` : '',
+    !isActive(key) ? `${P[key].name} is inactive; reactivate it on the network strip to broadcast or reply.` : '',
+  ].filter(Boolean).join(' ');
+};
+
+const renderBroadcastBox = () => {
+  const id = volatile.broadcastFor;
+  const box = $('broadcastBox');
+  if (!id) { box.innerHTML = ''; return; }
+  const key = state.desk;
+  const r = recordOf(key, id);
+  if (!r) { box.innerHTML = ''; return; }
+  const ident = identifiability(r, state.tuning);
+  const others = PROVIDERS.filter((p) => p.key !== key);
+  const R = activeKeys().length;
+  box.innerHTML = `<div class="note" style="margin-top:12px"><b>Resolve ${esc(displayName(r))} on the network</b>
+    <div style="margin-top:6px">Identifiability threshold (§2.4): a full match of this record could score <b>${ident.total}</b> against a bar of ${ident.T}, with <b>${ident.primaries}</b> primary identifier${ident.primaries === 1 ? '' : 's'} present. <b>${ident.passes ? 'It clears.' : 'It does not clear: "A node MUST NOT broadcast a record that does not clear the identifiability threshold."'}</b></div>
+    ${ident.passes ? `
+    <div style="margin-top:8px"><span class="lbl">Mandatory resolvers, each named with a Mention (§2.4, §2.6)</span>${others.map((p) => `<label class="check"><input type="checkbox" data-mand="${p.key}" ${isActive(p.key) ? '' : 'disabled'}> ${p.name}${isActive(p.key) ? '' : ' (inactive, not in R)'}</label>`).join('')}</div>
+    <div style="margin-top:6px"><span class="lbl">Authorized to read the payload (§2.1: must cover the mandatory list plus enough to reach consensus)</span>${others.map((p) => `<label class="check"><input type="checkbox" data-auth="${p.key}" checked> ${p.name}</label>`).join('')}</div>
+    <div class="row" style="margin-top:8px"><button class="btn primary" data-act="doBroadcast" data-id="${esc(id)}">Broadcast the Note</button><button class="btn" data-act="cancelBroadcast">Cancel</button><span class="fine">R is ${R} now, so consensus will need floor(2/3 &times; ${R}) = ${Math.floor((2 * R) / 3)} replies.</span></div>`
+    : `<div class="row" style="margin-top:8px"><button class="btn" data-act="cancelBroadcast">Close</button></div>`}</div>`;
+};
+
+const renderLocal = () => {
+  const key = state.desk;
+  const run = volatile.localRuns[key];
+  const n = roster(key).length;
+  const box = $('localBox');
+  $('btnLocal').disabled = !n;
+  if (!run) {
+    $('localStat').textContent = n ? `${fmt(n)} records; comparing every pair would take ${fmt((n * (n - 1)) / 2)} comparisons.` : 'No records loaded.';
+    box.innerHTML = '';
+    return;
+  }
+  const st = run.stats;
+  $('localStat').textContent = `${fmt(st.records)} records in ${fmt(st.blocks)} blocks (largest ${fmt(st.largest)}); ${fmt(st.compared)} pairs scored instead of ${fmt(st.allPairs)}; ${fmt(st.ms)} ms.`;
+  if (!run.pairs.length) { box.innerHTML = '<p class="empty">No pair reached the reject floor. Nothing to resolve internally.</p>'; return; }
+  box.innerHTML = `<div class="tbl-wrap"><table><thead><tr><th>Record</th><th>Record</th><th class="num">Score</th><th>Band</th><th>Primaries</th><th>Verdict</th></tr></thead><tbody>${run.pairs.slice(0, 100).map((p) => {
+    const v = linkVerdict(key, p.a.id, p.b.id);
+    return `<tr><td><b>${esc(displayName(p.a))}</b><div class="fine mono">${esc(p.a.MemberMlsId ?? p.a.id)}</div></td><td><b>${esc(displayName(p.b))}</b><div class="fine mono">${esc(p.b.MemberMlsId ?? p.b.id)}</div></td>
+      <td class="num">${p.s.total}</td><td>${pillFor(p.s.band)}</td><td>${primariesShort(p.s.primaries)}</td>
+      <td><div class="row"><button class="btn small quiet" data-act="comparePair" data-a="${esc(p.a.id)}" data-b="${esc(p.b.id)}">Compare</button>
+      ${v ? `<span class="pill ${v === 'same' ? 'create' : ''}">${v === 'same' ? 'same person' : 'different people'}</span><button class="btn small quiet" data-act="unlink" data-a="${esc(p.a.id)}" data-b="${esc(p.b.id)}">undo</button>`
+        : `<button class="btn small" data-act="link" data-v="same" data-a="${esc(p.a.id)}" data-b="${esc(p.b.id)}">Same person</button><button class="btn small" data-act="link" data-v="different" data-a="${esc(p.a.id)}" data-b="${esc(p.b.id)}">Different people</button>`}</div></td></tr>`;
+  }).join('')}</tbody></table></div>${run.pairs.length > 100 ? `<p class="fine">Showing the top 100 of ${fmt(run.pairs.length)} pairs.</p>` : ''}`;
+};
+
+const tallyLine = (th) => { const c = consensus(th); return `${c.count} of ${c.needed} replies (floor(2/3 &times; ${c.R}))${th.mandatory.length ? `, mandatory ${c.mandatoryPending.length ? `pending: ${c.mandatoryPending.map((k) => P[k].name).join(', ')}` : 'all in'}` : ''}${c.reached ? ' &middot; <b>consensus</b>' : ''}`; };
+const renderDashboard = () => {
+  const key = state.desk;
+  $('dashWho').textContent = P[key].name;
+  const run = volatile.localRuns[key];
+  const internal = run ? run.pairs.filter((p) => !linkVerdict(key, p.a.id, p.b.id)) : null;
+  const mine = Object.values(state.threads).filter((th) => th.originator === key).sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  const open = mine.filter((th) => th.status === 'open');
+  const done = mine.filter((th) => th.status !== 'open');
+  const owed = owedReplies(key);
+  const item = (th, extra) => `<li><span class="grow"><b>${esc(displayName(recordOf(th.originator, th.recordId) ?? { id: th.recordId }))}</b><div class="fine">${extra}</div></span><button class="btn small" data-act="openThread" data-id="${esc(th.id)}">Open</button></li>`;
+  $('dashBox').innerHTML = `
+    <div class="col"><h3>Resolve internally first</h3>${internal === null ? '<p class="empty">Run local matching to list likely internal duplicates.</p>' : internal.length ? `<ul>${internal.map((p) => `<li><span class="grow"><b>${esc(displayName(p.a))}</b> and <b>${esc(displayName(p.b))}</b><div class="fine">${p.s.total} &middot; ${BAND[p.s.band]} &middot; ${primariesShort(p.s.primaries)} primaries</div></span><button class="btn small" data-act="comparePair" data-a="${esc(p.a.id)}" data-b="${esc(p.b.id)}">Review</button></li>`).join('')}</ul>` : '<p class="empty">Nothing pending internally.</p>'}</div>
+    <div class="col"><h3>Awaiting the network</h3>${open.length || owed.length ? `<ul>${open.map((th) => item(th, tallyLine(th))).join('')}${owed.map((th) => `<li><span class="grow"><b>Reply owed</b> to ${esc(P[th.originator].name)}${th.mandatory.includes(key) ? ' <span class="pill delete">mandatory</span>' : ''}<div class="fine">${esc(displayName(payloadOf(activityById(currentRequest(th))?.activity ?? {})?.body?.value?.[0] ?? { id: '…' }))}</div></span><button class="btn small" data-act="openThread" data-id="${esc(th.id)}">Reply</button></li>`).join('')}</ul>` : '<p class="empty">No open thread of yours, and no reply owed.</p>'}</div>
+    <div class="col"><h3>Resolved</h3>${done.length ? `<ul>${done.map((th) => item(th, `${th.status} &middot; ${esc(shortUli(th.outcome?.kind === 'retired' ? th.outcome.successor : th.outcome?.uli ?? ''))}${lateMatches(th).length ? ' &middot; <b style="color:var(--bad)">better match surfaced</b>' : ''}`)).join('')}</ul>` : '<p class="empty">Nothing resolved yet.</p>'}
+      <p class="fine" style="margin-top:8px">${fmt(roster(key).filter((r) => r[ULI_FIELD]).length)} of ${fmt(roster(key).length)} records carry a ULI.</p></div>`;
+};
+
+/**
+ * A thread renderer with no ULI semantics. It takes ap.js delivery records
+ * and a shape; the shape supplies labels, summaries and payload access.
+ * Offer Management can pass its own shape to the same function.
+ */
+const renderThreadView = (records, shape) => {
+  const rows = flatten(thread(records));
+  if (!rows.length) return '<p class="empty">Nothing in this thread yet.</p>';
+  return `<div class="thread">${rows.map((r) => {
+    const a = r.activity;
+    const d = shape.describe(a);
+    const pay = shape.payload(a);
+    return `<article class="act" style="margin-left:${Math.min(r.depth, 4) * 22}px">
+      <div class="top"><span class="who" style="color:${shape.color(a)}">${esc(shape.actorLabel(a))}</span><span class="pill ${d.kind}">${esc(d.type)}</span>${d.flags.map((f) => `<span class="pill">${esc(f)}</span>`).join('')}<span class="when">${esc(whenShort(a.published))}</span></div>
+      <div class="sum">${esc(d.summary)}</div>
+      <div class="deliv">delivered to ${r.delivered.length} inbox${r.delivered.length === 1 ? '' : 'es'}${r.undeliverable.length ? `, ${r.undeliverable.length} undeliverable` : ''}</div>
+      <details><summary>What crossed the network</summary><div class="inner">
+        <div><h4>The activity</h4><pre>${paint(a)}</pre></div>
+        <div><h4>${pay ? 'The payload, behind the link' : 'No payload'}</h4>${pay ? `<pre class="hdr">${esc(pay.request)}\n\n${esc(pay.status)}</pre>${pay.body ? `<pre>${paint(pay.body)}</pre>` : ''}${pay.note ? `<p class="fine">${esc(pay.note)}</p>` : ''}` : `<p class="fine">${esc(d.noPayload)}</p>`}</div>
+      </div></details></article>`;
+  }).join('')}${shape.trailer ? `<div class="quiet-end">${shape.trailer}</div>` : ''}</div>`;
+};
+/** The ULI shape for the renderer above: what each activity means in RCP-54 terms. */
+const uliShape = (viewerKey, th) => ({
+  actorLabel: (a) => byActor(a.actor ?? a.attributedTo)?.name ?? String(a.actor ?? a.attributedTo ?? '?'),
+  color: (a) => byActor(a.actor ?? a.attributedTo)?.color ?? 'inherit',
+  describe: (a) => {
+    const kind = a.type === 'Create' ? 'create' : a.type === 'Delete' ? 'delete' : 'note';
+    const flags = [...(a.tag ? [`${a.tag.length} mandatory via Mention`] : []), ...(a.inReplyTo ? [] : ['thread root']), ...(a.content === 'ULI Resolution Request' && a.inReplyTo ? ['rebroadcast: the decline'] : [])];
+    const summary = a.type === 'Create' ? `${a.object?.content ?? 'Create'}; the created Note is ${a.object?.id ?? ''}` : a.type === 'Delete' ? `Tombstone for ${a.object?.id ?? ''}, redirecting to ${a.object?.url?.href ?? ''}` : (a.content ?? '');
+    const noPayload = a.content === 'No Match' ? 'A no-match carries no link. It still counts toward consensus (§2.5).' : a.type === 'Delete' ? 'The redirect target is a ULI URN, an identifier rather than data, so it rides in the activity itself (§2.2).' : 'This activity carries no link.';
+    return { type: a.type, kind, flags, summary, noPayload };
+  },
+  payload: (a) => { const href = a.url?.href ?? a.object?.url?.href; return href && !href.startsWith('urn:') ? dereference(href, viewerKey) : null; },
+  trailer: th?.status === 'adopted' ? 'The thread ends with the replies. The adoption happened locally and posted nothing (§2.7): a node posts an outcome only when it changes shared ULI state.' : null,
+});
+
+const renderDecline = (th) => {
+  if (volatile.declineFor !== th.id) return '';
+  const r = recordOf(th.originator, th.recordId);
+  return `<div style="margin-top:10px"><h3>Corrected criteria. The rebroadcast is the decline (§2.7); resolution decides, not the reviewer.</h3>
+    <div class="wt-grid">${FIELDS.map((f) => `<label><span>${esc(LABELS[f])}</span><input type="text" data-field="${f}" value="${esc(r[f] ?? '')}"></label>`).join('')}</div>
+    <div class="row" style="margin-top:8px"><button class="btn primary" data-act="declineSend" data-id="${esc(th.id)}">Rebroadcast the corrected criteria</button>${th.recordId === 'licensee-200' ? `<button class="btn" data-act="declineSpec" data-id="${esc(th.id)}">Fill in the §2.12.5 corrected values</button>` : ''}<button class="btn quiet" data-act="declineCancel">Cancel</button></div></div>`;
+};
+const renderThreadAction = (th, c, key) => {
+  const B = (label, act, extra = '', cls = 'btn primary') => `<button class="${cls}" data-act="${act}" data-id="${esc(th.id)}" ${extra}>${label}</button>`;
+  if (key === th.originator) {
+    if (th.status === 'adopted') return `<div class="note ok" style="margin-top:10px"><b>Adopted ${esc(shortUli(th.outcome.uli))} from ${esc(P[th.outcome.from].name)} at score ${th.outcome.score}, locally.</b> Nothing was posted to the thread. Adoption changes no shared ULI state, so §2.7 has the originator simply stop; the thread below ends with the replies.</div>`;
+    if (th.status === 'retired') return `<div class="note" style="margin-top:10px"><b>Retired ${esc(shortUli(th.outcome.uli))} and redirected it to ${esc(shortUli(th.outcome.successor))}.</b> The record relinked to the successor; a tombstone never removes data (§2.7).</div>`;
+    if (th.status === 'minted') {
+      const late = lateMatches(th);
+      return `<div class="note ok" style="margin-top:10px"><b>Minted ${esc(shortUli(th.outcome.uli))} at no-match consensus</b> and posted the Create to the thread.${late.length ? `<div class="note bad" style="margin-top:8px"><b>A better match surfaced after the mint (§2.12.3).</b> ${esc(P[late[0].key].name)} holds ${esc(shortUli(late[0].uli))} at score ${late[0].score}. The holder MUST tombstone and redirect, with no fresh consensus round, because the score is recomputable from the published criteria (§2.7).<div class="row" style="margin-top:8px">${B(`Retire ${esc(shortUli(th.outcome.uli))} and redirect to ${esc(shortUli(late[0].uli))}`, 'retire')}</div></div>` : ''}</div>`;
+    }
+    if (!c.reached) return `<div class="note" style="margin-top:10px">Waiting for the network: ${c.needed > c.count ? `${c.needed - c.count} more repl${c.needed - c.count === 1 ? 'y' : 'ies'} needed` : 'the count is met'}${c.mandatoryPending.length ? `; mandatory still pending: ${c.mandatoryPending.map((k) => P[k].name).join(', ')}` : ''}. Switch desks to reply by hand, or let the other resolvers reply from the network strip.</div>`;
+    if (c.best) return `<div class="note" style="margin-top:10px"><b>Match consensus.</b> Highest-scoring match: ${esc(shortUli(c.best.uli))} from ${esc(P[c.best.key].name)} at ${c.best.score}.${c.distinctUlis.length > 1 ? ` <b>${c.distinctUlis.length} different ULIs matched</b>: one person held under several identifiers is the §2.12.4 merge case, which this page does not build; adoption takes the highest score.` : ''}
+      <div class="row" style="margin-top:8px">${B(`Adopt ${esc(shortUli(c.best.uli))} locally`, 'adopt')}${B('Decline on review', 'declineStart', '', 'btn')}<button class="btn quiet" data-act="compareReply" data-id="${esc(th.id)}" data-key="${c.best.key}">Compare the candidate</button></div>${renderDecline(th)}</div>`;
+    return `<div class="note" style="margin-top:10px"><b>No-match consensus.</b> ${c.count} of the ${c.R} in R replied and none holds this licensee. ${volatile.ed ? B('Mint a ULI and post the Create', 'mint') : '<span class="tag off">Minting disabled: Ed25519 is unavailable in this browser</span>'}</div>`;
+  }
+  if (!isActive(key)) return `<div class="note" style="margin-top:10px">${P[key].name} is inactive and cannot act. Reactivate it on the network strip; on resume a resolver drains its inbox and replies to every open thread it was tagged in (§2.6).</div>`;
+  const mine = replyOf(th, key);
+  if (mine) return `<div class="note" style="margin-top:10px">You replied <b>${esc(mine.activity.content)}</b>.</div>`;
+  const o = replyOptions(key, th);
+  if (o.reason) return `<div class="note" style="margin-top:10px">${esc(o.reason)}</div>`;
+  if (o.unauthorized) return `<div class="note bad" style="margin-top:10px"><b>401 on the payload.</b> ${esc(P[th.originator].name)} did not authorize ${P[key].name} to read ${esc(o.href)}. With no record to match against this desk cannot reply. The specification does not say what an unauthorized member of R does; this page keeps it silent, and it still counts in R.</div>`;
+  if (th.status !== 'open' && !o.canMatch) return `<div class="note" style="margin-top:10px">This thread is ${th.status}. Only a match that clears the bar matters now (§2.12.3); your best candidate scores ${o.best ? o.best.s.total : 0}.</div>`;
+  const notPinned = th.status === 'open' && !th.rPinned.includes(key);
+  const best = o.best ? `Your best candidate is <b>${esc(displayName(o.best.r))}</b> at <b>${o.best.s.total}</b> (${BAND[o.best.s.band]}, ${primariesShort(o.best.s.primaries)} primaries)${o.best.r[ULI_FIELD] ? ` under ${esc(shortUli(o.best.r[ULI_FIELD]))}` : ', which carries no ULI'}.` : 'Your roster is empty.';
+  const rule = o.clears && !o.hasUli ? ' A match reply links to the candidate ULI (§2.5); this candidate has none, so the only reply the specification shapes is No Match, and the duplicate would heal later by merge (§2.12.4). Resolve the record from this desk first.'
+    : o.best && o.best.s.band === 'review' ? ' Below the bar a resolver MUST NOT reply with a match (§2.5); §2.4 reserves below-threshold contact for a direct message a future revision will define, so the reply here is No Match.' : '';
+  return `<div class="note" style="margin-top:10px">${best}${rule}${notPinned ? ' You were pruned from R for this thread: a reply still lands in the thread but does not count toward its bar.' : ''}
+    <div class="row" style="margin-top:8px">${B(th.status === 'open' ? 'Reply: Matches Found' : 'Reply late: Matches Found', 'replyMatch', o.canMatch ? '' : 'disabled')}${th.status === 'open' ? B('Reply: No Match', 'replyNo', '', 'btn') : ''}${o.best ? `<button class="btn quiet" data-act="compareBest" data-id="${esc(th.id)}">Compare</button>` : ''}</div></div>`;
+};
+const renderThreads = () => {
+  const ths = Object.values(state.threads).sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
+  if (!ths.length) { $('threadList').innerHTML = '<p class="empty">No thread yet. Resolve a record from the roster to broadcast one.</p>'; $('threadBox').innerHTML = ''; return; }
+  const sel = state.threads[volatile.thread] ? volatile.thread : ths[0].id;
+  $('threadList').innerHTML = ths.map((th) => `<button class="btn small ${th.id === sel ? 'primary' : ''}" data-act="openThread" data-id="${esc(th.id)}">${esc(P[th.originator].name)}: ${esc(displayName(recordOf(th.originator, th.recordId) ?? { id: th.recordId }))} &middot; ${th.status}</button>`).join('');
+  const th = state.threads[sel];
+  const key = state.desk;
+  const c = consensus(th);
+  const req = payloadOf(activityById(currentRequest(th))?.activity ?? {})?.body?.value?.[0] ?? recordOf(th.originator, th.recordId) ?? { id: th.recordId };
+  $('threadBox').innerHTML = `<div class="note" style="margin-top:10px">
+    <h3 style="margin-top:0">${esc(P[th.originator].name)} resolving ${esc(displayName(req))} <span class="pill">${th.status}</span>${th.requests.length > 1 ? ` <span class="pill delete">rebroadcast &times;${th.requests.length - 1}</span>` : ''}</h3>
+    <div class="tally"><div><div class="big">${c.count} <span class="fine">of ${c.needed}</span></div><div class="lab">replies; floor(2/3 &times; ${c.R}) = ${c.needed}</div></div><div><div class="big">${th.mandatory.length - c.mandatoryPending.length} <span class="fine">of ${th.mandatory.length}</span></div><div class="lab">mandatory replied</div></div><div><div class="big">${c.matches.length}</div><div class="lab">match replies</div></div><div><span class="tag ${c.reached ? 'real' : 'neutral'}">${c.reached ? 'Consensus reached' : 'Waiting'}</span></div></div>
+    <div class="rlist">${th.rPinned.map((k) => { const r = replyOf(th, k); const orig = k === th.originator; return `<span class="rchip ${r ? 'replied' : ''}" style="border-left:3px solid ${P[k].color}">${P[k].name}${orig ? ' (originator)' : ''}${th.mandatory.includes(k) ? ' <span class="pill delete">mandatory</span>' : ''}${!orig && !th.authorized.includes(k) ? ' <span class="pill">not authorized</span>' : ''}${orig ? '' : r ? ` &middot; ${esc(r.activity.content)}` : ' &middot; pending'}</span>`; }).join('')}${PROVIDERS.filter((x) => !th.rPinned.includes(x.key)).map((x) => `<span class="rchip pruned">${x.name} &middot; not in R</span>`).join('')}</div>
+    <p class="fine" style="margin-top:6px">R pinned at governance feed position ${th.feedPosition}, originator included; it shrinks if a member is pruned and never grows (§2.6). A no-match counts.</p>
+    ${renderThreadAction(th, c, key)}</div>${renderThreadView(threadRecords(th), uliShape(key, th))}`;
+};
+
+const gauge = (s) => {
+  const tone = s.band === 'possible' ? 'ok' : s.band === 'review' ? 'warn' : 'bad';
+  return `<div class="gauge2" role="img" aria-label="score ${s.total} on a scale to ${s.max}">
+    <div class="gz"><i class="bad" style="flex-grow:${s.floor}"></i><i class="warn" style="flex-grow:${Math.max(s.T - s.floor, 0)}"></i><i class="ok" style="flex-grow:${Math.max(s.max - s.T, 0)}"></i></div>
+    <div class="gf"><i class="${tone}" style="flex-grow:${s.total}"></i><i style="flex-grow:${Math.max(s.max - s.total, 0)}"></i></div>
+    <div class="gl"><i style="flex-grow:${s.floor}"></i><b>${s.floor}</b><i style="flex-grow:${Math.max(s.T - s.floor, 0)}"></i><b>T ${s.T}</b><i style="flex-grow:${Math.max(s.max - s.T, 0)}"></i><b>${s.max}</b></div></div>`;
+};
+const renderDiff = (a, b) => `<div class="diff"><span class="h">Field</span><span class="h">${esc(displayName(a))}</span><span class="h"></span><span class="h">${esc(displayName(b))}</span>${[...FIELDS, ULI_FIELD].filter((f) => a[f] || b[f]).map((f) => {
+  const va = a[f] ?? ''; const vb = b[f] ?? ''; const present = va && vb; const eq = present && foldName(va) === foldName(vb);
+  return `<span class="f">${esc(LABELS[f])}</span><span class="v">${esc(va) || '&ndash;'}</span><span class="m ${present ? (eq ? 'y' : 'n') : ''}">${present ? (eq ? '&#10003;' : '&#10007;') : ''}</span><span class="v">${esc(vb) || '&ndash;'}</span>`;
+}).join('')}</div>`;
+const renderScore = (s, a, b) => `
+  <div class="band ${s.band}"><span class="hl">${BAND[s.band]}</span><span class="int">${s.total} points &middot; ${primariesText(s.primaries)}${s.gate ? '' : ' (gate not met)'}</span></div>
+  ${gauge(s)}
+  <p class="fine">Zones: rejected below ${s.floor}; review from ${s.floor} to ${s.T}; possible match at ${s.T} and above. The track is scaled to ${s.max}, the maximum attainable under the current weights with each cluster counted once; the specification defines no maximum.</p>
+  ${s.total >= s.T && !s.gate ? '<p class="note warn">The score clears the bar but fewer than two primary identifiers matched, so the band stays at review. Any two primaries clear; one alone does not.</p>' : ''}
+  <div class="grid2" style="margin-top:10px"><div><h3>Factors</h3><table class="factors"><thead><tr><th>Identifier</th><th>Tier</th><th class="num">Weight</th><th>Counted</th></tr></thead><tbody>${s.rows.map((r) => `<tr class="${r.matched ? (r.counted ? '' : 'sup') : 'off'}"><td>${esc(r.label)}</td><td>${r.tier}${r.cluster ? `, ${r.cluster} cluster` : ''}</td><td class="w">${r.weight}</td><td>${r.counted ? `<b>+${r.weight}</b>` : r.matched ? 'matched; superseded in its cluster' : 'no match'}</td></tr>`).join('')}<tr><td colspan="3"><b>Total</b></td><td><b>${s.total}</b></td></tr></tbody></table></div>
+  <div><h3>Field by field</h3>${renderDiff(a, b)}</div></div>`;
+const renderCompare = () => {
+  const cmp = volatile.compare;
+  const box = $('compareBox');
+  if (!cmp?.a) { box.innerHTML = '<p class="empty">Pick a pair from <a href="#local" data-goto="local">local matching</a>, a search result or a thread reply, or start from <a href="#roster" data-goto="roster">your roster</a>.</p>'; return; }
+  if (!cmp.b) { box.innerHTML = `<p class="note">Query: <b>${esc(displayName(cmp.a))}</b>. Now pick a second record in the roster with "Score with this". <button class="btn small quiet" data-act="clearCompare">Clear</button></p>`; return; }
+  box.innerHTML = `${renderScore(score(normalize(cmp.a), normalize(cmp.b), state.tuning), cmp.a, cmp.b)}<div class="row" style="margin-top:8px"><button class="btn small quiet" data-act="clearCompare">Clear</button></div>`;
+};
+
+const invariantItems = (inv) => {
+  const T = inv.T; const th = inv.th;
+  const pairText = (p) => `${esc(p.a.label)} + ${esc(p.b.label)} = ${p.sum}`;
+  const i1 = inv.inv1.ok ? `T = ${th.derived}, derived from the weights.` : th.override > th.derived
+    ? `T is ${T} by override, above the derived ${th.derived}. These two-primary pairs no longer clear it: ${inv.inv1.notClearing.map(pairText).join('; ')}. Two primaries would not always work, which is exactly the defect that let a bar of 1300 survive four years.`
+    : `T is ${T} by override, below the derived ${th.derived}. Every two-primary pair clears, but the bar no longer follows from the weights; see invariants 2 and 3.`;
+  const i2 = `Strongest single primary ${inv.maxPrimary.weight} (${esc(inv.maxPrimary.label)}) plus every secondary ${inv.secSum} = ${inv.maxPrimary.weight + inv.secSum}, against T ${T}: ${inv.inv2.ok ? `short by ${inv.inv2.headroom}. Secondaries boost and break ties among candidates that already cleared; they may rise by less than ${inv.inv2.headroom} in total before one primary plus everything else reaches the bar.` : 'reaches the bar. One primary plus secondary evidence now clears, so secondaries have stopped being tie-breakers and are moving candidates across bands.'}`;
+  const i3 = inv.inv3.ok ? `No single primary reaches T: the largest is ${inv.maxPrimary.weight} against ${T}.` : `${inv.inv3.reaching.map((f) => `${esc(f.label)} (${f.weight})`).join(', ')} reaches the bar alone, so "not one alone" is broken. If a measured frequency makes one identifier near-unique this is honest, and the right response is a decision about the rule rather than a cap on the weight. Nothing here is clamped.`;
+  return [{ ok: inv.inv1.ok, title: '1. The threshold is derived', text: i1 }, { ok: inv.inv2.ok, title: '2. No amount of secondary evidence substitutes for a second primary', text: i2 }, { ok: inv.inv3.ok, title: '3. No single primary reaches the threshold', text: i3 }];
+};
+const tuningJson = (t, th) => JSON.stringify({ weights: t.weights, rejectFloor: t.rejectFloor, override: t.override, hypothetical: t.hypothetical, derivedThreshold: th.derived, effectiveThreshold: th.effective }, null, 2);
+const renderTuning = () => {
+  const t = state.tuning;
+  const inv = invariants(t);
+  const th = inv.th;
+  $('tuningBox').innerHTML = `
+    <div class="wt-grid">${FACTORS.map((f) => `<label><span>${esc(f.label)} <em class="fine">${f.tier}${f.cluster ? `, ${f.cluster} cluster` : ''}</em></span><input type="number" min="0" step="5" data-weight="${f.id}" value="${t.weights[f.id]}"></label>`).join('')}
+      <label><span>Hypothetical new primary <em class="fine">unbacked by a field; for testing the rule</em></span><input type="number" min="0" step="5" data-hypo="weight" value="${t.hypothetical?.weight ?? ''}" placeholder="none"></label>
+      <label><span>Its cluster</span><select data-hypo="cluster"><option value="" ${!t.hypothetical?.cluster ? 'selected' : ''}>none</option><option value="license" ${t.hypothetical?.cluster === 'license' ? 'selected' : ''}>license</option><option value="office" ${t.hypothetical?.cluster === 'office' ? 'selected' : ''}>office</option></select></label>
+      <label><span>Reject floor</span><input type="number" min="0" step="5" data-floor value="${t.rejectFloor}"></label>
+      <label><span>Threshold override <em class="fine">blank keeps it derived</em></span><input type="number" min="0" step="5" data-override value="${t.override ?? ''}" placeholder="${th.derived}"></label></div>
+    <div class="note" style="margin-top:10px"><b>Match threshold T = ${th.effective}${th.overridden ? `, by override; the derived value is ${th.derived}` : ', derived'}.</b> ${th.pair ? `${esc(th.pair.a.label)} ${th.pair.a.weight} + ${esc(th.pair.b.label)} ${th.pair.b.weight}: the two smallest primary weights one candidate can match together.` : 'No two primaries are co-matchable.'} Excluded because they share a cluster: ${th.excluded.map((p) => `${esc(p.a.label)} + ${esc(p.b.label)} = ${p.sum}`).join('; ') || 'none'}. Maximum attainable score ${th.max}.</div>
+    <div class="inv">${invariantItems(inv).map((i) => `<div class="it ${i.ok ? '' : 'broken'}"><b>${i.ok ? '&#10003;' : '&#10007;'} ${esc(i.title)}</b>${i.text}</div>`).join('')}</div>
+    <div class="row" style="margin-top:10px"><button class="btn" data-act="tuningReset">Reset to the §2.9 table</button><button class="btn" data-act="tuningIo">${volatile.tuningIo ? 'Hide JSON' : 'Export or import JSON'}</button><span class="fine">Tuning persists in this browser.</span></div>
+    <div class="${volatile.tuningIo ? '' : 'hidden'}" style="margin-top:8px"><textarea id="tuningTxt">${esc(tuningJson(t, th))}</textarea><div class="row" style="margin-top:6px"><button class="btn small" data-act="tuningApply">Apply the JSON above</button><button class="btn small" data-act="tuningDownload">Download as a file</button></div></div>`;
+};
+
+const orgName = (uoi) => PROVIDERS.find((p) => p.uoi === uoi)?.name ?? uoi;
+/** §2.8: an organization may have more than one certified key; a signature matching any of them verifies. */
+const feedKeys = (uoi) => PROVIDERS.filter((p) => p.uoi === uoi).flatMap((p) => [...(state.keys[p.key] ? [{ pub: state.keys[p.key].pub, label: 'generated by this page' }] : []), ...(p.key === 'p1' ? [SPEC_KEY] : [])]);
+const verifyUli = async (text) => {
+  const input = String(text ?? '').trim();
+  const parsed = parseUli(input);
+  if (parsed.error) return { parsed, verdict: 'malformed' };
+  const keys = feedKeys(parsed.uoi);
+  if (!keys.length) return { parsed, verdict: 'unknown-org', keys: [] };
+  const results = await Promise.all(keys.map(async (k) => ({ ...k, ok: await verifyBytes(k.pub, parsed.sigBytes, ascii(parsed.signed)) })));
+  const hit = results.find((r) => r.ok);
+  const current = resolveRedirects(input);
+  return { parsed, verdict: hit ? 'verified' : 'failed', keys: results, hit, redirect: current !== input ? current : null };
+};
+const renderVerify = () => {
+  const v = volatile.verify;
+  $('edTag').className = `tag ${volatile.ed === false ? 'off' : 'real'}`;
+  $('edTag').textContent = volatile.ed === false ? 'Ed25519 unavailable in this browser' : 'Ed25519 via WebCrypto';
+  $('btnVerify').disabled = volatile.ed === false;
+  $('verifyBox').innerHTML = !v ? '' : v.verdict === 'malformed' ? `<div class="verdict bad">Not a ULI</div><p class="fine">${esc(v.parsed.error)}</p>` : `
+    <div class="verdict ${v.verdict === 'verified' ? 'ok' : v.verdict === 'unknown-org' ? 'off' : 'bad'}">${v.verdict === 'verified' ? `Verified: minted by ${esc(orgName(v.parsed.uoi))}` : v.verdict === 'unknown-org' ? 'Cannot verify: that UOI is not on this page\'s modeled governance feed' : 'Not a genuine ULI: the signature verifies against none of this organization\'s certified keys'}</div>
+    <div class="seg"><span class="l">prefix</span><span class="v">${esc(v.parsed.prefix)}${v.parsed.prefixNotLowercase ? ' (compared case-insensitively; signed lowercase)' : ''}</span><span class="l">UOI</span><span class="v">${esc(v.parsed.uoi)}</span><span class="l">nonce</span><span class="v">${esc(v.parsed.nonce)}</span><span class="l">signature</span><span class="v">${esc(v.parsed.signature)}</span><span class="l">signed bytes</span><span class="v">${esc(v.parsed.signed)} (US-ASCII, ${v.parsed.signed.length} bytes)</span><span class="l">keys tried</span><span class="v">${v.keys.map((k) => `${esc(k.pub)} &ndash; ${esc(k.label)}${k.ok ? ' &#10003;' : ''}`).join('<br>') || 'none'}</span>${v.redirect ? `<span class="l">redirect</span><span class="v">retired on this page; the current ULI is ${esc(v.redirect)}</span>` : ''}</div>`;
+  $('feedTbl').innerHTML = `<thead><tr><th>Organization</th><th>UOI</th><th>Status</th><th>Ed25519 public keys, base64url</th></tr></thead><tbody>${PROVIDERS.map((p) => `<tr><td>${p.name}</td><td class="mono">${esc(p.uoi)}</td><td>${state.gov.status[p.key]}</td><td class="mono">${feedKeys(p.uoi).map((k) => `${esc(k.pub)} <span class="fine">${esc(k.label)}</span>`).join('<br>') || '<span class="fine">none yet</span>'}</td></tr>`).join('')}</tbody>`;
+  const held = PROVIDERS.flatMap((p) => roster(p.key).filter((r) => r[ULI_FIELD] && !String(r[ULI_FIELD]).includes('<unsigned')).map((r) => ({ uli: r[ULI_FIELD], label: `${displayName(r)} (${p.name})` })));
+  $('mintedSel').innerHTML = `<option value="">Use one held here</option>${held.map((m) => `<option value="${esc(m.uli)}">${esc(m.label)}</option>`).join('')}`;
+};
+
+const renderStorage = () => {
+  const st = storageStats();
+  const kb = (b) => `${(b / 1024).toFixed(1)} KB`;
+  $('storageBox').innerHTML = `<div><span class="stat"><b>${fmt(st.mine.entries)}</b><span>entries, this page</span></span><span class="stat"><b>${kb(st.mine.bytes)}</b><span>approximate size</span></span><span class="stat"><b>${fmt(net.all().length)}</b><span>activities held</span></span><span class="stat"><b>${fmt(Math.max(st.all.entries - st.mine.entries, 0))}</b><span>other entries on this origin</span></span><span class="stat"><b>${fmt(st.session)}</b><span>session storage entries</span></span></div>
+    <p class="fine" style="margin-top:6px">Rosters: ${PROVIDERS.map((p) => `${p.name} ${fmt(roster(p.key).length)}${state.rosterMeta[p.key]?.persisted === false ? ' (memory only)' : ''}`).join(' &middot; ')}.</p>
+    ${volatile.clearing ? `<div class="note bad" style="margin-top:10px"><b>About to wipe:</b> ${fmt(st.all.entries)} local storage entr${st.all.entries === 1 ? 'y' : 'ies'} (about ${kb(st.all.bytes)}; this page's ${fmt(st.mine.entries)} of them hold ${kb(st.mine.bytes)}), ${fmt(st.session)} session storage entr${st.session === 1 ? 'y' : 'ies'}, and every IndexedDB database on this origin. The sample rosters can be restored afterward; an imported roster cannot.<div class="row" style="margin-top:8px"><button class="btn danger" data-act="clearConfirm">Wipe it now</button><button class="btn" data-act="clearCancel">Keep it</button></div></div>`
+    : `<div class="row" style="margin-top:10px"><button class="btn danger" data-act="clearStart">Clear this browser's data for this page</button></div>`}`;
+};
+
+
+/* ---------------------------------------------------------------------------
+ * Tabs. The sections are unchanged; each carries a data-group and the sidebar
+ * shows one group at a time. Tab choice lives in localStorage so it survives a
+ * reload, and a bare #hash deep-links a tab for a demo.
+ * ------------------------------------------------------------------------ */
+const TABS = ['data', 'net', 'tools', 'meta'];
+const TAB_OF_SECTION = { roster:'data', local:'data', dashboard:'data', network:'net', threads:'net',
+  compare:'data', tuning:'tools', verify:'tools', honesty:'meta', storage:'meta' };
+const TAB_KEY = 'uli.playground.tab';
+let activeTab = 'data';
+const seen = {};
+
+const showTab = (tab, opts = {}) => {
+  if (!TABS.includes(tab)) tab = 'data';
+  activeTab = tab;
+  document.querySelectorAll('section.card[data-group]').forEach((el) => { el.hidden = el.dataset.group !== tab; });
+  showSub(tab, activeSub[tab] ?? (SUBS[tab] ?? [])[0]);
+  document.querySelectorAll('.side a[data-tab]').forEach((a) => {
+    if (a.dataset.tab === tab) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  try { localStorage.setItem(TAB_KEY, tab); } catch { /* private window: the tab just does not persist */ }
+  seen[tab] = signatureFor(tab);                       // viewing a tab clears its "changed" dot
+  renderNav();
+  if (opts.scroll !== false) window.scrollTo({ top: 0 });
+};
+
+/* A count badge means WORK IS OWED, and it is derived by counting the action controls the panel
+   actually rendered rather than from a separate tally. It therefore cannot disagree with what the
+   user sees. A dot means something changed since the tab was last viewed and no decision is owed. */
+const ACTIONS = {
+  data: '[data-act="link"][data-v="same"]',            // one per undecided local pair
+  net: '[data-act="mint"],[data-act="adopt"]',         // a thread at consensus awaiting a decision
+  tools: null,
+  meta: null,
+};
+const countFor = (tab) => {
+  const sel = ACTIONS[tab];
+  if (!sel) return 0;
+  return [...document.querySelectorAll('section.card[data-group="' + tab + '"]')]
+    .reduce((n, sec) => n + sec.querySelectorAll(sel).length, 0);
+};
+/* Cheap change-detection: the rendered text of a tab's sections. Not clever, but it cannot drift,
+   and the alternative is a second set of counters to keep in step with the first. */
+const signatureFor = (tab) => [...document.querySelectorAll('section.card[data-group="' + tab + '"]')]
+  .map((s) => s.textContent.length).join(',');
+
+const renderNav = () => {
+  TABS.forEach((tab) => {
+    const n = countFor(tab);
+    const b = document.querySelector('.bdg[data-bdg="' + tab + '"]');
+    if (b) { b.textContent = String(n); b.classList.toggle('on', n > 0); b.title = n + ' item' + (n === 1 ? '' : 's') + ' awaiting a decision'; }
+    const d = document.querySelector('.dot[data-dot="' + tab + '"]');
+    const changed = tab !== activeTab && n === 0 && seen[tab] !== undefined && seen[tab] !== signatureFor(tab);
+    if (d) { d.classList.toggle('on', changed); d.title = changed ? 'Something changed here' : ''; }
+  });
+};
+
+
+/* Sub-tabs. The section order here is the order shown, so Dashboard leads: it is the
+   "what needs my attention" view. `compare` has no data-sub and is therefore pinned. */
+const SUBS = { data: ['dashboard', 'roster', 'local'], net: ['network', 'threads'],
+  tools: ['tuning', 'verify'], meta: ['honesty', 'storage'] };
+const SUB_LABEL = { dashboard:'Dashboard', roster:'Roster', local:'Local matching',
+  network:'Resolvers', threads:'Threads', tuning:'Weights', verify:'Verify a ULI',
+  honesty:'What is real', storage:'Storage' };
+const SUB_KEY = 'uli.playground.sub';
+let activeSub = {};
+
+const subCountFor = (sub) => {
+  const sel = ACTIONS_SUB[sub];
+  if (!sel) return 0;
+  const sec = document.querySelector('section.card[data-sub="' + sub + '"]');
+  return sec ? sec.querySelectorAll(sel).length : 0;
+};
+const ACTIONS_SUB = { local: '[data-act="link"][data-v="same"]', threads: '[data-act="mint"],[data-act="adopt"]' };
+
+/** Jump straight to a sub-tab. `showTab` restores whatever sub was last
+ *  active, so landing on a NAMED one has to say so explicitly. */
+const gotoSub = (sub) => {
+  const tab = TAB_OF_SECTION[sub] ?? 'data';
+  showTab(tab, { scroll: false });
+  showSub(tab, sub);
+};
+
+const showSub = (tab, sub) => {
+  const list = SUBS[tab] ?? [];
+  if (!list.includes(sub)) sub = list[0];
+  activeSub[tab] = sub;
+  // A section with no data-sub (the score panel) is never hidden by a sub-tab.
+  document.querySelectorAll('section.card[data-sub]').forEach((el) => {
+    el.hidden = el.dataset.group !== tab || el.dataset.sub !== sub;
+  });
+  try { localStorage.setItem(SUB_KEY, JSON.stringify(activeSub)); } catch { /* not persisted */ }
+  renderSubs();
+};
+
+const renderSubs = () => {
+  const strip = document.getElementById('subs');
+  if (!strip) return;
+  const list = SUBS[activeTab] ?? [];
+  strip.innerHTML = list.map((sub) => {
+    const n = subCountFor(sub);
+    const on = activeSub[activeTab] === sub;
+    return '<button role="tab" data-sub-btn="' + sub + '" aria-selected="' + on + '">' +
+      esc(SUB_LABEL[sub] ?? sub) +
+      (n > 0 ? '<span class="bdg on">' + n + '</span>' : '') + '</button>';
+  }).join('');
+  strip.querySelectorAll('[data-sub-btn]').forEach((b) => {
+    b.addEventListener('click', () => showSub(activeTab, b.dataset.subBtn));
+  });
+};
+
+const render = () => {
+  renderDeskSel(); renderHonesty(); renderNetwork(); renderRoster(); renderBroadcastBox(); renderLocal(); renderDashboard(); renderThreads(); renderCompare(); renderTuning(); renderVerify(); renderStorage(); renderNav(); renderSubs();
+};
+
+/* ---------------------------------------------------------------------------
+ * Wiring and start-up
+ * ------------------------------------------------------------------------ */
+const toast = (msg) => {
+  document.querySelector('.toast')?.remove();
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.setAttribute('role', 'status');
+  el.innerHTML = msg;
+  el.addEventListener('animationend', () => el.remove());
+  el.addEventListener('click', () => el.remove());
+  document.body.appendChild(el);
+};
+const scrollTo = (id) => $(id)?.scrollIntoView({ block: 'start' });
+const download = (name, text, type) => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], { type }));
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+};
+const num = (v, fallback) => { const n = Number(v); return Number.isFinite(n) && n >= 0 ? n : fallback; };
+const sanitizeTuning = (j) => ({
+  weights: Object.fromEntries(FACTORS.map((f) => [f.id, num(j?.weights?.[f.id], DEFAULT_TUNING.weights[f.id])])),
+  rejectFloor: num(j?.rejectFloor, DEFAULT_TUNING.rejectFloor),
+  override: j?.override === null || j?.override === undefined || j?.override === '' ? null : num(j.override, null),
+  hypothetical: j?.hypothetical && Number.isFinite(Number(j.hypothetical.weight)) ? { weight: num(j.hypothetical.weight, 0), cluster: ['license', 'office'].includes(j.hypothetical.cluster) ? j.hypothetical.cluster : null } : null,
+});
+const setTuning = (patch) => commit({ tuning: sanitizeTuning({ ...state.tuning, ...patch }) });
+
+const runLocal = async () => {
+  const key = state.desk;
+  const bar = $('localProg');
+  bar.classList.remove('hidden');
+  $('btnLocal').disabled = true;
+  const res = await localMatches(roster(key), state.tuning, (f) => { bar.firstElementChild.style.width = `${Math.round(f * 100)}%`; });
+  bar.classList.add('hidden');
+  bar.firstElementChild.style.width = '0';
+  setVolatile({ localRuns: { ...volatile.localRuns, [key]: res } });
+};
+const importRoster = async (file) => {
+  const key = state.desk;
+  const prefix = `imp-${Date.now().toString(36)}`;
+  const isWorkbook = /\.xlsx$/i.test(file.name);
+  const outcome = await (async () => {
+    if (!isWorkbook) return recordsFromCsv(await file.text(), prefix);
+    try {
+      return await recordsFromWorkbook(await file.arrayBuffer(), prefix);
+    } catch (cause) {
+      return { records: [], recognized: [], ignored: [], error: `That file could not be read as a workbook: ${cause.message}` };
+    }
+  })();
+  const { records, recognized, ignored, error, sheetName, otherSheets } = outcome;
+  if (error) { $('importNote').innerHTML = `<p class="note bad">${esc(error)}</p>`; return; }
+  state = { ...state, rosters: { ...state.rosters, [key]: records } };
+  saveRoster(key);
+  volatile = { ...volatile, localRuns: { ...volatile.localRuns, [key]: undefined }, compare: null };
+  render();
+  const meta = state.rosterMeta[key];
+  const sheetNote = sheetName === undefined ? '' : ` Read the sheet "${esc(sheetName)}"${otherSheets?.length ? `; skipped ${otherSheets.map(esc).join(', ')}` : ''}.`;
+  const hints = hintsFor(ignored);
+  $('importNote').innerHTML = `<p class="note ok">Imported ${fmt(records.length)} records into ${P[key].name}'s roster from ${esc(file.name)}.${sheetNote} Columns used: ${recognized.map(esc).join(', ')}.${ignored.length ? ` Ignored: ${ignored.map(esc).join(', ')}.` : ''}${hints.length ? ` ${hints.map(esc).join(' ')}` : ''} ${meta.persisted ? 'Kept in this browser\'s local storage.' : 'Too large for local storage; held in memory for this tab only.'} Nothing was sent anywhere.</p>`;
+};
+const restoreSamples = async () => {
+  const empties = PROVIDERS.filter((p) => !roster(p.key).length && p.key !== state.desk).map((p) => p.key);
+  for (const k of [state.desk, ...empties]) await seedRoster(k);
+  volatile = { ...volatile, localRuns: {}, compare: null };
+  render();
+  toast(`Restored the sample roster for ${P[state.desk].name}${empties.length ? ` and seeded ${empties.length} empty desk${empties.length === 1 ? '' : 's'}` : ''}.`);
+};
+const doVerify = async (text) => { setVolatile({ verify: await verifyUli(text) }); };
+
+const onAct = async (btn) => {
+  const { act, id } = btn.dataset;
+  const key = state.desk;
+  const th = id ? state.threads[id] : null;
+  const ops = {
+    desk: () => commit({ desk: btn.dataset.key }),
+    status: () => { setStatus(btn.dataset.key, btn.dataset.to); toast(`${P[btn.dataset.key].name} is now ${btn.dataset.to}; governance feed position ${state.gov.position}.`); },
+    resolve: () => { setVolatile({ broadcastFor: id }); },
+    cancelBroadcast: () => setVolatile({ broadcastFor: null }),
+    doBroadcast: () => {
+      const mand = [...document.querySelectorAll('[data-mand]:checked')].map((e) => e.dataset.mand);
+      const auth = [...document.querySelectorAll('[data-auth]:checked')].map((e) => e.dataset.auth);
+      const res = broadcast(key, id, mand, auth);
+      if (res.error) { toast('Refused: the record does not clear the identifiability threshold (§2.4).'); return; }
+      volatile = { ...volatile, broadcastFor: null, thread: res.id };
+      render();
+      scrollTo('threads');
+      toast(`Note posted to ${RESOLVERS}; ${mand.length} mandatory via Mention.`);
+    },
+    pickA: () => setVolatile({ compare: { a: recordOf(key, id), b: null } }),
+    pickB: () => { setVolatile({ compare: { a: volatile.compare.a, b: recordOf(key, id) } }); scrollTo('compare'); },
+    comparePair: () => { setVolatile({ compare: { a: recordOf(key, btn.dataset.a), b: recordOf(key, btn.dataset.b) } }); scrollTo('compare'); },
+    clearCompare: () => setVolatile({ compare: null }),
+    link: () => setLink(key, btn.dataset.a, btn.dataset.b, btn.dataset.v),
+    unlink: () => { const { [linkKey(btn.dataset.a, btn.dataset.b)]: gone, ...rest } = state.links[key] ?? {}; commit({ links: { ...state.links, [key]: rest } }); },
+    openThread: () => { setVolatile({ thread: id }); scrollTo('threads'); },
+    replyMatch: () => { if (reply(key, th, 'match')) toast('Replied Matches Found; the score rides in the payload, not the activity.'); },
+    replyNo: () => { if (reply(key, th, 'nomatch')) toast('Replied No Match. It counts toward consensus.'); },
+    adopt: () => { adopt(th, consensus(th).best); toast('Adopted locally. Nothing was posted to the thread.'); },
+    mint: async () => { const uli = await mint(th); toast(`Minted ${esc(shortUli(uli))} and posted the Create.`); },
+    declineStart: () => setVolatile({ declineFor: id }),
+    declineCancel: () => setVolatile({ declineFor: null }),
+    declineSpec: () => { const set = (f, v) => { const e = document.querySelector(`[data-field="${f}"]`); if (e) e.value = v; }; set('MemberNationalAssociationId', '555000999'); set('MemberStateLicense', 'SL445566'); },
+    declineSend: () => {
+      const fields = Object.fromEntries([...document.querySelectorAll('[data-field]')].map((e) => [e.dataset.field, e.value.trim()]));
+      const res = decline(th, { ...recordOf(th.originator, th.recordId), ...fields });
+      if (res.error) { toast('Refused: the corrected record does not clear the identifiability threshold (§2.4).'); return; }
+      volatile = { ...volatile, declineFor: null };
+      render();
+      toast('Rebroadcast posted into the same thread. That is the decline.');
+    },
+    retire: () => { const late = lateMatches(th); if (late.length) { retire(th, late[0]); toast('Tombstone posted; the record relinked to the successor.'); } },
+    compareReply: () => {
+      const m = consensus(th).matches.find((x) => x.key === btn.dataset.key);
+      const q = payloadOf(activityById(currentRequest(th)).activity)?.body?.value?.[0];
+      const cand = m ? payloadOf(m.record.activity)?.body?.licensee?.value?.[0] : null;
+      if (q && cand) { setVolatile({ compare: { a: q, b: cand } }); scrollTo('compare'); }
+    },
+    compareBest: () => { const o = replyOptions(key, th); if (o.best) { setVolatile({ compare: { a: o.query, b: o.best.r } }); scrollTo('compare'); } },
+    tuningReset: () => commit({ tuning: { ...DEFAULT_TUNING, weights: { ...DEFAULT_TUNING.weights } } }),
+    tuningIo: () => setVolatile({ tuningIo: !volatile.tuningIo }),
+    tuningApply: () => { try { commit({ tuning: sanitizeTuning(JSON.parse($('tuningTxt').value)) }); toast('Tuning applied.'); } catch (e) { toast(`Not valid JSON: ${esc(e.message)}`); } },
+    tuningDownload: () => download('uli-tuning.json', tuningJson(state.tuning, threshold(state.tuning)), 'application/json'),
+    clearStart: () => setVolatile({ clearing: true }),
+    clearCancel: () => setVolatile({ clearing: false }),
+    clearConfirm: async () => {
+      const n = await wipeAll();
+      state = loadState();
+      volatile = { ...volatile, clearing: false, localRuns: {}, compare: null, thread: null, verify: null, broadcastFor: null, declineFor: null };
+      await ensureKeys();
+      render();
+      toast(`Wiped local storage, session storage and ${n} IndexedDB database${n === 1 ? '' : 's'} on this origin. The sample rosters can be restored from the roster section.`);
+    },
+  };
+  await ops[act]?.();
+};
+
+const wire = () => {
+  document.addEventListener('click', (ev) => { const btn = ev.target.closest('[data-act]'); if (btn && !btn.disabled) onAct(btn); });
+  document.addEventListener('change', (ev) => {
+    const el = ev.target;
+    if (el.dataset.weight) setTuning({ weights: { ...state.tuning.weights, [el.dataset.weight]: el.value } });
+    else if (el.dataset.hypo) { const w = el.dataset.hypo === 'weight' ? el.value : document.querySelector('[data-hypo="weight"]')?.value; const c = el.dataset.hypo === 'cluster' ? el.value : document.querySelector('[data-hypo="cluster"]')?.value; setTuning({ hypothetical: w === '' ? null : { weight: w, cluster: c || null } }); }
+    else if (el.hasAttribute('data-floor')) setTuning({ rejectFloor: el.value });
+    else if (el.hasAttribute('data-override')) setTuning({ override: el.value === '' ? null : el.value });
+    else if (el.id === 'deskSel') commit({ desk: el.value });
+    else if (el.id === 'csvFile' && el.files?.[0]) importRoster(el.files[0]).then(() => { el.value = ''; });
+    else if (el.id === 'mintedSel' && el.value) { $('uliIn').value = el.value; doVerify(el.value); }
+  });
+  $('q').addEventListener('input', renderRoster);
+  $('btnAutoReply').addEventListener('click', () => { const acted = autoReply(); toast(acted.length ? `Replies posted: ${esc(acted.join('; '))}.` : 'No resolver had a reply to give.'); });
+  $('btnSolo').addEventListener('click', () => { PROVIDERS.filter((p) => p.key !== state.desk && isActive(p.key)).forEach((p) => setStatus(p.key, 'inactive')); toast('Only you are active: R = 1, so floor(2/3 × 1) = 0 replies are needed. That is resolving with yourself.'); });
+  $('btnFull').addEventListener('click', () => { PROVIDERS.filter((p) => !isActive(p.key)).forEach((p) => setStatus(p.key, 'active')); });
+  $('btnTemplate').addEventListener('click', () => { const box = $('templateBox'); box.classList.toggle('hidden'); $('templateTxt').value = toCsv(SAMPLE.p1.slice(0, 3)); });
+  document.querySelectorAll('.side a[data-tab]').forEach((a) => {
+    a.addEventListener('click', (e) => { e.preventDefault(); showTab(a.dataset.tab); history.replaceState(null, '', a.getAttribute('href')); });
+  });
+  // A bare #section in the URL opens that section's tab, so a link can land someone on it mid-demo.
+  window.addEventListener('hashchange', () => {
+    const t = TAB_OF_SECTION[location.hash.slice(1)];
+    if (t) showTab(t);
+  });
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[data-goto]');
+    if (!a) return;
+    e.preventDefault();
+    gotoSub(a.dataset.goto);
+  });
+  $('btnRestore').addEventListener('click', restoreSamples);
+  $('btnLocal').addEventListener('click', runLocal);
+  $('btnVerify').addEventListener('click', () => doVerify($('uliIn').value));
+  $('btnSpecExample').addEventListener('click', () => { $('uliIn').value = SPEC_ULI; doVerify(SPEC_ULI); });
+  $('lnk6').href = `${SPEC}#section-6-appendices`;
+  $('lnkSpec').href = SPEC;
+};
+
+const ensureTokens = () => {
+  const missing = PROVIDERS.filter((p) => !state.tokens[p.key]);
+  if (!missing.length) return;
+  const tokens = { ...state.tokens, ...Object.fromEntries(missing.map((p) => [p.key, `uli_${p.key}_${randB64u(9)}`])) };
+  state = { ...state, tokens };
+  store.set('tokens', tokens);
+};
+const init = async () => {
+  wire();
+  render();
+  const ed = await edAvailable();
+  const pu = parseUli(SPEC_ULI);
+  volatile = { ...volatile, ed, specVerified: ed ? await verifyBytes(SPEC_KEY.pub, pu.sigBytes, ascii(pu.signed)) : false };
+  ensureTokens();
+  if (ed) await ensureKeys();
+  // Taken BEFORE seeding: the seed below gives every first-time visitor a
+  // roster, so after it nobody looks new. This is what decides where they land.
+  const broughtOwnRoster = PROVIDERS.some((p) => roster(p.key).length);
+  if (!broughtOwnRoster) { for (const p of PROVIDERS) await seedRoster(p.key); }
+  render();
+  try { activeSub = JSON.parse(localStorage.getItem(SUB_KEY) ?? '{}') ?? {}; } catch { activeSub = {}; }
+  // Someone returning to their own data wants the Dashboard; someone arriving
+  // for the first time wants the Roster, which is where the work starts. An
+  // explicit earlier choice wins over both.
+  if (activeSub.data === undefined) {
+    activeSub.data = broughtOwnRoster ? 'dashboard' : 'roster';
+  }
+  // Entry lands by roster, not by where you were last. Someone returning to
+  // their own data wants the Dashboard; someone arriving without a roster wants
+  // the Roster, which is where the work starts. A #section link still wins, so
+  // a deep link into any view keeps working. The stored tab is deliberately not
+  // consulted here - it made the rule unreachable for anyone who had wandered.
+  const fromHash = TAB_OF_SECTION[location.hash.slice(1)];
+  if (!fromHash) activeSub.data = broughtOwnRoster ? 'dashboard' : 'roster';
+  TABS.forEach((t) => { seen[t] = signatureFor(t); });
+  showTab(fromHash ?? 'data', { scroll: false });
+};
+/** A read-only handle for tests and the curious; nothing on the page depends on it. */
+window.__uli = Object.freeze({ state: () => state, volatile: () => volatile, threshold, invariants, score, normalize, consensus, activities: () => net.all(), conformance: () => conformance(net.all()) });
+init();
+</script>
+</body>
+</html>
+
+<script id="reso-house-chrome-post">
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('resoThemeBtn');
+  var icon = document.getElementById('resoThemeIcon');
+  var isDark = function () {
+    var set = root.getAttribute('data-theme');
+    if (set) return set === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  };
+  var paint = function () { icon.innerHTML = isDark() ? '&#9728;' : '&#9789;'; };
+  btn.addEventListener('click', function () {
+    var next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('dd-theme', next); } catch (e) {}
+    paint();
+  });
+  paint();
+})();
+</script>

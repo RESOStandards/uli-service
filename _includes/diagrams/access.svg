@@ -1,0 +1,33 @@
+<figure class="diagram" role="group" aria-labelledby="fig-access-cap">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 428" role="img" aria-labelledby="fig-access-title">
+<title id="fig-access-title">Three nested layers of access: network admission, thread access and record access</title>
+<rect class="box" x="12" y="12" width="416" height="404" rx="10"/>
+<text x="28" y="40" class="t-b">1  Network admission</text>
+<rect class="tag" x="292" y="24" width="124" height="20" rx="10"/>
+<text x="354" y="38" class="t-small" text-anchor="middle">RESO decides</text>
+<text x="28" y="62" class="t-mid">Certification admits a resolver to the pool R:</text>
+<text x="28" y="80" class="t-mid">certified, compliant and active.</text>
+<rect class="box" x="32" y="96" width="376" height="236" rx="8"/>
+<text x="48" y="124" class="t-b">2  Thread access</text>
+<rect class="tag" x="244" y="108" width="156" height="20" rx="10"/>
+<text x="322" y="122" class="t-small" text-anchor="middle">membership decides</text>
+<text x="48" y="146" class="t-mid">Every resolver following the collection</text>
+<text x="48" y="164" class="t-mid">receives every broadcast. No tokens are</text>
+<text x="48" y="182" class="t-mid">needed: delivery is free.</text>
+<rect class="box-soft" x="52" y="198" width="336" height="118" rx="6"/>
+<text x="68" y="226" class="t-b">3  Record access</text>
+<rect class="tag" x="208" y="210" width="170" height="20" rx="10"/>
+<text x="293" y="224" class="t-small" text-anchor="middle">the originator decides</text>
+<text x="68" y="248" class="t-mid">Reading the licensee's fields needs</text>
+<text x="68" y="266" class="t-mid">permission granted in advance, on an</text>
+<text x="68" y="284" class="t-mid">OAuth2-protected link, before the</text>
+<text x="68" y="302" class="t-mid">thread exists.</text>
+<rect class="box" x="358" y="290" width="16" height="12" rx="2"/>
+<path class="line" d="M361,290 v-4 a5,5 0 0 1 10,0 v4"/>
+<text x="28" y="354" class="t-small t-muted">Admission is never entitlement: a resolver receives</text>
+<text x="28" y="370" class="t-small t-muted">every broadcast and reads only what it was authorized</text>
+<text x="28" y="386" class="t-small t-muted">to read. RESO verifies resolvers; it does not</text>
+<text x="28" y="402" class="t-small t-muted">authenticate traffic.</text>
+</svg>
+<figcaption id="fig-access-cap">Three layers of access. RESO admits resolvers to the pool, membership delivers every broadcast to every resolver, and the originator decides, per thread and in advance, who may read the licensee's fields (Specification, Sections 2.1, 2.10 and 3.1).</figcaption>
+</figure>

@@ -1,0 +1,252 @@
+/* uli.reso.org – the one stylesheet for the site pages.
+   System fonts only, no web fonts, no framework. Colors are tokens on :root, with a
+   separate dark set (not an inversion) under prefers-color-scheme and under
+   [data-theme="dark"]. The playground at /playground/ is self-contained and does not
+   load this file. The light tokens follow transport.reso.org; the dark tokens follow
+   the playground, so the two surfaces read as one system. */
+
+:root {
+  color-scheme: light dark;
+  --bg: #f7fafc;
+  --surface: #ffffff;
+  --text: #2d3748;
+  --muted: #4a5568;
+  --rule: #e2e8f0;
+  --rule-strong: #cbd5e0;
+  --link: #1a2f58;
+  --link-hover: #006b87;
+  --accent: #007e9e;
+  --accent-text: #006b87;
+  --accent-soft: #e0f4f8;
+  --header-bg: #1a2f58;
+  --header-text: #ffffff;
+  --header-current: rgba(255, 255, 255, 0.14);
+  --code-bg: #edf2f7;
+  --dia-fill: #ffffff;
+  --dia-stroke: #4a5568;
+  --dia-emph: #007e9e;
+  --dia-muted: #718096;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;  /* exactly tools.reso.org's stack */
+  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;  /* exactly tools.reso.org's stack */
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1217;
+    --surface: #161b22;
+    --text: #e8ecf1;
+    --muted: #a6b0be;
+    --rule: #28303a;
+    --rule-strong: #3a4454;
+    --link: #90cdf4;
+    --link-hover: #c3e4ff;
+    --accent: #79a9de;
+    --accent-text: #8fb8e8;
+    --accent-soft: #17263a;
+    --header-bg: #1a2f58;
+    --header-text: #ffffff;
+    --header-current: rgba(255, 255, 255, 0.16);
+    --code-bg: #1c222b;
+    --dia-fill: #161b22;
+    --dia-stroke: #a6b0be;
+    --dia-emph: #79a9de;
+    --dia-muted: #6e7887;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1217;
+  --surface: #161b22;
+  --text: #e8ecf1;
+  --muted: #a6b0be;
+  --rule: #28303a;
+  --rule-strong: #3a4454;
+  --link: #90cdf4;
+  --link-hover: #c3e4ff;
+  --accent: #79a9de;
+  --accent-text: #8fb8e8;
+  --accent-soft: #17263a;
+  --header-bg: #1a2f58;
+  --header-text: #ffffff;
+  --header-current: rgba(255, 255, 255, 0.16);
+  --code-bg: #1c222b;
+  --dia-fill: #161b22;
+  --dia-stroke: #a6b0be;
+  --dia-emph: #79a9de;
+  --dia-muted: #6e7887;
+}
+
+/* Base */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 16px;   /* tools.reso.org's baseline */
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: break-word;
+}
+@media (max-width: 480px) { body { font-size: 16px; } }
+.wrap { width: 100%; max-width: 780px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--surface); color: var(--text); padding: .5rem 1rem; z-index: 100; }
+.skip:focus { left: 8px; top: 8px; }
+
+/* Header and navigation */
+.site-header { background: var(--header-bg); color: var(--header-text); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+/* The header is chrome, not prose, so it spans the window rather than the 780px
+   reading measure: logo hard left, nav hard right, as on tools.reso.org. The
+   content column below is deliberately left narrow. */
+.site-header .wrap { max-width: none; padding-left: 1.5rem; padding-right: 1.5rem; }
+.header-inner { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; min-height: 64px; padding-top: .7rem; padding-bottom: .7rem; }
+.brand { display: inline-flex; align-items: center; gap: .75rem; color: var(--header-text); text-decoration: none; font-weight: 700; font-size: 1.1rem; letter-spacing: -.01em; }
+.brand:hover, .brand:focus { color: var(--header-text); }
+.brand img { height: 36px; width: auto; display: block; }
+.site-nav { display: flex; flex-wrap: wrap; gap: .15rem .35rem; margin-left: auto; }
+.site-nav a { color: var(--header-text); font-weight: 600; font-size: .95rem; text-decoration: none; padding: .3rem .55rem; border-radius: 4px; opacity: .88; }
+.site-nav a:hover, .site-nav a:focus { opacity: 1; background: var(--header-current); color: var(--header-text); }
+.site-nav a[aria-current="page"] { opacity: 1; background: var(--header-current); }
+@media (max-width: 640px) {
+  .site-nav { margin-left: 0; width: 100%; }
+  .brand-name { font-size: 1rem; }
+}
+
+/* Content */
+.content { flex: 1 0 auto; padding-top: 1.5rem; padding-bottom: 3rem; }
+h1, h2, h3, h4 { line-height: 1.25; margin: 1.8em 0 .6em; font-weight: 700; letter-spacing: -.01em; }
+h1 { font-size: 2rem; margin-top: .6em; }
+h2 { font-size: 1.45rem; padding-bottom: .25rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.15rem; }
+h4 { font-size: 1rem; }
+p, ul, ol { margin: 0 0 1em; }
+li { margin-bottom: .3em; }
+.lede { font-size: 1.2rem; color: var(--muted); margin-top: -.4rem; }
+/* Links are bold, not underlined. */
+a { color: var(--link); font-weight: 600; text-decoration: none; }
+a:hover, a:focus { color: var(--link-hover); }
+hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+blockquote { margin: 1.2rem 0; padding: .6rem 1rem; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 6px 6px 0; }
+blockquote p:last-child { margin-bottom: 0; }
+img { max-width: 100%; height: auto; }
+
+/* Code */
+code, pre { font-family: var(--mono); }
+code { font-size: .9em; background: var(--code-bg); padding: .1em .35em; border-radius: 3px; overflow-wrap: anywhere; }
+pre { background: var(--code-bg); padding: .8rem 1rem; border-radius: 6px; overflow-x: auto; line-height: 1.45; font-size: .88em; margin: 0 0 1.2em; }
+pre code { background: none; padding: 0; font-size: inherit; overflow-wrap: normal; white-space: pre; }
+.highlighter-rouge { margin: 0 0 1.2em; }
+.highlighter-rouge pre { margin: 0; }
+
+/* Tables. A table is its own horizontal scroll container, so a wide one scrolls
+   inside its box and never widens the page. */
+table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 0 0 1.4em; font-size: .93em; line-height: 1.45; }
+th, td { border: 1px solid var(--rule-strong); padding: .45rem .65rem; text-align: left; vertical-align: top; }
+th { background: var(--code-bg); font-weight: 700; }
+/* An identifier in a cell stays whole; the table scrolls instead. */
+table code { overflow-wrap: normal; white-space: nowrap; }
+
+/* Landing page routes */
+.routes { list-style: none; padding: 0; margin: 0 0 1.5em; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .9rem; }
+.routes li { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: .9rem 1rem; margin: 0; }
+.routes a { display: block; font-size: 1.05rem; margin-bottom: .25rem; }
+.routes span { display: block; color: var(--muted); font-size: .95rem; }
+
+/* Specification page */
+.provenance { background: var(--accent-soft); border-left: 4px solid var(--accent); padding: .8rem 1rem; border-radius: 0 6px 6px 0; margin: 0 0 2rem; }
+.provenance p { margin: 0 0 .5em; }
+.provenance p:last-child { margin-bottom: 0; }
+.provenance .pr-link { font-size: 1.1rem; }
+.spec h1 { font-size: 1.6rem; margin-top: 2.2em; padding-top: 1rem; border-top: 1px solid var(--rule); }
+.spec h1:first-of-type { border-top: 0; padding-top: 0; margin-top: .6em; font-size: 2rem; }
+.spec h2 { font-size: 1.3rem; border-bottom: 0; }
+.spec h3 { font-size: 1.1rem; }
+.spec > br { display: none; }
+
+/* Diagrams: inline SVG, text as text, colors from the tokens above. */
+.diagram { margin: 1.6rem 0 2rem; padding: 1rem .75rem; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+.diagram svg { display: block; width: 100%; max-width: 560px; height: auto; margin: 0 auto; font-family: var(--sans); }
+.diagram figcaption { max-width: 560px; margin: .8rem auto 0; font-size: .92rem; color: var(--muted); line-height: 1.45; }
+.diagram text { fill: var(--text); font-size: 15px; }
+.diagram .t-small { font-size: 13px; }
+.diagram .t-mid { font-size: 14px; }
+.diagram .t-b { font-weight: 700; }
+.diagram .t-muted { fill: var(--muted); }
+.diagram .t-emph { fill: var(--accent-text); font-weight: 700; }
+.diagram .t-i { font-style: italic; }
+.diagram .box { fill: var(--dia-fill); stroke: var(--dia-stroke); stroke-width: 1.5; }
+.diagram .box-emph { fill: var(--dia-fill); stroke: var(--dia-emph); stroke-width: 2.5; }
+.diagram .box-ghost { fill: none; stroke: var(--dia-muted); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.diagram .box-soft { fill: var(--accent-soft); stroke: var(--dia-stroke); stroke-width: 1.5; }
+.diagram .line { fill: none; stroke: var(--dia-stroke); stroke-width: 1.5; }
+.diagram .line-emph { fill: none; stroke: var(--dia-emph); stroke-width: 2.5; }
+.diagram .line-ghost { fill: none; stroke: var(--dia-muted); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.diagram marker path { fill: var(--dia-stroke); }
+.diagram .tag { fill: var(--accent-soft); stroke: none; }
+
+/* Footer */
+/* Footer lifted from tools.reso.org: a full-width navy bar that closes the
+   page the way the header opens it, rather than a rule and some grey text. */
+.site-footer {
+  background: var(--header-bg);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.8125rem;
+  margin-top: 2rem;
+}
+.site-footer .wrap { max-width: none; }
+.site-footer p { margin: 0; }
+.site-footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+.site-footer a:hover, .site-footer a:focus { color: var(--reso-orange, #ff9900); text-decoration: underline; }
+
+
+/* ---------------------------------------------------------------------------
+   Shared RESO vanity-site shell. Keep in sync across uli / offers / upi.
+   ------------------------------------------------------------------------ */
+
+/* The bar stays while the page scrolls. */
+.site-header { position: sticky; top: 0; z-index: 50; }
+
+/* Theme toggle, matching the control on tools.reso.org. */
+.theme-toggle {
+  background: var(--header-current); border: 1px solid rgba(255,255,255,.18);
+  color: var(--header-text); border-radius: 7px; width: 34px; height: 34px;
+  margin-left: .75rem; cursor: pointer; display: inline-flex;
+  align-items: center; justify-content: center; font-size: 15px; line-height: 1;
+  padding: 0; flex: 0 0 auto;
+}
+.theme-toggle:hover { background: rgba(255,255,255,.22); }
+.theme-toggle:focus-visible { outline: 2px solid var(--reso-orange, #ff9900); outline-offset: 2px; }
+
+/* Content panes. A pane is one h2 and everything under it.
+   Values lifted from tools.reso.org's `.card`, not approximated. */
+.pane {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.4rem 1.35rem;
+  margin: 0 0 1.1rem;
+  transition: box-shadow 0.15s;
+}
+.pane:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.pane > h2:first-child { margin-top: 0; border-bottom: 0; padding-bottom: 0; }
+.pane > :last-child { margin-bottom: 0; }
+.content > h1 { margin-bottom: .4em; }
+.pane .routes li { background: var(--bg); }
+@media (max-width: 640px) { .pane { padding: 1rem 1.1rem; } }
+
+/* tools.reso.org's dark card, ported onto the data-theme mechanism these
+   sites use. Same values, better guard: data-theme tells "explicitly light"
+   apart from "unset", which a .dark class cannot. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pane { background: #2d3748; border-color: #4a5568; }
+  :root:not([data-theme="light"]) .pane:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+}
+:root[data-theme="dark"] .pane { background: #2d3748; border-color: #4a5568; }
+:root[data-theme="dark"] .pane:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+/* tools.reso.org's content measure. Wider than a prose column because the
+   panes carry the reading rhythm now. */
+.content.wrap { max-width: 1200px; padding-left: 1.5rem; padding-right: 1.5rem; }

@@ -1,6 +1,57 @@
-# theme: jekyll-theme-slate
+# uli.reso.org – Jekyll configuration for GitHub Pages.
+#
+# The jekyll-theme-slate line that used to be here is gone on purpose. The site now
+# carries its own shell: one layout (_layouts/default.html), one stylesheet
+# (assets/site.css), the RESO logo (assets/reso-logo-white.png) and a nav (_data/nav.yml).
 title: RESO Unique Licensee Identifier
-description: Unique Licensee Matching and Resolution Service
+description: One stable identifier for each licensed real estate professional, resolved by a network of certified participants with no central database.
+url: https://uli.reso.org
 
-#github:
-#  is_project_page: false
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  syntax_highlighter: rouge
+
+# These five are enabled by default on GitHub Pages; listing them keeps a local build
+# faithful to what GitHub produces.
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+  - jekyll-readme-index
+  - jekyll-default-layout
+  - jekyll-titles-from-headings
+
+# GUESS, for review: the repository also holds the 2023 pilot code and the old docs/
+# pages. GitHub Pages renders any Markdown file it finds, so without this list the old
+# docs would be published under the new shell, including docs/how-does-it-work.md with
+# the superseded lifecycle image and docs/uli-resolution-protocol-spec.md, a stale copy
+# of the specification. Everything below is kept out of the site. Remove an entry if
+# something here should be published after all.
+exclude:
+  - README.md
+  - CLAUDE.md
+  - LICENSE
+  - docs/
+  - api/
+  - client/
+  - test/
+  - node_modules/
+  - Dockerfile
+  - docker-compose.yml
+  - docker-compose.opensearch.yml
+  - package.json
+  - package-lock.json
+  - yarn.lock
+  - launch.json
+  - logger.yml
+  - kibana.yml
+  - elasticsearch.yml
+  - error.log/
+  - uli-pilot-ingest.json
+  - uli-ranking-formula.json
+  - regex-query-example-first-name.json
+  - regex-query-example-full-name.json
+  - regex-query-example-last-name.json
+  - ULI - Data Pilot Template.xlsx
