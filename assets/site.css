@@ -109,8 +109,17 @@ body {
 .site-nav a:hover, .site-nav a:focus { opacity: 1; background: var(--header-current); color: var(--header-text); }
 .site-nav a[aria-current="page"] { opacity: 1; background: var(--header-current); }
 @media (max-width: 640px) {
-  .site-nav { margin-left: 0; width: 100%; }
-  .brand-name { font-size: 1rem; }
+  /* The toggle used to wrap to a row of its own below a full-width nav, so the
+     header cost four rows on a narrow window. With flex-wrap the browser picks
+     line breaks from each item's HYPOTHETICAL size, before any shrinking, so
+     the brand at its natural width plus the toggle never fit on one line and
+     the toggle always wrapped. A flex-basis of zero lets the brand be placed
+     first and grow into what is left, which keeps the toggle beside it. */
+  .brand { order: 0; flex: 1 1 0; min-width: 0; gap: .5rem; }
+  .brand img { height: 24px; }
+  .brand-name { min-width: 0; overflow-wrap: anywhere; font-size: 1rem; }
+  .theme-toggle { order: 1; flex: 0 0 auto; margin-left: auto; }
+  .site-nav { order: 2; margin-left: 0; width: 100%; }
 }
 
 /* Content */
@@ -250,3 +259,43 @@ table code { overflow-wrap: normal; white-space: nowrap; }
 /* tools.reso.org's content measure. Wider than a prose column because the
    panes carry the reading rhythm now. */
 .content.wrap { max-width: 1200px; padding-left: 1.5rem; padding-right: 1.5rem; }
+
+/* Menu button, lifted from tools.reso.org so the control is the same one on
+   every RESO site: borderless, a 24px rule icon, and the nav becoming a
+   centre-aligned column with hairline separators below 768px.
+
+   The `js-nav` guard is ours. tools hides the nav unconditionally at this
+   width, which leaves a page whose script did not run with no navigation at
+   all. Script adds the class, so the collapse cannot outlive its own control. */
+.header-actions { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: .5rem;
+  color: var(--header-text);
+}
+.menu-toggle svg { width: 24px; height: 24px; display: block; }
+.menu-toggle:focus-visible { outline: 2px solid var(--reso-orange, #ff9900); outline-offset: 2px; }
+
+@media (max-width: 768px) {
+  .menu-toggle { display: block; }
+  .js-nav .site-nav {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    margin: 0;
+    padding: .5rem 0 1rem;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .js-nav .site-nav.open { display: flex; }
+  .js-nav .site-nav.open a {
+    padding: .625rem 0;
+    opacity: 1;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .js-nav .site-nav.open a:last-of-type { border-bottom: none; }
+}

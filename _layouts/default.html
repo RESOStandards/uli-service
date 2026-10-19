@@ -50,13 +50,18 @@
         <img src="{{ '/assets/reso-logo-white.png' | relative_url }}" alt="RESO" width="149" height="36">
         <span class="brand-name">Unique Licensee Identifier</span>
       </a>
-      <nav class="site-nav" aria-label="Site">
+      <nav class="site-nav" id="siteNav" aria-label="Site">
         {%- for item in site.data.nav %}
         <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a>
         {%- endfor %}
       </nav>
-      <button class="theme-toggle" id="themeToggle" type="button"
-              aria-label="Switch between light and dark">&#9789;</button>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" type="button"
+        aria-label="Switch between light and dark">&#9789;</button>
+        <button class="menu-toggle" id="menuToggle" type="button"
+                aria-label="Toggle menu" aria-expanded="false"
+                aria-controls="siteNav"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button>
+      </div>
     </div>
   </header>
   <main id="main" class="wrap content{% if page.body_class %} {{ page.body_class }}{% endif %}">
@@ -83,6 +88,26 @@
         paint();
       });
       paint();
+
+      // Menu button, as on tools.reso.org. The class is added here rather than
+      // in the markup so a page whose script never runs keeps a visible nav
+      // instead of one locked behind a button that cannot open it.
+      var menuToggle = document.getElementById('menuToggle');
+      var siteNav = document.getElementById('siteNav');
+      if (menuToggle && siteNav) {
+        (siteNav.closest('header') || document.body).classList.add('js-nav');
+        menuToggle.addEventListener('click', function () {
+          menuToggle.setAttribute('aria-expanded',
+            siteNav.classList.toggle('open') ? 'true' : 'false');
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && siteNav.classList.contains('open')) {
+            siteNav.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.focus();
+          }
+        });
+      }
 
       // Group each h2 and the content beneath it into a pane. Done here rather
       // than at build time so GitHub Pages needs no plugin. The specification
