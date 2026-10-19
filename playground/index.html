@@ -1766,7 +1766,7 @@ const renderRoster = () => {
       <td class="mono">${esc(r.MemberMlsId ?? '')}</td>
       <td>${uliCell(r)}</td>
       <td><div class="row">
-        <button class="btn small" data-act="resolve" data-id="${esc(r.id)}" ${r[ULI_FIELD] || r.placeholder || !isActive(key) ? 'disabled' : ''} title="${r[ULI_FIELD] ? 'Already holds a ULI. The changed-data rebroadcast of §2.4 is not built here; see the report.' : r.placeholder ? 'Resolution in flight.' : ''}">Resolve on the network</button>
+        <button class="btn small" data-act="resolve" data-id="${esc(r.id)}" ${r[ULI_FIELD] || r.placeholder || !isActive(key) ? 'disabled' : ''} title="${r[ULI_FIELD] ? 'Already holds a ULI. The changed-data rebroadcast of §2.4 is not built here; see the report.' : r.placeholder ? 'Resolution in flight.' : !isActive(key) ? `${P[key].name} is inactive. Reactivate it on the network strip to broadcast.` : ''}">Resolve on the network</button>
         ${a && a.id !== r.id ? `<button class="btn small quiet" data-act="pickB" data-id="${esc(r.id)}">Score with this</button>` : `<button class="btn small quiet" data-act="pickA" data-id="${esc(r.id)}">Score against&hellip;</button>`}
       </div></td></tr>`).join('')}</tbody>`;
   const meta = state.rosterMeta[key];
@@ -2214,7 +2214,7 @@ const onAct = async (btn) => {
   const ops = {
     desk: () => commit({ desk: btn.dataset.key }),
     status: () => { setStatus(btn.dataset.key, btn.dataset.to); toast(`${P[btn.dataset.key].name} is now ${btn.dataset.to}; governance feed position ${state.gov.position}.`); },
-    resolve: () => { setVolatile({ broadcastFor: id }); },
+    resolve: () => { setVolatile({ broadcastFor: id }); scrollTo('broadcastBox'); },
     cancelBroadcast: () => setVolatile({ broadcastFor: null }),
     doBroadcast: () => {
       const mand = [...document.querySelectorAll('[data-mand]:checked')].map((e) => e.dataset.mand);
