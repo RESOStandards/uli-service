@@ -9,34 +9,30 @@ description: How a licensee is resolved to a ULI, step by step, with the protoco
      outcomes table's empty placeholder header row dropped so it renders without a header. -->
 # How the ULI Works
 
-## The Problem, in One Case
+## The Problem
 
-An agent is licensed in Indiana and works listings in two neighboring MLSs. Each one gave her an
-account. One has her as Jennifer, the other as Jenny. Her brokerage changed hands last year, so the
-office name differs too.
+A licensee working listings in two neighboring MLSs holds an account in each, created independently
+and under names and office affiliations that rarely agree. Production splits across those records, a
+data share carries both, and a broker back office cannot reconcile them. Forms providers, lockbox
+systems and comparative market analysis tools each hold a different version of the same person.
 
-She is one person. To every system that touches her, she is two agents, or three. Her production
-splits across the records. A data share carries both. A broker back office cannot reconcile them.
-Her forms provider, her lockbox and her CMA tool each hold a different version of her.
+Nothing identifies the records as one licensee, so each system creates its own identifier and none
+of them align.
 
-Nobody did anything wrong. There is simply no identifier that says *these are the same licensee*,
-so every system invents its own and none of them agree.
-
-The Unique Licensee Identifier is that missing identifier. One stable ID per licensed
-professional, carried alongside the IDs everyone already has rather than replacing them.
+The Unique Licensee Identifier is that identifier: one stable ID per licensed professional, carried
+alongside the IDs everyone already has rather than replacing them.
 
 ## What a ULI Does Not Do
 
-It does not merge anyone's records. This is the part that surprises people, so it is worth saying
-early.
+It does not merge records.
 
-MLSs duplicate licensee records deliberately, to grant the access a licensee actually needs. Those
-duplicates are not a defect to be cleaned up; they are how the system works. A ULI **links** them.
-Each record keeps its own identity and its own local ID, and each also carries the ULI that says
-which human it belongs to.
+MLSs duplicate licensee records deliberately, to grant the access a licensee requires. Those
+duplicates are not a defect to be corrected; they are how the system works. A ULI **links** them.
+Each record keeps its own identity and its own local ID, and each also carries the ULI recording
+which person it belongs to.
 
-So nothing is flattened and nothing is taken away. A system that wants to roll up a licensee's
-production can now do it. A system that does not care can ignore the field.
+Nothing is flattened and nothing is removed. A system that rolls up a licensee's production can do
+so. A system with no use for it can ignore the field.
 
 ## The Lifecycle
 
@@ -52,7 +48,7 @@ agreement with anyone and no disclosure.
 <!-- GUESS: the brief asks for the playground to be linked from this page; the draft had
      no link. Placement and wording are mine; the claims are the white paper's. -->
 A **[browser playground](/playground/)** runs this local matching on sample data, or on a
-roster you import yourself, and nothing you load leaves your browser.
+imported roster, and nothing loaded into the page leaves the browser.
 
 <!-- The resolution diagram sits where the draft's 'Diagram needed' note was. -->
 {% include diagrams/resolution.svg %}
@@ -77,7 +73,7 @@ Each one replies, and **a reply of "no match" counts.** That is not a formality.
 the group reach an answer at all, and it is the difference between a participant that looked and
 found nothing and a participant that never looked.
 
-### Someone Has Her, or Nobody Does
+### An Existing Identifier, or None
 
 **Nobody does.** Once enough participants have answered, the asking organization creates a new
 ULI. Not before – a new identifier is a claim that this person is not already on the network, and
@@ -86,7 +82,7 @@ only the network can establish that.
 **Someone does.** The asking organization adopts the existing ULI. Nothing is created, nothing is
 announced, and the other participant's record is untouched. Both now point at the same person.
 
-**Someone has her twice.** Two ULIs that turn out to be one licensee are reconciled, and **neither
+**Two already exist.** Two ULIs that turn out to be one licensee are reconciled, and **neither
 of the two survives**: both are excluded from matching, the merged details resolve on the network,
 and both originals retire into whatever that resolution returns (§2.7, §2.12.4). Each retired
 identifier keeps pointing at the target rather than disappearing, so anything that recorded either

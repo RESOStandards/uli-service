@@ -12,17 +12,13 @@ description: Why the industry needs one identifier for each licensed professiona
 
 ## Overview
 
-A real estate professional licensed in one state and working two neighboring markets is one person.
-To the systems that touch her she is two professionals, or three. Each market gave her an account.
-One has her as Jennifer, the other as Jenny. Her brokerage changed hands last year, so the office
-name differs too.
+A licensee working several markets holds a separate record in each, created independently and under
+names and office affiliations that rarely agree. Production splits across those records, data shares
+carry every version, and no back office can reconcile them. Forms providers, lockbox systems and
+education records each hold a different version of the same person.
 
-Her production splits across those records. A data share carries all of them. Her broker's back
-office cannot reconcile them, and her forms provider, her lockbox and her education records each
-hold a different version of her.
-
-Nobody made a mistake. There is simply no identifier that says *these records are the same
-licensee*, so every system invents one and none of them agree.
+Nothing identifies the records as one licensee, so each system creates its own identifier and none
+of them align.
 
 State licenses, association IDs and MLS IDs do not solve this. None conveys a single identifier that
 holds across systems and geographies, and inside a single MLS a licensee is often duplicated
@@ -37,13 +33,13 @@ them.
 
 **It links. It does not merge.**
 
-This is the part that surprises people, so it is worth stating before anything else. MLSs duplicate
-licensee records on purpose, to grant the access a licensee actually needs. Those duplicates are not
-a defect to be cleaned up. The ULI gives each of them a common identifier, so every record keeps its
-own identity and its own local ID while also saying which person it belongs to.
+MLSs duplicate licensee records deliberately, to grant the access a licensee requires. Those
+duplicates are not a defect to be corrected. The ULI gives each of them a common identifier, so
+every record keeps its own identity and its own local ID while also recording which person it
+belongs to.
 
-Nothing is flattened and nothing is taken away. A system that wants to roll up one licensee's
-production across markets can now do it. A system that does not care can ignore the field.
+Nothing is flattened and nothing is removed. A system that rolls up one licensee's production
+across markets can do so. A system with no use for it can ignore the field.
 
 **No one surrenders control of their data.** A participant shares only the subset of fields it
 chooses, with the participants it chooses, and the network itself stores nothing. There is no
@@ -146,8 +142,8 @@ own systems.
 | Office | `OfficeName` · `OfficeMlsId` |
 | Provenance | `SourceSystemID` · `SourceSystemName` · `OriginatingSystemID` · `OriginatingSystemName` |
 
-All seventeen are RESO Data Dictionary fields on the Member Resource, so none of them asks anyone to
-model anything new. Having them is a different question: §2.3 records adoption as uneven, "from
+All seventeen are RESO Data Dictionary fields on the Member Resource, so none requires new
+modeling. Having them is a different question: §2.3 records adoption as uneven, "from
 near-universal names and identifiers down to a rarely broken-out license state and type," and
 `MemberStateLicenseType` is defined from Data Dictionary 2.0, so a server certified against 1.7 does
 not carry it at all.
@@ -185,18 +181,18 @@ existing.
 The ULI follows that shape. It is built on the RESO Data Dictionary and Web API standards already in
 place, and resolution runs as a conversation between participants rather than through a hub.
 
-A shared pool of licensee data was the obvious alternative and it is not what the protocol does.
-The specification gives the reason plainly: resolving by consensus over replies rather than through
-a central pool "makes the network adoptable among competitors even though the ULI fields are neutral
+A shared pool of licensee data is the obvious alternative, and it is not what the protocol does.
+The specification states the reason: resolving by consensus over replies rather than through a
+central pool "makes the network adoptable among competitors even though the ULI fields are neutral
 and widely available," so the protocol works "without anyone surrendering control of their data or
-trusting a shared repository." The obstacle was never technical. It was that the participants who
-would have to populate such a pool compete with each other.
+trusting a shared repository." The constraint is organizational rather than technical. The
+participants who would populate such a pool compete with one another.
 
-## Try It
+## Playground
 
-A **[browser playground](/playground/)** runs the real matcher on sample data, or on a roster you
-import yourself. Nothing you load leaves your browser, and the page has no way to send it anywhere.
-Clear it when you are finished.
+A **[browser playground](/playground/)** runs the matcher on sample data, or on an imported roster.
+Nothing loaded into the page leaves the browser, and the page has no means of sending it
+anywhere.
 
 ## The Pilot
 
