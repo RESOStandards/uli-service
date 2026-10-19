@@ -1,0 +1,28 @@
+# This repository is public. Anything matched here must never reach it.
+
+# Credentials and local configuration. The working tree carries a .env; without
+# this line a single `git add -A` would publish it.
+.env
+.env.*
+*.pem
+*.key
+
+# Dependencies and build output
+node_modules/
+dist/
+build/
+.cache/
+
+# Editor and OS droppings
+.DS_Store
+.vscode/
+.idea/
+
+# Backups left by the site tooling
+*.bak-*
+*.orig
+*.rej
+
+# Logs and local run artifacts
+*.log
+npm-debug.log*
