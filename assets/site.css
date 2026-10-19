@@ -267,7 +267,11 @@ table code { overflow-wrap: normal; white-space: nowrap; }
    The `js-nav` guard is ours. tools hides the nav unconditionally at this
    width, which leaves a page whose script did not run with no navigation at
    all. Script adds the class, so the collapse cannot outlive its own control. */
-.header-actions { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+/* No auto margin here above the breakpoint: `.site-nav` already carries one,
+   and two of them split the free space between the two elements, which centres
+   the nav instead of keeping it hard right. Below the breakpoint the nav is
+   hidden, so there this IS what pushes the buttons to the right. */
+.header-actions { display: flex; align-items: center; gap: .5rem; }
 .menu-toggle {
   display: none;
   background: none;
@@ -281,6 +285,7 @@ table code { overflow-wrap: normal; white-space: nowrap; }
 
 @media (max-width: 768px) {
   .menu-toggle { display: block; }
+  .header-actions { margin-left: auto; }
   .js-nav .site-nav {
     display: none;
     flex-direction: column;

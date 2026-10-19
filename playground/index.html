@@ -20,7 +20,11 @@
    The `js-nav` guard is ours. tools hides the nav unconditionally at this
    width, which leaves a page whose script did not run with no navigation at
    all. Script adds the class, so the collapse cannot outlive its own control. */
-.reso-header .header-actions { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+/* No auto margin above the breakpoint: the nav already carries one, and two
+   of them split the free space and centre the nav instead of keeping it hard
+   right. Below the breakpoint the nav is hidden, so there this is what pushes
+   the buttons right. */
+.reso-header .header-actions { display: flex; align-items: center; gap: .5rem; }
 .reso-header .menu-toggle {
   display: none;
   background: none;
@@ -34,6 +38,7 @@
 
 @media (max-width: 768px) {
   .reso-header .menu-toggle { display: block; }
+  .reso-header .header-actions { margin-left: auto; }
   .reso-header.js-nav .site-nav {
     display: none;
     flex-direction: column;
