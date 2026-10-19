@@ -273,9 +273,16 @@
   .dot{width:7px;height:7px;border-radius:50%;background:var(--soft);display:none;flex:none}
   .dot.on{display:block}
   @media (max-width:780px){
-    .shell{grid-template-columns:1fr}
+    /* minmax(0,1fr), not 1fr: a 1fr track takes its automatic minimum from
+       the item's min-content, so the single column grew to the widest thing
+       inside it and carried the whole page past the screen. */
+    .shell{grid-template-columns:minmax(0,1fr)}
+    .shell>*{min-width:0}
+    /* min-width:0 is what makes overflow-x:auto work here. A grid item
+       defaults to min-width:auto, so the nowrap links below set a min-content
+       floor and the column grew past the screen instead of scrolling. */
     .side{position:static;flex-direction:row;overflow-x:auto;gap:4px;padding-bottom:6px;
-      border-bottom:1px solid var(--rule);margin-bottom:8px}
+      border-bottom:1px solid var(--rule);margin-bottom:8px;min-width:0}
     .side .grp{display:none}
     .side a{white-space:nowrap}
   }
