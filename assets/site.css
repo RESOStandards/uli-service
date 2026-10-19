@@ -1,3 +1,8 @@
+/* Dark surfaces lifted from tools.reso.org: page #1a202c, card #2d3748,
+   rule #4a5568. The site ramp was never lifted when `.pane` was, so the
+   page behind the cards was darker than tools and darker than the
+   playground. The playground ramp sat one step below tools throughout.
+   Light mode is untouched. */
 /* uli.reso.org – the one stylesheet for the site pages.
    System fonts only, no web fonts, no framework. Colors are tokens on :root, with a
    separate dark set (not an inversion) under prefers-color-scheme and under
@@ -31,12 +36,12 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1217;
-    --surface: #161b22;
-    --text: #e8ecf1;
+    --bg: #1a202c;
+    --surface: #2d3748;
+    --text: #e2e8f0;
     --muted: #a6b0be;
-    --rule: #28303a;
-    --rule-strong: #3a4454;
+    --rule: #4a5568;
+    --rule-strong: #718096;
     --link: #90cdf4;
     --link-hover: #c3e4ff;
     --accent: #79a9de;
@@ -53,12 +58,12 @@
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e1217;
-  --surface: #161b22;
-  --text: #e8ecf1;
+  --bg: #1a202c;
+  --surface: #2d3748;
+  --text: #e2e8f0;
   --muted: #a6b0be;
-  --rule: #28303a;
-  --rule-strong: #3a4454;
+  --rule: #4a5568;
+  --rule-strong: #718096;
   --link: #90cdf4;
   --link-hover: #c3e4ff;
   --accent: #79a9de;
