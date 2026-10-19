@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  {% if page.url == "/" %}<title>{{ site.title }}</title>{% else %}<title>{{ page.title }} – {{ site.title }}</title>{% endif %}
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  <meta property="og:description" content="{{ page.description | default: site.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231a2f58'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+  <script>
+    // Before first paint, so a chosen theme never flashes. Same `dd-theme` key
+    // tools.reso.org writes, so the choice carries between RESO properties.
+    (function () {
+      try {
+        var t = localStorage.getItem('dd-theme');
+        if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage blocked; the OS preference still applies */ }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{{ '/' | relative_url }}">
+        <img src="{{ '/assets/reso-logo-white.png' | relative_url }}" alt="RESO" width="149" height="36">
+        <span class="brand-name">Unique Licensee Identifier</span>
+      </a>
+      <nav class="site-nav" aria-label="Site">
+        {%- for item in site.data.nav %}
+        <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a>
+        {%- endfor %}
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button"
+              aria-label="Switch between light and dark">&#9789;</button>
+    </div>
+  </header>
+  <main id="main" class="wrap content{% if page.body_class %} {{ page.body_class }}{% endif %}">
+{{ content }}
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><a href="https://www.reso.org/">Real Estate Standards Organization</a> &middot; <a href="https://github.com/RESOStandards/uli-service">This site on GitHub</a> &middot; <a href="https://github.com/RESOStandards/transport/pull/222">RCP-54 on RESO Transport</a></p>
+    </div>
+  </footer>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('themeToggle');
+      var dark = function () {
+        var set = root.getAttribute('data-theme');
+        return set ? set === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      };
+      var paint = function () { btn.innerHTML = dark() ? '&#9728;' : '&#9789;'; };
+      btn.addEventListener('click', function () {
+        var next = dark() ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('dd-theme', next); } catch (e) {}
+        paint();
+      });
+      paint();
+
+      // Group each h2 and the content beneath it into a pane. Done here rather
+      // than at build time so GitHub Pages needs no plugin. The specification
+      // page opts out: it is structured on h1 and panes would cut it wrongly.
+      var main = document.getElementById('main');
+      if (!main || main.classList.contains('spec')) return;
+      var nodes = Array.prototype.slice.call(main.children);
+      var pane = null;
+      nodes.forEach(function (el) {
+        if (el.tagName === 'H2') {
+          pane = document.createElement('section');
+          pane.className = 'pane';
+          main.insertBefore(pane, el);
+          pane.appendChild(el);
+        } else if (pane) {
+          pane.appendChild(el);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
