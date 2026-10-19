@@ -7,7 +7,24 @@
   {% if page.url == "/" %}<title>{{ site.title }}</title>{% else %}<title>{{ page.title }} – {{ site.title }}</title>{% endif %}
   <meta name="description" content="{{ page.description | default: site.description }}">
   <meta property="og:site_name" content="{{ site.title }}">
-  <meta property="og:title" content="{{ page.title | default: site.title }}">
+  {%- comment -%}
+    og:title follows the same rule as <title>: the landing page is the SITE, not
+    the page called "Home". Without this the unfurl is headed "Home", which says
+    nothing about what was shared.
+  {%- endcomment -%}
+  {% if page.url == "/" %}<meta property="og:title" content="{{ site.title }}">
+  {% else %}<meta property="og:title" content="{{ page.title | default: site.title }}">{% endif %}
+  {%- comment -%}
+    Absolute, because Slack, LinkedIn and X do not resolve a relative og:image.
+  {%- endcomment -%}
+  <meta property="og:image" content="{{ '/assets/social-card.png' | absolute_url }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ site.title }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% if page.url == '/' %}{{ site.title }}{% else %}{{ page.title | default: site.title }}{% endif %}">
+  <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+  <meta name="twitter:image" content="{{ '/assets/social-card.png' | absolute_url }}">
   <meta property="og:description" content="{{ page.description | default: site.description }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ page.url | absolute_url }}">
