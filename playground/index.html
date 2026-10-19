@@ -20,7 +20,11 @@
    The `js-nav` guard is ours. tools hides the nav unconditionally at this
    width, which leaves a page whose script did not run with no navigation at
    all. Script adds the class, so the collapse cannot outlive its own control. */
-.reso-header .header-actions { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+/* No auto margin above the breakpoint: the nav already carries one, and two
+   of them split the free space and centre the nav instead of keeping it hard
+   right. Below the breakpoint the nav is hidden, so there this is what pushes
+   the buttons right. */
+.reso-header .header-actions { display: flex; align-items: center; gap: .5rem; }
 .reso-header .menu-toggle {
   display: none;
   background: none;
@@ -34,6 +38,7 @@
 
 @media (max-width: 768px) {
   .reso-header .menu-toggle { display: block; }
+  .reso-header .header-actions { margin-left: auto; }
   .reso-header.js-nav .site-nav {
     display: none;
     flex-direction: column;
@@ -114,16 +119,16 @@
     --sh:0 1px 2px rgba(26,32,44,.06),0 4px 12px rgba(26,32,44,.05);
   }
   @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-    --paper:#171923; --raised:#1a202c; --sunk:#2d3748;
-    --ink:#e2e8f0; --soft:#a0aec0; --faint:#718096; --rule:#2d3748;
+    --paper:#1a202c; --raised:#2d3748; --sunk:#3b4657;
+    --ink:#e2e8f0; --soft:#a0aec0; --faint:#718096; --rule:#4a5568;
     --accent:#63b3ed; --accent-bg:#1a365d;
     --ok:#68d391; --ok-bg:#1c4532; --warn:#f6ad55; --warn-bg:#3d2e12; --bad:#fc8181; --bad-bg:#3b1d1d;
     --p1:#63b3ed; --p2:#68d391; --p3:#4fd1c5; --p5:#f6ad55; --p8:#b794f4;
     --sh:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25);
   }}
   :root[data-theme="dark"]{
-    --paper:#171923; --raised:#1a202c; --sunk:#2d3748;
-    --ink:#e2e8f0; --soft:#a0aec0; --faint:#718096; --rule:#2d3748;
+    --paper:#1a202c; --raised:#2d3748; --sunk:#3b4657;
+    --ink:#e2e8f0; --soft:#a0aec0; --faint:#718096; --rule:#4a5568;
     --accent:#63b3ed; --accent-bg:#1a365d;
     --ok:#68d391; --ok-bg:#1c4532; --warn:#f6ad55; --warn-bg:#3d2e12; --bad:#fc8181; --bad-bg:#3b1d1d;
     --p1:#63b3ed; --p2:#68d391; --p3:#4fd1c5; --p5:#f6ad55; --p8:#b794f4;
