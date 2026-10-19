@@ -13,6 +13,17 @@
 </script>
 
 <style id="reso-house-chrome-css">
+  /* The site footer, ported in, for the same reason the header was: Jekyll
+     copies this file verbatim so it never gets _layouts/default.html. Mirrors
+     assets/site.css, with display set explicitly to beat the bare `footer`
+     rule above. */
+  .site-footer{display:block;background:#1a2f58;color:rgba(255,255,255,.6);
+    text-align:center;padding:1.5rem;font-size:.8125rem;margin:2rem 0 0}
+  .site-footer .wrap{max-width:none;margin:0}
+  .site-footer p{margin:0}
+  .site-footer a{color:rgba(255,255,255,.8);text-decoration:none}
+  .site-footer a:hover,.site-footer a:focus{color:#ff9900;text-decoration:underline}
+
   /* The site header, ported in. Jekyll copies this file verbatim so it never
      gets _layouts/default.html; these rules mirror assets/site.css exactly so
      the playground is not the one page with different chrome. */
@@ -442,6 +453,12 @@
     <a id="lnkSpec" href="#" target="_blank" rel="noopener">RCP-54 proposal</a>
   </footer>
 </div>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><a href="https://www.reso.org/">Real Estate Standards Organization</a> &middot; <a href="https://github.com/RESOStandards/uli-service">This site on GitHub</a> &middot; <a href="https://github.com/RESOStandards/transport/pull/222">RCP-54 on RESO Transport</a></p>
+    </div>
+  </footer>
+
 <script type="module">
 /* ===================================================================
  * ap.js, inlined verbatim from the sibling file so the page is one
