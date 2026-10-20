@@ -1,0 +1,108 @@
+# A ULI pilot node, stood up in one command.
+#
+#   docker compose -f docker-compose.pilot.yml up -d --build
+#   curl -s localhost:3000/uli-service/v1/health
+#   open http://localhost:5601          # OpenSearch Dashboards, to look at the index
+#
+# Then load a roster, which runs in the node's own container so no local toolchain is needed:
+#
+#   docker compose -f docker-compose.pilot.yml run --rm \
+#     -v "$PWD/roster.csv:/data/roster.csv:ro" node \
+#     node dist/bin/ingest-csv.js /data/roster.csv --uoi M00000123
+#
+# SECURITY: this is a development and pilot-evaluation stand-up on loopback. OpenSearch runs with
+# its security plugin disabled and the node's payload endpoints accept a generated bearer token.
+# It is NOT the shape of a deployed pilot, where tenant isolation is the property the whole protocol
+# rests on. See the deployment notes at the bottom.
+
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.19.6
+    container_name: uli-pilot-opensearch
+    environment:
+      - cluster.name=uli-pilot
+      - node.name=uli-os-1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+      nofile: { soft: 65536, hard: 65536 }
+    volumes:
+      - uli-pilot-data:/usr/share/opensearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+    networks: [uli]
+    healthcheck:
+      # Wait for yellow, not for the port: the port answers before the cluster accepts a write.
+      test: ["CMD-SHELL", "curl -fs 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 40s
+
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uli-pilot-node
+    environment:
+      - OPENSEARCH_URL=http://opensearch:9200
+      - PORT=3000
+      # Identifiers and payload links are minted under this origin, so it must be the address other
+      # participants can actually reach. Loopback is correct for an evaluation and wrong for a pilot.
+      - ULI_ORIGIN=http://localhost:3000
+      # The organization this node acts for. Leave unset and it takes the first one in the index.
+      - ULI_NODE_UOI=${ULI_NODE_UOI:-}
+      # Bearer tokens permitted to read payloads. A default is generated and logged when unset.
+      - ULI_NODE_TOKENS=${ULI_NODE_TOKENS:-}
+      # A JSON map of organization identifier to PKCS#8 private key. Unset means a fresh key per
+      # start, which means identifiers minted in one run stop verifying after a restart. Set this
+      # before anything you mint is expected to outlive the container.
+      - ULI_SIGNING_KEYS=${ULI_SIGNING_KEYS:-}
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks: [uli]
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    restart: unless-stopped
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:2.19.6
+    container_name: uli-pilot-dashboards
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    ports:
+      - "127.0.0.1:5601:5601"
+    networks: [uli]
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    profiles: [tools]      # `--profile tools` to include it; not needed to run a node
+
+volumes:
+  uli-pilot-data:
+    driver: local
+
+networks:
+  uli:
+    driver: bridge
+
+# ---------------------------------------------------------------------------------------------
+# Before this becomes a deployed pilot rather than an evaluation
+# ---------------------------------------------------------------------------------------------
+#
+# 1. ULI_ORIGIN must be the address other participants can reach. Identifiers and payload links are
+#    minted under it, and a ULI minted under localhost is not resolvable by anyone else.
+# 2. ULI_SIGNING_KEYS must be set and persisted. An unset value regenerates per start, and every
+#    identifier minted under the old key stops verifying.
+# 3. OpenSearch security must be enabled, and the node must authenticate to it.
+# 4. The payload endpoints must be served over TLS. They carry licensee data behind a bearer token,
+#    and a token over plain HTTP is not a protected link.
+# 5. Where one host runs nodes for several participants, tenant isolation stops being an assumption
+#    and becomes the thing to test. Data isolation between participants is what the protocol rests
+#    on, and a shared index makes it a query-scoping property rather than a network one.

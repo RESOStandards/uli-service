@@ -1,0 +1,88 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    },
+    "analysis": {
+      "normalizer": {
+        "uli_id_norm": {
+          "type": "custom",
+          "filter": ["lowercase", "asciifolding", "trim"]
+        }
+      },
+      "analyzer": {
+        "uli_name": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": ["lowercase", "asciifolding"]
+        },
+        "uli_id": {
+          "type": "custom",
+          "tokenizer": "keyword",
+          "filter": ["lowercase", "asciifolding", "trim"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "recordKey": { "type": "keyword" },
+
+      "uoi": { "type": "keyword" },
+      "usi": { "type": "keyword" },
+      "ddVersion": { "type": "keyword" },
+      "uli": { "type": "keyword" },
+      "ingestedAt": { "type": "date" },
+
+      "MemberNationalAssociationId": {
+        "type": "keyword", "normalizer": "uli_id_norm",
+        "fields": { "exact": { "type": "keyword" } }
+      },
+      "MemberFullName": {
+        "type": "text", "analyzer": "uli_name",
+        "fields": { "kw": { "type": "keyword", "normalizer": "uli_id_norm" } }
+      },
+      "MemberFirstName": {
+        "type": "text", "analyzer": "uli_name",
+        "fields": { "kw": { "type": "keyword", "normalizer": "uli_id_norm" } }
+      },
+      "MemberLastName": {
+        "type": "text", "analyzer": "uli_name",
+        "fields": { "kw": { "type": "keyword", "normalizer": "uli_id_norm" } }
+      },
+      "MemberMiddleName": {
+        "type": "text", "analyzer": "uli_name",
+        "fields": { "kw": { "type": "keyword", "normalizer": "uli_id_norm" } }
+      },
+      "MemberNickname": {
+        "type": "text", "analyzer": "uli_name",
+        "fields": { "kw": { "type": "keyword", "normalizer": "uli_id_norm" } }
+      },
+      "MemberType": { "type": "keyword" },
+
+      "MemberStateLicense": {
+        "type": "keyword", "normalizer": "uli_id_norm",
+        "fields": { "exact": { "type": "keyword" } }
+      },
+      "MemberStateLicenseState": { "type": "keyword" },
+      "MemberStateLicenseType": { "type": "keyword" },
+
+      "MemberMlsId": { "type": "keyword", "normalizer": "uli_id_norm" },
+
+      "OfficeName": {
+        "type": "text", "analyzer": "uli_name",
+        "fields": { "kw": { "type": "keyword", "normalizer": "uli_id_norm" } }
+      },
+      "OfficeMlsId": { "type": "keyword", "normalizer": "uli_id_norm" },
+
+      "SourceSystemID": { "type": "keyword" },
+      "SourceSystemName": { "type": "keyword" },
+      "OriginatingSystemID": { "type": "keyword" },
+      "OriginatingSystemName": { "type": "keyword" },
+
+      "blockKey": { "type": "keyword" }
+    }
+  }
+}

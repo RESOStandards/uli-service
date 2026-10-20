@@ -4,10 +4,20 @@
 # this line a single `git add -A` would publish it.
 .env
 .env.*
+# `.env` alone matches only a file named exactly that - NOT federation/node-a.env, which
+# `federation/make-env.mjs` writes along with a keys.json of private signing keys. Both
+# patterns are deliberately broader than the files that exist, because that script
+# regenerates them on demand and this repository is public.
+*.env
+keys.json
+*-keys.json
 *.pem
 *.key
 
-# Dependencies and build output
+# Dependencies and build output. `node_modules/` with the slash matches a DIRECTORY only -
+# a symlinked node_modules, which is how you share one install across git worktrees, is not
+# a directory and slips straight past it. Both spellings, so neither case can be committed.
+node_modules
 node_modules/
 dist/
 build/

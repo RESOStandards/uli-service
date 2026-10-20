@@ -1,0 +1,42 @@
+# Nothing here is needed to build the image, and some of it would poison it.
+
+# Installed for the host platform. Alpine needs its own resolution, so a copied
+# node_modules is the classic "works locally, segfaults in the container" bug.
+node_modules
+
+# The build stage compiles its own.
+dist
+
+# Tests and their fixtures are not part of a deployed node. They run in CI and on a
+# developer's machine, against the source, not the image.
+tests
+vitest.config.ts
+
+# Credentials. A .env copied into an image is a credential baked into every layer and
+# visible to anyone who can pull it.
+.env
+.env.*
+*.pem
+*.key
+
+# Rosters. Licensee data must never travel in an image. Mount it at run time instead,
+# which is what the compose file's ingest example does.
+*.csv
+*.xlsx
+data/
+
+.git
+.gitignore
+.github
+Dockerfile
+docker-compose*.yml
+README.md
+*.md
+.DS_Store
+npm-debug.log*
+coverage
+
+# The federation stand-up: env files with demo keys and tokens, seed rosters. Mounted or read at run
+# time, never built in.
+federation/
+local/

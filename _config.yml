@@ -30,6 +30,16 @@ plugins:
 # of the specification. Everything below is kept out of the site. Remove an entry if
 # something here should be published after all.
 exclude:
+  # The reference node. Code, not site content - Jekyll would otherwise try to render it.
+  - src/
+  - tests/
+  - federation/
+  - index/
+  - tsconfig.json
+  - vitest.config.ts
+  - docker-compose.federation.yml
+  - docker-compose.pilot.yml
+  - .dockerignore
   - README.md
   - CLAUDE.md
   - LICENSE
