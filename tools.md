@@ -4,11 +4,11 @@ permalink: /tools/
 description: The reference node, the playground and the artifacts built alongside them.
 ---
 <!-- Every link here was resolved against RESOStandards/uli-service main on
-     2026-10-19. The node and client source are not published yet, so the page says
-     so rather than linking a path that does not resolve; when they land, replace the
-     status lines with the links. Two docs were deliberately not linked:
-     docs/technical-considerations.md on main is a heading with no body, and
-     docs/uli-resolution-architecture.md is not committed. -->
+     2026-10-20. The NODE source is now published and linked; the CLIENT is still not in
+     the public repository, so that status line still says so rather than linking a path
+     that does not resolve - when it lands, replace it the same way. Two docs were
+     deliberately not linked: docs/technical-considerations.md on main is a heading with
+     no body, and docs/uli-resolution-architecture.md is not committed. -->
 # Tools
 
 ## Reference Node
@@ -17,7 +17,9 @@ One node that speaks the protocol: the matcher and its scoring, the consensus ar
 
 A node is the unit of participation. Running one is how an organization joins, answers broadcasts from its own data and mints identifiers under its own key.
 
-**Status:** in progress. The protocol layer is built and the adapters over it are thin by design. The source is not yet in the public repository. What it implements is published in full as the **[specification](/specification/)**, and the pilot it was built for is described in **[running the pilot](https://github.com/RESOStandards/uli-service/blob/main/docs/running-the-pilot.md)**.
+**[Source](https://github.com/RESOStandards/uli-service/tree/main/src)**, and **[how to run one](https://github.com/RESOStandards/uli-service/blob/main/docs/reference-node.md)** – an empty `.env` is enough to start. A **[two-node federation](https://github.com/RESOStandards/uli-service/tree/main/federation)** runs the whole protocol across two containers on one machine: a broadcast from one node answered by the other over HTTP, consensus, a minted identifier and its verification against the minting node's key.
+
+**Status:** in progress. The protocol layer is built and the adapters over it are thin by design. What it implements is published in full as the **[specification](/specification/)**, and the pilot it was built for is described in **[running the pilot](https://github.com/RESOStandards/uli-service/blob/main/docs/running-the-pilot.md)**.
 
 ## Client
 

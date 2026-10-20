@@ -1,0 +1,33 @@
+[
+  {
+    "UniqueLicenseeIdentifier": "urn:reso:uli:1.0:urn:reso:uoi:1.0:T00000012:M00000002:R0HZFyKWZgBc:aYgjQzUmC_uECgOKVmiJXwoyI-QAPhkoyUKnFt11ewJ95KHEwu5fq7IVhXil5TSHd21fHjXJPbaQFv5Qe4GPAQ",
+    "MemberFullName": "Jane Smith",
+    "MemberFirstName": "Jane",
+    "MemberMiddleName": "A",
+    "MemberLastName": "Smith",
+    "MemberNickname": "Janie",
+    "MemberType": "REALTOR Salesperson",
+    "MemberNationalAssociationId": "999000111",
+    "MemberStateLicense": "SL123456",
+    "MemberStateLicenseType": "Salesperson",
+    "MemberStateLicenseState": "CA",
+    "MemberMlsId": "B7788",
+    "OfficeName": "Smith Realty Group",
+    "OfficeMlsId": "OFF042",
+    "SourceSystemID": "M00000002",
+    "SourceSystemName": "Node B MLS",
+    "OriginatingSystemID": "M00000002",
+    "OriginatingSystemName": "Node B MLS"
+  },
+  {
+    "MemberFullName": "Ada Lovelace",
+    "MemberFirstName": "Ada",
+    "MemberLastName": "Lovelace",
+    "MemberStateLicense": "L1",
+    "MemberStateLicenseState": "IN",
+    "MemberMlsId": "B0002",
+    "OfficeName": "Analytical Realty",
+    "OfficeMlsId": "OFC-01",
+    "MemberType": "Agent"
+  }
+]

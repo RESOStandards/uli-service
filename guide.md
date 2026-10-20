@@ -38,6 +38,14 @@ the network would find before any participant is contacted.
 
 ### Run a Node Locally
 
+The node is in the **[uli-service repository](https://github.com/RESOStandards/uli-service)**,
+alongside this site and the specification:
+
+```
+git clone https://github.com/RESOStandards/uli-service.git
+cd uli-service
+```
+
 Credentials belong in a file, never in a chat.
 
 Create a `.env` file next to the node. Every one of these has a working default, so the shortest
@@ -66,8 +74,15 @@ npm install && npm run build
 node dist/bin/serve.js
 ```
 
-The node answers on `http://localhost:3000/uli-service/v1`. Start the dashboard with `npm run dev`
-in the client and open `http://localhost:5173`.
+The node answers on `http://localhost:3000/uli-service/v1`. `GET health` is the quickest check
+that it came up, and needs no credential.
+
+The operator dashboard is not in the public repository yet, so there is nothing to start against
+the node at this point; the screens are drawn in the
+**[interface mockups](https://github.com/RESOStandards/uli-service/blob/main/docs/uli-mockups.md)**.
+Everything below this point can be done against the node directly, and the
+**[two-node federation](https://github.com/RESOStandards/uli-service/tree/main/federation)** shows
+each call and its response.
 
 > One thing to know about the local node, because it looks like magic otherwise. It registers
 > **every organization it finds in the index** as a resolver, each with its own signing key, on an

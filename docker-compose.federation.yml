@@ -1,0 +1,94 @@
+# Two ULI nodes that federate with each other over ActivityPub.
+#
+#   npm run build && node federation/make-env.mjs      # keys, env files, seed rosters (once)
+#   docker compose -f docker-compose.federation.yml up -d --build
+#   node federation/demo.mjs                           # ingest, broadcast from A, watch B answer over HTTP
+#
+# Node A acts for M00000001 at http://node-a:3000 and node B for M00000002 at http://node-b:3000,
+# names that resolve only on the compose network, which is where the two nodes talk. From the host
+# they are 127.0.0.1:3001 and 127.0.0.1:3002. Each registers the other as a resolver (ULI_RESOLVERS,
+# with the other's actor URL and Ed25519 public key) and holds the bearer token the other accepts
+# (ULI_PEER_TOKENS): section 2.1's prearranged grant, one per peer.
+#
+# One OpenSearch, two tenant partitions. Both nodes share the cluster and the index names; members
+# are partitioned by `uoi`, and ULI_NODE_TENANTS tells each node which partition is its own. Nothing
+# about a thread crosses through the shared index: A learns B's reply only because B POSTed it to A's
+# inbox, which the demo shows from both nodes' delivery logs. The caveat the pilot compose already
+# states applies with more force here: with a shared index, isolation between the two nodes' state
+# is a query-scoping property, not a storage one.
+#
+# This stack has its own project name, network, volume and ports, so it runs beside the pilot
+# stand-up (docker-compose.pilot.yml, or uli-service's) without touching it.
+#
+# SECURITY: demo keys, demo tokens, security plugin off, plain HTTP. An evaluation, not a deployment.
+
+name: uli-federation
+
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.19.6
+    container_name: uli-fed-opensearch
+    environment:
+      - cluster.name=uli-federation
+      - node.name=uli-fed-os-1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+      nofile: { soft: 65536, hard: 65536 }
+    volumes:
+      - uli-fed-data:/usr/share/opensearch/data
+    ports:
+      - "127.0.0.1:9201:9200"
+    networks: [federation]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs 'http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 40s
+
+  node-a:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: reso-uli-node:federation
+    container_name: uli-fed-node-a
+    env_file: federation/node-a.env
+    environment:
+      - OPENSEARCH_URL=http://opensearch:9200
+      - PORT=3000
+    ports:
+      - "127.0.0.1:3001:3000"
+    networks: [federation]
+    depends_on:
+      opensearch:
+        condition: service_healthy
+    restart: unless-stopped
+
+  node-b:
+    image: reso-uli-node:federation
+    container_name: uli-fed-node-b
+    env_file: federation/node-b.env
+    environment:
+      - OPENSEARCH_URL=http://opensearch:9200
+      - PORT=3000
+    ports:
+      - "127.0.0.1:3002:3000"
+    networks: [federation]
+    depends_on:
+      # After A is healthy, so the shared indices exist before B's own ensureIndices runs.
+      node-a:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  uli-fed-data:
+    driver: local
+
+networks:
+  federation:
+    driver: bridge

@@ -1,0 +1,77 @@
+# Local OpenSearch for the ULI pilot.
+#
+# Replaces the 2022 `docker-compose.yml`, which runs elasticsearch:8.2.2. Three reasons
+# for the switch, in order of how much they would cost later:
+#
+#   1. The pilot deploys to AWS OpenSearch Service. Elasticsearch and OpenSearch forked at
+#      7.10 and have diverged in query DSL, security and client libraries, so building
+#      locally on Elasticsearch and deploying to OpenSearch is drift discovered late.
+#   2. Elasticsearch 8.x is Elastic License 2.0, which is not OSI open source. OpenSearch is
+#      Apache 2.0, which matters for a reference implementation RESO publishes.
+#   3. `8.2.2` is a 2022 image carrying three years of unpatched CVEs.
+#
+# Version is pinned to the settled 2.19 line rather than 3.x because the real constraint is
+# what AWS OpenSearch Service supports in the target region. Confirm that before phase 2
+# deploys; matching down is cheap, matching up is not.
+#
+#   docker compose -f docker-compose.opensearch.yml up -d
+#   curl -s localhost:9200 | python3 -m json.tool
+#   open http://localhost:5601
+#
+# SECURITY IS DISABLED. This is a local development environment on loopback only: no TLS, no
+# authentication, no audit. It must never be the shape of the deployed pilot, where data
+# isolation between participant tenants is the property the whole protocol rests on.
+
+services:
+  opensearch:
+    image: opensearchproject/opensearch:2.19.6
+    container_name: uli-opensearch
+    environment:
+      - cluster.name=uli-pilot
+      - node.name=uli-os-1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      # 7.7 GB available locally; 1 GB heap is ample for a 300k-document index and leaves
+      # room for the page cache, which is what actually makes search fast.
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+      # Local only. See the note above.
+      - DISABLE_SECURITY_PLUGIN=true
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    ulimits:
+      memlock: { soft: -1, hard: -1 }
+      nofile: { soft: 65536, hard: 65536 }
+    volumes:
+      - uli-os-data:/usr/share/opensearch/data
+    ports:
+      - "127.0.0.1:9200:9200"   # REST
+      - "127.0.0.1:9600:9600"   # performance analyzer
+    networks: [uli]
+    healthcheck:
+      # Anything that ingests should wait for yellow, not for the port to open: the port
+      # answers before the cluster will accept a write.
+      test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 40s
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:2.19.6
+    container_name: uli-dashboards
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    ports:
+      - "127.0.0.1:5601:5601"
+    networks: [uli]
+    depends_on:
+      opensearch:
+        condition: service_healthy
+
+volumes:
+  uli-os-data:
+    driver: local
+
+networks:
+  uli:
+    driver: bridge

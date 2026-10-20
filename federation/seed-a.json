@@ -1,0 +1,34 @@
+[
+  {
+    "MemberFullName": "Jane A Smith",
+    "MemberFirstName": "Jane",
+    "MemberMiddleName": "A",
+    "MemberLastName": "Smith",
+    "MemberNickname": "Janie",
+    "MemberType": "REALTOR Salesperson",
+    "MemberNationalAssociationId": "999000111",
+    "MemberStateLicense": "SL123456",
+    "MemberStateLicenseType": "Salesperson",
+    "MemberStateLicenseState": "CA",
+    "MemberMlsId": "A0001",
+    "OfficeName": "Smith Realty Group",
+    "OfficeMlsId": "OFF001",
+    "SourceSystemID": "M00000001",
+    "SourceSystemName": "Node A MLS",
+    "OriginatingSystemID": "M00000001",
+    "OriginatingSystemName": "Node A MLS"
+  },
+  {
+    "MemberNationalAssociationId": "012345687",
+    "MemberFullName": "John Smith",
+    "MemberFirstName": "John",
+    "MemberLastName": "Smith",
+    "MemberStateLicense": "RE-884120",
+    "MemberStateLicenseState": "IN",
+    "MemberStateLicenseType": "Salesperson",
+    "MemberMlsId": "A1001",
+    "OfficeName": "Prairie Realty",
+    "OfficeMlsId": "OFC-77",
+    "MemberType": "Agent"
+  }
+]
